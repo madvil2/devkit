@@ -52,7 +52,7 @@ pnpm add react@latest react-dom@latest @tanstack/react-query @tanstack/react-rou
 Dev (TypeScript pinned to the line from stack.md W-1, `~6.0` today):
 
 ```sh
-pnpm add -D typescript@~6.0 @biomejs/biome dependency-cruiser oxc-parser postcss postcss-custom-media @csstools/postcss-global-data vitest @testing-library/react happy-dom @playwright/test @axe-core/playwright @tanstack/router-plugin @rolldown/plugin-babel @babel/core babel-plugin-react-compiler
+pnpm add -D typescript@~6.0 @biomejs/biome dependency-cruiser postcss postcss-custom-media @csstools/postcss-global-data vitest @testing-library/react happy-dom @playwright/test @axe-core/playwright @tanstack/router-plugin @rolldown/plugin-babel @babel/core babel-plugin-react-compiler
 ```
 
 Per type:
@@ -87,7 +87,7 @@ pnpm exec biome check --write
   - `src/mocks/<domain>.ts` with every branched status, registered in `src/mocks/handlers.ts`; endpoints in `src/shared/api/endpoints.ts`;
   - `src/pages/<domain>/` list page with `model/use-<domain>-page.ts` + `ui/<domain>-page.tsx` + module CSS, `AsyncState` with `Skeleton`, empty state only after success;
   - route file `src/app/routes/<domain>.tsx`, link from the home page;
-  - i18n keys in every locale; translate the non-default locale copies; `R-typography` must pass;
+  - i18n keys in every locale; translate the non-default locale copies; `R-typography` must pass; each locale has a TXT-4 list or an ADR;
   - `docs/<domain>.md` + row in `docs/README.md`.
 - admin: kit additions `Table` (TanStack Table v9: `useTable`/`createTableHook`, `FlexRender`; the v8 `useReactTable` API exists only as `useLegacyTable`, do not use it), `Select`, `Tabs`, `Pagination`, `Badge`, `EmptyState`, built on `@base-ui/react` inside `shared/ui` and styled through Base UI state attributes (`data-open`, `data-checked`, `data-selected`, `data-highlighted`, `data-disabled`, ...; never `data-state`, KIT-3).
 - Forms: `react-hook-form` + zod adapters inside the kit (FRM-1, FRM-2).
@@ -105,6 +105,7 @@ pnpm exec biome check --write
 ## 8. Facts the checker relies on
 
 - `pnpm check` = lint → lint:arch → lint:rules → typecheck → test → build.
+- `pnpm lint` runs the GritQL plugins in `biome-plugins/`; `pnpm lint:rules` runs the comment scan and fails on a plugin runtime error.
 - `lint:arch` fails when dependency-cruiser cruises 0 modules (TOOL-8; verified by installing `typescript@7.0.2`).
 - `test:e2e` builds with `--mode e2e` (mock API) into `dist-e2e` and serves it on `127.0.0.1:<port>`.
 - Mock marker: `mock-transport:<name>`; `grep -r "mock-transport" dist` must be empty after `pnpm build` (the mock chunk is not emitted when `VITE_API_MODE` is not `mock`).

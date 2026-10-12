@@ -27,7 +27,7 @@ The project's `AGENTS.md` is a self-contained render of the devkit frontend rule
 | 9 | API client, endpoints, mocks, errors | `api.md` | API-1 … API-7 |
 | 10 | Auth for this project's pattern | `auth.md` | AUTH-1 … AUTH-9 (filtered) |
 | 11 | Config, env and storage | `config.md` | CFG-1 … CFG-5 |
-| 12 | i18n and typography | `i18n.md` | I18N-1 … I18N-5, TXT-1 … TXT-3 |
+| 12 | i18n and typography | `i18n.md` | I18N-1 … I18N-5, TXT-1 … TXT-4 |
 | 13 | Forms | `forms.md` | FRM-1 … FRM-5 |
 | 14 | Money (only with money) | `money.md` | MNY-1 … MNY-4 |
 | 15 | Framework: Vite SPA or Next | `vite-spa.md` or `next.md` | SPA-1 … SPA-6 or NXT-1 … NXT-14 |
@@ -37,11 +37,11 @@ The project's `AGENTS.md` is a self-contained render of the devkit frontend rule
 | 19 | CI and deploy | `ci-deploy.md` | CI-1, CI-2, DEP-1 … DEP-3 (DEP-1 next, DEP-2 vite) |
 | 20 | Workflow: no comments, docs, commits, local files | `workflow.md` | WF-1 … WF-6 |
 
-Rule IDs added after rev. 1 that must appear when in scope: TOOL-8, STY-11, NXT-13, NXT-14, TST-6, SPA-6, AUTH-9, MNY-4.
+Rule IDs added after rev. 1 that must appear when in scope: TOOL-8, STY-11, NXT-13, NXT-14, TST-6, SPA-6, AUTH-9, MNY-4, TXT-4.
 
 ## Check-rules and dependency-cruiser tables
 
-Section 18 carries the two catalogue tables from `tooling.md` (check ID → rule ID → level; dependency-cruiser rule → rule ID), so a failing check in the project points to the rule text in the same file. The allowlist lives in `scripts/check-rules.config.json`; every entry needs `file`, `check` and `reason`.
+Section 18 carries the two catalogue tables from `tooling.md` (check → rule → level → plugin; dependency-cruiser rule → rule ID), so a failing check in the project points to the rule text in the same file. The allowlist is Biome suppression comments: `// biome-ignore lint/plugin/R-<check>: <reason>`, or `biome-ignore-all` for a file; an empty reason fails `biome check`.
 
 ## Verification of the render
 

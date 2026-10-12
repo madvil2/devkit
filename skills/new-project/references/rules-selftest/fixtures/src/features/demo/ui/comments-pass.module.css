@@ -1,0 +1,3 @@
+.root { content: '/* not a comment */'; }
+/* biome-ignore lint/plugin/R-raw-values: platform inset */
+.inset { padding: 3px; }

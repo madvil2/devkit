@@ -1,0 +1,11 @@
+language js
+
+or {
+  JsReferenceIdentifier() as $global where {
+    $global <: "Telegram",
+    not $global <: within TsReferenceType()
+  },
+  JsStaticMemberExpression(member=$global) where { $global <: "Telegram" }
+} where {
+  register_diagnostic(span=$global, message="R-telegram-global Telegram global outside shared/lib/telegram (TMA-1)")
+}

@@ -1,0 +1,10 @@
+language js
+
+or {
+  JsRegexLiteralExpression() as $regex where {
+    register_diagnostic(span=$regex, message="R-inline-regex regex literal; add a named helper in shared/lib/patterns (CMP-12)")
+  },
+  `new RegExp($args)` as $regex where {
+    register_diagnostic(span=$regex, message="R-inline-regex RegExp constructor; add a named helper in shared/lib/patterns (CMP-12)")
+  }
+}

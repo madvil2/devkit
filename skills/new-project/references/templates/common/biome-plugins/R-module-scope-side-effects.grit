@@ -1,0 +1,34 @@
+language js
+
+or {
+  JsExpressionStatement() as $effect where {
+    not $effect <: within or {
+      JsFunctionBody(),
+      JsArrowFunctionExpression(),
+      JsStaticInitializationBlockClassMember(),
+      JsMethodClassMember(),
+      JsMethodObjectMember()
+    },
+    register_diagnostic(span=$effect, message="R-module-scope-side-effects statement runs at module scope; move it into an init* function (CMP-9)", severity="warn")
+  },
+  JsVariableDeclarator(initializer=$init) as $decl where {
+    not $decl <: within or {
+      JsFunctionBody(),
+      JsArrowFunctionExpression(),
+      JsMethodClassMember(),
+      JsMethodObjectMember()
+    },
+    $init <: contains or {
+      JsReferenceIdentifier() as $read where {
+        $read <: r"(?:window|document|navigator|location|localStorage|sessionStorage|matchMedia)"
+      },
+      `new Date($_)` as $read,
+      `new Date()` as $read,
+      `import.meta.env` as $read
+    } until or {
+      JsArrowFunctionExpression(),
+      JsFunctionExpression()
+    },
+    register_diagnostic(span=$read, message=`R-module-scope-side-effects $read read at module scope (CMP-9)`, severity="warn")
+  }
+}

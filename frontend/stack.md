@@ -31,9 +31,8 @@ Version source unless noted: `npm view <pkg> version time dist-tags`, https://ww
 | Forms | @hookform/resolvers | 5.9.1 | 2026-10-11 | npm | |
 | UI | @base-ui/react | 1.9.0 | 2026-10-11 | npm; package grep | `@base-ui-components/react` is frozen at 1.0.0-rc.0; never install it |
 | UI | lucide-react | 1.55.0 | 2026-10-11 | npm | |
-| Tooling | @biomejs/biome | 2.5.15 | 2026-10-11 | npm; configuration_schema.json | `*.module.css` auto-detected as CSS Modules |
+| Tooling | @biomejs/biome | 2.5.15 | 2026-10-12 | npm; configuration_schema.json; experiment | `*.module.css` auto-detected as CSS Modules; GritQL plugins (JS and CSS) carry the check-rules catalogue (W-19) |
 | Tooling | dependency-cruiser | 18.5.0 | 2026-10-11 | npm; `depcruise --info` | Supports typescript >=2.0.0 <7.0.0 |
-| Tooling | oxc-parser | 0.153.0 | 2026-10-11 | package README | 0.x; `parseSync` returns `program` + `comments` |
 | Test | vitest | 5.0.3 | 2026-10-11 | npm; https://vitest.dev/guide/migration | Peer vite ^6.4/^7/^8 (TST-6) |
 | Test | @testing-library/react | 16.3.3 | 2026-10-11 | npm | |
 | Test | happy-dom | 20.14.6 | 2026-10-11 | npm | |
@@ -59,14 +58,15 @@ Each item is re-checked on every freshness run.
 | W-8 | Theme script in Next | `next/script` `beforeInteractive` does not block hydration; use an inline `<script>` in `<head>` (NXT-10). Inferred from docs | 2026-10-11 | https://nextjs.org/docs/app/api-reference/components/script |
 | W-9 | CSS chunking | `experimental.cssChunking` defaults to `true` and may reorder CSS; `'strict'` is webpack-only (STY-6) | 2026-10-11 | Next `cssChunking.md` |
 | W-10 | pnpm 12 build approvals | `ERR_PNPM_IGNORED_BUILDS` fails installs; `pnpm approve` writes `allowBuilds` to `pnpm-workspace.yaml`; create-next-app still writes the pnpm 10 `ignoredBuiltDependencies` key (status under 12 inferred) (TOOL-1) | 2026-10-11 | experiment |
-| W-11 | Biome 2.5 CSS Modules | `css.parser.cssModules` applies only to files not named `*.module.css`; `composes` parses clean. Nursery `noUnusedClasses`/`noUndeclaredClasses` and GritQL `plugins` exist (candidates to replace checks) | 2026-10-11 | biome schema; experiment |
+| W-11 | Biome 2.5 CSS Modules | `css.parser.cssModules` applies only to files not named `*.module.css`; `composes` parses clean (`CssComposesImportSpecifier`). Nursery `noUnusedClasses` does not follow `styles.<name>` (reports every class of a used module) and `noUndeclaredClasses` reports nothing; neither replaces a check. GritQL plugins replaced check-rules (TOOL-5, W-19) | 2026-10-12 | experiment |
 | W-12 | Vitest 5 | Node >=22.12; `clearMocks` default true; strict `toHaveTextContent`; top-level `vi.mock`; no parent-dir config lookup; CSS Modules import with defaults (TST-6) | 2026-10-11 | https://vitest.dev/guide/migration |
 | W-13 | TanStack Table 9 | New API (`useTable`, `createTableHook`); v8 API only through `useLegacyTable` (KIT-2) | 2026-10-11 | package d.ts |
 | W-14 | Base UI state attributes | `data-open`/`data-closed`, `data-checked`/`data-unchecked`, `data-disabled`, `data-highlighted`, `data-selected`, `data-pressed`, `data-popup-open`, `data-side`, `data-align`, `data-starting-style`/`data-ending-style`; no `data-state` (KIT-3) | 2026-10-11 | package grep |
 | W-15 | create-next-app defaults | Pins `typescript ^5`, an older Biome, `@types/node ^20`; writes `cacheComponents: true`, `partialPrefetching: true` and an `AGENTS.md`. The scaffold re-adds current versions and replaces `AGENTS.md`. Non-interactive flags verified, plus `--empty`, `--cache-components`, `--skip-install` | 2026-10-11 | experiment |
 | W-16 | create-vite 9 | `create-vite <dir> --template react-ts --no-interactive`; pins `typescript ~6.0.2`; `react-compiler-ts` template exists | 2026-10-11 | `create-vite --help`; experiment |
-| W-17 | oxc-parser | 0.x: minor bumps can change the AST; check-rules is re-run on templates after an upgrade | 2026-10-11 | README |
+| W-17 | oxc-parser | Retired 2026-10-12: no check parses code with oxc any more; checks are GritQL plugins (TOOL-5, W-19); package removed | 2026-10-12 | experiment |
 | W-18 | vite-plugin-pwa 2 | No config-shape change found; the full breaking-change list is not published | 2026-10-11 | releases page |
+| W-19 | Biome GritQL plugins | 2.5.15: plugins are attached per path set through `overrides[].plugins`, and the plugin-level `includes` matches only `**/` globs; the file stem is the suppression name; `register_diagnostic` severity `error` fails `biome check`, `warn`/`info` do not; a runtime plugin error is an info diagnostic with exit 0 (TOOL-5 guard); regex matching is anchored and capture groups bind variables; there are no comparison operators; comments are invisible; `language js` covers TS/JSX, and `language css` works. Re-run `rules-selftest` after any Biome bump | 2026-10-12 | experiment |
 
 ## Open unknowns
 
@@ -75,5 +75,6 @@ Each item is re-checked on every freshness run.
 - W-10: whether pnpm 12 still honors `ignoredBuiltDependencies`.
 - W-15: interplay of `cacheComponents: true` with NXT-6 static-by-default; decided per project until settled.
 - W-18: vite-plugin-pwa 2 breaking changes.
+- W-19: whether a Biome minor renames syntax kinds; in a project, only the devkit self-test catches a plugin that silently stops matching.
 - AUTH-8: CSP needs for Next 16 inline flight-data scripts were not verified in this pass.
 - Vite 8: whether Lightning CSS minification adds vendor prefixes for the browserslist targets (NXT-12 analog for Vite).

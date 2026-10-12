@@ -1,0 +1,19 @@
+language js
+
+or {
+  JsStringLiteralExpression(),
+  JsTemplateExpression()
+} as $copy where {
+  or {
+    and { $copy <: r"[\s\S]*\d \p{L}[\s\S]*", $problem = "number followed by a plain space" },
+    and {
+      $copy <: r"[\s\S]* (?:\x{2014}|\\u2014)[\s\S]*",
+      $problem = "plain space before an em dash"
+    },
+    and {
+      $copy <: r"[\s\S]*[\x{2116}\x{00A7}] [\s\S]*",
+      $problem = "plain space after a number or section sign"
+    }
+  },
+  register_diagnostic(span=$copy, message=`R-typography $problem; bind it with \\u00a0 (TXT-1)`)
+}

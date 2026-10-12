@@ -1,0 +1,240 @@
+{
+  "src/app/routes/index.tsx": {
+    "R-one-component": "pass"
+  },
+  "src/features/demo/api/allow-file.ts": {
+    "R-fetch": "pass"
+  },
+  "src/features/demo/api/allow-line.ts": {
+    "R-fetch": "pass"
+  },
+  "src/features/demo/api/allow-wrong.ts": {
+    "R-fetch": "fail"
+  },
+  "src/features/demo/api/endpoint-fail.ts": {
+    "R-endpoint-literals": "fail"
+  },
+  "src/features/demo/api/endpoint-pass.ts": {
+    "R-endpoint-literals": "pass"
+  },
+  "src/features/demo/api/fetch-fail.ts": {
+    "R-fetch": "fail"
+  },
+  "src/features/demo/api/fetch-pass.ts": {
+    "R-fetch": "pass"
+  },
+  "src/features/demo/lib/comments-fail.ts": {
+    "R-comments": "fail"
+  },
+  "src/features/demo/lib/comments-pass.ts": {
+    "R-comments": "pass"
+  },
+  "src/features/demo/lib/fn-fail.ts": {
+    "R-no-function-decl": "fail"
+  },
+  "src/features/demo/lib/fn-pass.ts": {
+    "R-no-function-decl": "pass"
+  },
+  "src/features/demo/lib/regex-fail.ts": {
+    "R-inline-regex": "fail"
+  },
+  "src/features/demo/lib/regex-pass.ts": {
+    "R-inline-regex": "pass"
+  },
+  "src/features/demo/model/env-fail.ts": {
+    "R-env-access": "fail"
+  },
+  "src/features/demo/model/env-pass.ts": {
+    "R-env-access": "pass"
+  },
+  "src/features/demo/model/error-model.ts": {
+    "R-error-message": "pass"
+  },
+  "src/features/demo/model/memo-fail.ts": {
+    "R-manual-memo": "fail"
+  },
+  "src/features/demo/model/memo-pass.ts": {
+    "R-manual-memo": "pass"
+  },
+  "src/features/demo/model/scope-fail.ts": {
+    "R-module-scope-side-effects": "fail"
+  },
+  "src/features/demo/model/scope-pass.ts": {
+    "R-module-scope-side-effects": "pass"
+  },
+  "src/features/demo/model/storage-fail.ts": {
+    "R-storage": "fail"
+  },
+  "src/features/demo/model/storage-pass.ts": {
+    "R-storage": "pass"
+  },
+  "src/features/demo/model/telegram-fail.ts": {
+    "R-telegram-global": "fail"
+  },
+  "src/features/demo/model/telegram-pass.ts": {
+    "R-telegram-global": "pass"
+  },
+  "src/features/demo/ui/classname-fail-string.tsx": {
+    "R-classname": "fail"
+  },
+  "src/features/demo/ui/classname-fail.tsx": {
+    "R-classname": "fail"
+  },
+  "src/features/demo/ui/classname-pass.tsx": {
+    "R-classname": "pass"
+  },
+  "src/features/demo/ui/comments-fail.module.css": {
+    "R-comments": "fail"
+  },
+  "src/features/demo/ui/comments-fail.tsx": {
+    "R-comments": "fail"
+  },
+  "src/features/demo/ui/comments-pass.module.css": {
+    "R-comments": "pass",
+    "R-raw-values": "pass"
+  },
+  "src/features/demo/ui/comments-pass.tsx": {
+    "R-comments": "pass"
+  },
+  "src/features/demo/ui/composes-fail.module.css": {
+    "R-composes-source": "fail"
+  },
+  "src/features/demo/ui/composes-pass.module.css": {
+    "R-composes-source": "pass"
+  },
+  "src/features/demo/ui/error-fail.tsx": {
+    "R-error-message": "fail"
+  },
+  "src/features/demo/ui/error-pass.tsx": {
+    "R-error-message": "pass"
+  },
+  "src/features/demo/ui/global-css-fail.tsx": {
+    "R-global-css-import": "fail"
+  },
+  "src/features/demo/ui/global-css-pass.tsx": {
+    "R-global-css-import": "pass"
+  },
+  "src/features/demo/ui/hook-fail.tsx": {
+    "R-hook-fields": "fail"
+  },
+  "src/features/demo/ui/hook-pass.tsx": {
+    "R-hook-fields": "pass"
+  },
+  "src/features/demo/ui/hook-twelve.tsx": {
+    "R-hook-fields": "fail"
+  },
+  "src/features/demo/ui/import-fail.module.css": {
+    "R-global-css-import": "fail"
+  },
+  "src/features/demo/ui/invite-form.tsx": {
+    "R-one-component": "pass"
+  },
+  "src/features/demo/ui/native-fail.tsx": {
+    "R-native-elements": "fail"
+  },
+  "src/features/demo/ui/native-pass.tsx": {
+    "R-native-elements": "pass"
+  },
+  "src/features/demo/ui/nbsp-fail.module.css": {
+    "R-literal-nbsp": "fail"
+  },
+  "src/features/demo/ui/nbsp-fail.tsx": {
+    "R-literal-nbsp": "fail"
+  },
+  "src/features/demo/ui/nbsp-pass.module.css": {
+    "R-literal-nbsp": "pass"
+  },
+  "src/features/demo/ui/nbsp-pass.tsx": {
+    "R-literal-nbsp": "pass"
+  },
+  "src/features/demo/ui/one-component.tsx": {
+    "R-one-component": "pass"
+  },
+  "src/features/demo/ui/raw-fail.module.css": {
+    "R-raw-values": "fail"
+  },
+  "src/features/demo/ui/raw-pass.module.css": {
+    "R-raw-values": "pass",
+    "R-composes-source": "pass"
+  },
+  "src/features/demo/ui/style-fail.tsx": {
+    "R-inline-style": "fail"
+  },
+  "src/features/demo/ui/style-pass.tsx": {
+    "R-inline-style": "pass"
+  },
+  "src/features/demo/ui/two-components.tsx": {
+    "R-one-component": "fail"
+  },
+  "src/features/demo/ui/wrong-name.tsx": {
+    "R-one-component": "fail"
+  },
+  "src/main.tsx": {
+    "R-global-css-import": "pass"
+  },
+  "src/shared/api/endpoints.ts": {
+    "R-endpoint-literals": "pass"
+  },
+  "src/shared/api/transport.ts": {
+    "R-fetch": "pass"
+  },
+  "src/shared/config/env.ts": {
+    "R-env-access": "pass"
+  },
+  "src/shared/i18n/locales/de.ts": {
+    "R-typography": "fail"
+  },
+  "src/shared/i18n/locales/en.ts": {
+    "R-typography": "fail"
+  },
+  "src/shared/i18n/locales/ru.ts": {
+    "R-typography": "fail"
+  },
+  "src/shared/lib/patterns/digits.ts": {
+    "R-inline-regex": "pass"
+  },
+  "src/shared/lib/storage/storage.ts": {
+    "R-storage": "pass"
+  },
+  "src/shared/lib/telegram/telegram-port.ts": {
+    "R-telegram-global": "pass"
+  },
+  "src/shared/styles/global.css": {
+    "R-global-css-import": "pass"
+  },
+  "src/shared/styles/surfaces.module.css": {
+    "R-composes-source": "pass"
+  },
+  "src/shared/styles/tokens/bogus.css": {
+    "R-token-tiers": "fail"
+  },
+  "src/shared/styles/tokens/components.css": {
+    "R-token-tiers": "fail"
+  },
+  "src/shared/styles/tokens/media.css": {
+    "R-token-tiers": "pass",
+    "R-raw-values": "pass"
+  },
+  "src/shared/styles/tokens/primitives.css": {
+    "R-raw-values": "pass",
+    "R-token-tiers": "pass"
+  },
+  "src/shared/styles/tokens/semantic.css": {
+    "R-token-tiers": "fail"
+  },
+  "src/shared/ui/card/classname-ui.tsx": {
+    "R-classname": "pass"
+  },
+  "src/shared/ui/progress/style-ui-fail.tsx": {
+    "R-inline-style": "fail"
+  },
+  "src/shared/ui/progress/style-ui-pass.tsx": {
+    "R-inline-style": "pass"
+  },
+  "src/shared/ui/text/text.tsx": {
+    "R-native-elements": "pass"
+  },
+  "src/vite-env.d.ts": {
+    "R-comments": "pass"
+  }
+}

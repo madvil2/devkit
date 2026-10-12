@@ -1,0 +1,13 @@
+language js
+
+or {
+  JsStringLiteralExpression(),
+  JsTemplateExpression(),
+  JsxText(),
+  JsxString(),
+  JsRegexLiteralExpression(),
+  JsModuleSource()
+} as $text where {
+  $text <: r"[\s\S]*\x{00A0}[\s\S]*",
+  register_diagnostic(span=$text, message="R-literal-nbsp literal U+00A0; write the \\u00a0 escape (TXT-2)")
+}

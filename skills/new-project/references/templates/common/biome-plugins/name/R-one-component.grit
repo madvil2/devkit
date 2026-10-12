@@ -1,0 +1,19 @@
+language js
+
+JsVariableDeclarator(id=$name, initializer=JsInitializerClause(expression=or {
+  JsArrowFunctionExpression(),
+  JsFunctionExpression()
+})) as $component where {
+  $name <: r"[A-Z][A-Za-z0-9]*",
+  not $component <: within or {
+    JsFunctionBody(),
+    JsArrowFunctionExpression(),
+    JsClassDeclaration(),
+    JsObjectExpression()
+  },
+  $filename <: r".*/([^/]+)\.[jt]sx"($base),
+  $flat = lowercase($name),
+  $joined = join(list=split($base, "-"), separator=""),
+  or { not $base <: r"[a-z0-9]+(?:-[a-z0-9]+)*", not $joined <: $flat },
+  register_diagnostic(span=$name, message=`R-one-component file $base should be the kebab-case of $name (CMP-1)`)
+}

@@ -1,0 +1,5 @@
+language css
+
+CssImportAtRule() as $import where {
+  register_diagnostic(span=$import, message="R-global-css-import @import outside the global stylesheet (STY-7)")
+}

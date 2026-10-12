@@ -1,0 +1,3 @@
+.root { composes: stack from '@/shared/styles/layouts.module.css'; }
+.b { composes: root; }
+.c { composes: row from '../../../shared/styles/layouts.module.css'; }

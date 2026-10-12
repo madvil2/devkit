@@ -1,0 +1,8 @@
+language js
+
+or {
+  JsReferenceIdentifier() as $global where { $global <: r"(?:localStorage|sessionStorage)" },
+  JsStaticMemberExpression(member=$global) where { $global <: r"(?:localStorage|sessionStorage)" }
+} where {
+  register_diagnostic(span=$global, message=`R-storage $global outside shared/lib/storage (CFG-5)`)
+}

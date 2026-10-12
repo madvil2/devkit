@@ -1,0 +1,28 @@
+language js
+
+JsVariableDeclarator(id=$name, initializer=JsInitializerClause(expression=or {
+  JsArrowFunctionExpression(),
+  JsFunctionExpression()
+})) as $component where {
+  $name <: r"[A-Z][A-Za-z0-9]*",
+  not $component <: within or {
+    JsFunctionBody(),
+    JsArrowFunctionExpression(),
+    JsClassDeclaration(),
+    JsObjectExpression()
+  },
+  $program <: contains JsVariableDeclarator(id=$other, initializer=JsInitializerClause(expression=or {
+    JsArrowFunctionExpression(),
+    JsFunctionExpression()
+  })) as $second where {
+    $other <: r"[A-Z][A-Za-z0-9]*",
+    not $other <: $name,
+    not $second <: within or {
+      JsFunctionBody(),
+      JsArrowFunctionExpression(),
+      JsClassDeclaration(),
+      JsObjectExpression()
+    }
+  },
+  register_diagnostic(span=$name, message=`R-one-component $name shares its file with another component (CMP-1)`)
+}

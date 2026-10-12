@@ -1,0 +1,9 @@
+language js
+
+JsxAttribute(name=$attr, initializer=$value) as $style where {
+  $attr <: "style",
+  not $value <: JsxAttributeInitializerClause(value=JsxExpressionAttributeValue(expression=JsObjectExpression(members=$members))) where {
+    $members <: every JsPropertyObjectMember(name=r"['\"]--[\w-]+['\"]")
+  },
+  register_diagnostic(span=$style, message="R-inline-style only runtime CSS variables in style (STY-10)")
+}

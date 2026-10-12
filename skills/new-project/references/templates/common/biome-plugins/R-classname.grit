@@ -1,0 +1,10 @@
+language js
+
+JsxAttribute(name=$attr, initializer=$value) as $class where {
+  $attr <: "className",
+  not $value <: JsxAttributeInitializerClause(value=JsxExpressionAttributeValue(expression=or {
+    `styles.$_`,
+    `className`
+  })),
+  register_diagnostic(span=$class, message="R-classname className must be one styles.<name> (STY-3)")
+}

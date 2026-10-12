@@ -1,0 +1,9 @@
+language js
+
+or {
+  JsxOpeningElement(name=$tag),
+  JsxSelfClosingElement(name=$tag)
+} where {
+  $tag <: r"(?:span|p|a|h[1-6]|button|input|select|textarea|form|label|img|pre)",
+  register_diagnostic(span=$tag, message=`R-native-elements <$tag> outside shared/ui; use the kit (KIT-1)`)
+}

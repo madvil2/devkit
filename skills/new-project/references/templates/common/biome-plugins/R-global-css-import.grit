@@ -1,0 +1,7 @@
+language js
+
+JsModuleSource() as $source where {
+  $source <: r"[\x27\"][^\x27\"]*\.css[\x27\"]",
+  not $source <: r"[\x27\"][^\x27\"]*\.module\.css[\x27\"]",
+  register_diagnostic(span=$source, message="R-global-css-import global CSS is imported only by the app entry (STY-7)")
+}

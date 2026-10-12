@@ -1,0 +1,6 @@
+language js
+
+JsxAttribute(name=$attr) as $style where {
+  $attr <: "style",
+  register_diagnostic(span=$style, message="R-inline-style inline style outside shared/ui (STY-10)")
+}

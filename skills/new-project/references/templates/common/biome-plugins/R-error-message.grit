@@ -1,0 +1,6 @@
+language js
+
+JsStaticMemberExpression(member=$member) as $read where {
+  $member <: "message",
+  register_diagnostic(span=$read, message="R-error-message error .message rendered; map errors with errorKey (API-6)", severity="warn")
+}

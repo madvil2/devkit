@@ -1,0 +1,8 @@
+language js
+
+JsVariableDeclarator(id=JsObjectBindingPattern(properties=$fields), initializer=JsInitializerClause(expression=JsCallExpression(callee=$hook))) where {
+  $hook <: r"use[A-Z][A-Za-z0-9]*",
+  $fields <: [$_, $_, $_, $_, $_, $_, $_, $_, $_, $_, $_, ...],
+  $count = length($fields),
+  register_diagnostic(span=$hook, message=`R-hook-fields $count fields from $hook; the cap is 10 (CMP-4)`)
+}

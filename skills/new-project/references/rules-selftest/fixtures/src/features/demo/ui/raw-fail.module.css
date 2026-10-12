@@ -1,0 +1,12 @@
+.root {
+  color: #fff;
+  background: rgb(0 0 0);
+  border-color: red;
+  padding: 16px;
+  margin: 2rem;
+  transition: opacity 200ms;
+  z-index: 10;
+}
+@media (min-width: 40rem) {
+  .root { color: var(--color-fg); }
+}

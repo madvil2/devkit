@@ -1,0 +1,10 @@
+language css
+
+CssComposesImportSpecifier(source=$source) where {
+  not $source <: r"[\x27\"](?:@/|(?:\.\./)+)shared/styles/[\w-]+\.module\.css[\x27\"]",
+  not and {
+    $filename <: r".*/src/shared/styles/[^/]+\.module\.css",
+    $source <: r"[\x27\"]\./[\w-]+\.module\.css[\x27\"]"
+  },
+  register_diagnostic(span=$source, message=`R-composes-source composes from $source; only src/shared/styles/*.module.css recipes (STY-4)`)
+}

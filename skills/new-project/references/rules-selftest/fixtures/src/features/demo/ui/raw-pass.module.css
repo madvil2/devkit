@@ -1,0 +1,18 @@
+.root {
+  composes: stack from '@/shared/styles/layouts.module.css';
+  color: var(--color-fg, #000);
+  border: 1px solid var(--color-border);
+  padding: var(--space-md);
+  margin: 0;
+  width: calc(var(--size) * 2);
+  grid-template-columns: 1fr 50%;
+  transition: opacity var(--duration-fast) var(--ease-standard);
+  transition-delay: 0s;
+  z-index: -1;
+  background: transparent url('#red.png');
+  content: 'red 16px';
+  background-color: currentColor;
+}
+@media (--bp-md) and (--motion-ok) {
+  .root { color: var(--color-fg); }
+}

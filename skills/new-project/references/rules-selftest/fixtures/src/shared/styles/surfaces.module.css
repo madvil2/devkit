@@ -1,0 +1,1 @@
+.card { composes: stack from './layouts.module.css'; }

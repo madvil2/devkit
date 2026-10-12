@@ -1,0 +1,9 @@
+language js
+
+or {
+  JsStringLiteralExpression(),
+  JsTemplateExpression()
+} as $copy where {
+  $copy <: r"(?i)[\s\S]*(?:[^\p{L}\p{N}]|\\[nrt])(в|во|и|к|с|со|у|о|об|на|за|по|до|из|от|не|ни|а|но|же|ли|бы) [\s\S]*"($word),
+  register_diagnostic(span=$copy, message=`R-typography short word "$word" followed by a plain space; bind it with \\u00a0 (TXT-1, ru list)`)
+}

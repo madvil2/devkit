@@ -1,0 +1,9 @@
+language js
+
+JsCallExpression(callee=$callee) where {
+  or {
+    $callee <: r"(?:useMemo|useCallback|memo)",
+    $callee <: JsStaticMemberExpression(member=r"(?:useMemo|useCallback|memo)")
+  },
+  register_diagnostic(span=$callee, message=`R-manual-memo $callee without a profiler trace (CMP-8)`, severity="warn")
+}

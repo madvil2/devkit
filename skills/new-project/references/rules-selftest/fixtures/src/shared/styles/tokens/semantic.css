@@ -1,0 +1,6 @@
+:root {
+  color-scheme: light;
+  --color-bg: var(--palette-gray-0);
+  --color-fg: var(--palette-gray-9, var(--palette-gray-8));
+  --color-raw: #fff;
+}

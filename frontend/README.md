@@ -11,7 +11,7 @@ The standard for new frontend projects. The `new-project` skill (`skills/new-pro
 - **Tokens only.** Raw design values live only in the token tier files ([tokens.md](tokens.md)).
 - **Logic in hooks, markup in the kit.** Components are a view-hook call plus pure JSX built from `shared/ui` ([components.md](components.md), [ui-kit.md](ui-kit.md)).
 - **One way to do each thing.** One client, one store per concern, one formatter, one modal API, one env module.
-- **Rules enforced by tools.** Biome, dependency-cruiser, `scripts/check-rules.mjs`, TypeScript, Playwright ([tooling.md](tooling.md)).
+- **Rules enforced by tools.** Biome (with GritQL plugins), dependency-cruiser, `scripts/check-rules.mjs` (comments), TypeScript, Playwright ([tooling.md](tooling.md)).
 - **Docs instead of comments.** No code comments; behavior is documented in `docs/<feature>.md` ([workflow.md](workflow.md)).
 - Styling is CSS Modules with tiered tokens in every project type. Tailwind is not used.
 
@@ -58,7 +58,7 @@ The standard for new frontend projects. The `new-project` skill (`skills/new-pro
 - Enforcement in brackets:
   - `[biome: rule]` Biome lint;
   - `[arch: rule]` dependency-cruiser rule;
-  - `[rules: R-…]` `scripts/check-rules.mjs` check;
+  - `[rules: R-…]` check-rules catalogue: a Biome GritQL plugin in `biome-plugins/`, or `scripts/check-rules.mjs` for R-comments;
   - `[ts: flag]` TypeScript;
   - `[ci]` CI gate;
   - `[e2e]` Playwright smoke.

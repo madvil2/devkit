@@ -46,7 +46,7 @@ Then format once: `pnpm exec biome check --write` (after §5, when Biome is inst
 cd <path>
 pnpm pkg set packageManager=pnpm@<pnpm version> engines.node=">=<nodeMajor>"
 pnpm add @tanstack/react-query zustand zod @base-ui/react lucide-react server-only
-pnpm add -D babel-plugin-react-compiler dependency-cruiser oxc-parser postcss postcss-custom-media @csstools/postcss-global-data vitest @testing-library/react happy-dom @playwright/test @axe-core/playwright
+pnpm add -D babel-plugin-react-compiler dependency-cruiser postcss postcss-custom-media @csstools/postcss-global-data vitest @testing-library/react happy-dom @playwright/test @axe-core/playwright
 ```
 
 landing + product adds `react-hook-form @hookform/resolvers`.

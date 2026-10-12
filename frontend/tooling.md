@@ -20,12 +20,13 @@ Applies to: all
   - `*.module.css` is parsed as CSS Modules automatically (`css.parser.cssModules` is only for other file names);
   - override `noDuplicateProperties` off for `*.module.css`;
   - generated files (`routeTree.gen.ts`, `shared/api/generated/`) excluded.
+  - GritQL plugins in `biome-plugins/` carry the check-rules catalogue (TOOL-5). Each plugin is attached to its paths by an `overrides[].plugins` entry; the plugin-level `includes` is not used (stack.md W-19). Biome formats the `.grit` files like any source.
   - Formatter: 2 spaces, width 100, single quotes, semicolons as needed, trailing commas all.
 - **TOOL-4** dependency-cruiser (`.dependency-cruiser.cjs`) rules, listed in the catalogue below. Layer list per variant; `.css` excluded from the graph; tsconfig paths resolved.
-- **TOOL-5** The check-rules catalogue below. Each check has an ID equal to a rule annotation. The allowlist lives in `scripts/check-rules.config.json`; every entry needs `file`, `check` and `reason`, and is reviewed.
+- **TOOL-5** The check-rules catalogue below. Each check ID equals a rule annotation and is the file stem of its plugin (`biome-plugins/**/R-<check>.grit`); every diagnostic message starts with the ID. Scope lives in `biome.json` `overrides`, one entry per path set. Allowlist: Biome suppression comments naming the check, `// biome-ignore lint/plugin/R-<check>: <reason>` for one line or `biome-ignore-all` at the top of a file; Biome rejects an empty reason and reports a suppression that matches nothing. Each suppression is reviewed. Exempting a path set (a negated glob in the check's override) needs an ADR. `R-comments` is the one check a plugin cannot express (comments are invisible to GritQL): `scripts/check-rules.mjs`, a parser-free scanner, reports it, and also fails when a plugin errors at runtime (Biome reports that as info and exits 0).
 - **TOOL-6** Scripts:
   - `dev`, `build`, `preview|start`, `typecheck`;
-  - `lint` (`biome check`), `lint:fix`, `lint:arch`, `lint:rules`;
+  - `lint` (`biome check`, runs the GritQL plugins), `lint:fix`, `lint:arch`, `lint:rules` (`scripts/check-rules.mjs`: R-comments and the plugin-failure guard);
   - `test`, `test:e2e`;
   - `check` = `lint && lint:arch && lint:rules && typecheck && test && build` (next: into `.next-build`).
 - **TOOL-7** PostCSS, the same `postcss.config.mjs` in Vite and Next. Plugins:
@@ -36,36 +37,38 @@ Applies to: all
   - No custom shared-styles plugin. Prefixing per STY-11.
 - **TOOL-8** `lint:arch` fails when dependency-cruiser reports 0 cruised modules. A silent empty graph (for example under TypeScript 7) is a failure, not a pass. [ci]
 
-## check-rules catalogue (`scripts/check-rules.mjs`)
+## check-rules catalogue (biome-plugins/, scripts/check-rules.mjs)
 
-Node ESM on `oxc-parser` (no TypeScript API) plus a small CSS tokenizer. Output `file:line ID message`; exit 1 on any error.
+Biome GritQL plugins (stack.md W-19) plus a parser-free comment scanner. A failure is a Biome diagnostic whose message starts with the check ID, or a `file:line R-comments …` line; exit 1 on any error.
 
-| Check | Rule | Level |
-|---|---|---|
-| `R-comments` | WF-1 | error |
-| `R-native-elements` | KIT-1 | error |
-| `R-one-component` | CMP-1 | error |
-| `R-hook-fields` | CMP-4 | error |
-| `R-no-function-decl` | CMP-2 | error |
-| `R-inline-style` | STY-10 | error |
-| `R-inline-regex` | CMP-12 | error |
-| `R-manual-memo` | CMP-8 | warn |
-| `R-fetch` | API-1 | error |
-| `R-endpoint-literals` | API-2 | error |
-| `R-env-access` | CFG-1 | error |
-| `R-storage` | CFG-5 | error |
-| `R-telegram-global` | TMA-1 | error |
-| `R-error-message` | API-6 | warn until tuned |
-| `R-module-scope-side-effects` | CMP-9 | warn until tuned |
-| `R-classname` | STY-3 | error |
-| `R-composes-source` | STY-4 | error |
-| `R-global-css-import` | STY-7 | error |
-| `R-raw-values` | TOK-1, TOK-4, STY-1 | error |
-| `R-token-tiers` | TOK-1 | error |
-| `R-literal-nbsp` | TXT-2 | error |
-| `R-typography` | TXT-2 | error |
+| Check | Rule | Level | Plugin |
+|---|---|---|---|
+| `R-comments` | WF-1 | error | `scripts/check-rules.mjs` |
+| `R-native-elements` | KIT-1 | error | `R-native-elements.grit` |
+| `R-one-component` | CMP-1 | error | `R-one-component.grit`, `name/` |
+| `R-hook-fields` | CMP-4 | error | `R-hook-fields.grit` |
+| `R-no-function-decl` | CMP-2 | error | `R-no-function-decl.grit` |
+| `R-inline-style` | STY-10 | error | `R-inline-style.grit`, `shared-ui/` |
+| `R-inline-regex` | CMP-12 | error | `R-inline-regex.grit` |
+| `R-manual-memo` | CMP-8 | warn | `R-manual-memo.grit` |
+| `R-fetch` | API-1 | error | `R-fetch.grit` |
+| `R-endpoint-literals` | API-2 | error | `R-endpoint-literals.grit` |
+| `R-env-access` | CFG-1 | error | `R-env-access.grit` |
+| `R-storage` | CFG-5 | error | `R-storage.grit` |
+| `R-telegram-global` | TMA-1 | error | `R-telegram-global.grit` |
+| `R-error-message` | API-6 | warn until tuned | `R-error-message.grit` |
+| `R-module-scope-side-effects` | CMP-9 | warn until tuned | `R-module-scope-side-effects.grit` |
+| `R-classname` | STY-3 | error | `R-classname.grit` |
+| `R-composes-source` | STY-4 | error | `css/` |
+| `R-global-css-import` | STY-7 | error | `R-global-css-import.grit`, `css/` |
+| `R-raw-values` | TOK-1, TOK-4, STY-1 | error | `css/` |
+| `R-token-tiers` | TOK-1 | error | `tokens-unknown/`, `tokens-semantic/`, `tokens-components/` |
+| `R-literal-nbsp` | TXT-2 | error | `R-literal-nbsp.grit`, `css/` |
+| `R-typography` | TXT-1, TXT-4 | error | `R-typography.grit`, `typography/<lang>/` |
 
-`R-raw-values` flags, in any `.css` outside `src/shared/styles/tokens/`: hex colors; `rgb(`/`hsl(`/`oklch(`/`color(`; named colors other than `transparent`/`currentColor`/`inherit`; px other than `1px`; rem/em literals; ms/s literals; `z-index` numbers other than `0`/`-1`; `@media` with raw values. Allowed: `0`, `%`, `fr`, `auto`, keywords, `var()`, `calc()` of vars.
+`R-raw-values` flags, in any `.css` under `src/` outside `src/shared/styles/tokens/`: hex colors; `rgb(`/`rgba(`/`hsl(`/`hsla(`/`hwb(`/`lab(`/`lch(`/`oklab(`/`oklch(`/`color(`; the CSS named colors other than `transparent`/`currentColor`/`inherit`; px other than `1px`; rem/em literals; ms/s literals other than `0`; `z-index` numbers other than `0`/`-1`; `@media` features other than a custom media name. Values inside `var()` (fallbacks included), `url()` and strings are not checked. Allowed: `0`, `%`, `fr`, `auto`, keywords, `var()`, `calc()` of vars.
+
+`R-typography` runs on `src/shared/i18n/locales/<lang>.ts` (not `index.ts`): the universal TXT-1 checks on every dictionary, plus the TXT-4 list that `biome.json` attaches for that file. It reads source text, so the `\u00a0` escape counts as bound, and `\u2014` and `\n` are understood. Initials, EN headings and buttons, and nbsp used for spacing are review-enforced.
 
 ## dependency-cruiser catalogue
 

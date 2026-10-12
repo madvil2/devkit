@@ -4,6 +4,22 @@ Applies to: all
 
 Append-only, newest first. Each entry: date and trigger, packages old → new, findings with sources, a decision per finding. Ledger: [stack.md](stack.md).
 
+## 2026-10-12 — check-rules on Biome GritQL plugins; typography per locale
+
+Trigger: explicit request. Experiments: `@biomejs/biome@2.5.15` scratch fixtures (one failing and one passing sample per check); rendered tma and landing-product templates. Packages: `oxc-parser` 0.153.0 → removed.
+
+| Finding | Source | Decision |
+|---|---|---|
+| 21 of 22 checks are expressible as GritQL plugins with the same scopes | experiment: fixtures; 0 findings on rendered templates | TOOL-3, TOOL-5 |
+| Comments are invisible to GritQL (trivia, not nodes) | experiment | R-comments stays in a parser-free `scripts/check-rules.mjs` |
+| The plugin-level `includes` matches absolute paths, so only `**/` globs work | experiment | W-19; plugins are attached through `overrides[].plugins` |
+| A runtime plugin error is an info diagnostic and `biome check` exits 0 | experiment | `scripts/check-rules.mjs` fails on any `<stem> errored:` diagnostic |
+| `biome-ignore lint/plugin/<stem>: <reason>` suppressions work; an empty reason is an error | experiment | Allowlist = suppression comments; the JSON allowlist file next to `check-rules.mjs` removed |
+| Nursery `noUnusedClasses`/`noUndeclaredClasses`, `noRestrictedElements`, `noInlineStyles`, `noProcessEnv` and `noRestrictedGlobals` use fixed messages or miss cases | experiment | Not adopted (W-11) |
+| oxc AST churn no longer applies | — | W-17 retired |
+| The RU short-word list ran on every dictionary, and TXT-2 contained a literal U+00A0 | rulebook review | TXT-1, TXT-2, new TXT-4 |
+| Behaviour changes: R-one-component flags all components in a multi-component file; R-hook-fields counts `...rest`; R-endpoint-literals ignores module sources; R-composes-source checks relative paths by shape without resolving them; R-typography no longer runs the RU list on non-RU files, skips `index.ts`, and adds `№`/`§` and the EN `a`/`I` checks; CSS strings containing `/*` are no longer comments; R-fetch adds `self.fetch` | experiment: old vs new on the fixtures | Accepted |
+
 ## 2026-10-12 — interview and ADRs through Pocock skills
 
 Trigger: explicit request. No package changes.

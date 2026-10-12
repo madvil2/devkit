@@ -1,0 +1,8 @@
+language js
+
+or {
+  `import.meta.env`,
+  `process.env`
+} as $env where {
+  register_diagnostic(span=$env, message="R-env-access env read outside shared/config env modules (CFG-1)")
+}

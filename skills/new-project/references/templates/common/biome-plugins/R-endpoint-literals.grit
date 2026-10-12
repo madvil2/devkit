@@ -1,0 +1,10 @@
+language js
+
+or {
+  JsStringLiteralExpression(),
+  JsTemplateExpression()
+} as $path where {
+  $path <: r"[\x27\"`]/[^/\x27\"`][\s\S]*",
+  not $path <: within JsImportCallExpression(),
+  register_diagnostic(span=$path, message="R-endpoint-literals endpoint path literal; use shared/api/endpoints.ts (API-2)")
+}

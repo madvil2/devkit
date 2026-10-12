@@ -1,0 +1,6 @@
+:root {
+  --button-radius: var(--radius-md);
+  --button-height: 2.5rem;
+  --button-bg: var(--palette-blue-5);
+  --card-fg: red;
+}

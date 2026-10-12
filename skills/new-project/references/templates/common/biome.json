@@ -68,7 +68,9 @@
         "noExplicitAny": "error",
         "noConsole": {
           "level": "error",
-          "options": { "allow": ["warn", "error"] }
+          "options": {
+            "allow": ["warn", "error"]
+          }
         }
       },
       "a11y": {
@@ -135,6 +137,200 @@
           "allowTrailingCommas": true
         }
       }
+    },
+    {
+      "includes": ["src/**/*.tsx", "src/**/*.jsx", "!src/shared/ui/**"],
+      "plugins": ["./biome-plugins/R-native-elements.grit", "./biome-plugins/R-inline-style.grit"]
+    },
+    {
+      "includes": ["src/shared/ui/**/*.tsx"],
+      "plugins": ["./biome-plugins/shared-ui/R-inline-style.grit"]
+    },
+    {
+      "includes": ["src/**/*.tsx", "src/**/*.jsx"],
+      "plugins": ["./biome-plugins/R-one-component.grit"]
+    },
+    {
+      "includes": [
+        "src/**/*.tsx",
+        "src/**/*.jsx",
+        "!src/app/routes/**",
+        "!src/app/**/page.tsx",
+        "!src/app/**/layout.tsx",
+        "!src/app/**/template.tsx",
+        "!src/app/**/loading.tsx",
+        "!src/app/**/error.tsx",
+        "!src/app/**/global-error.tsx",
+        "!src/app/**/not-found.tsx",
+        "!src/app/**/default.tsx"
+      ],
+      "plugins": ["./biome-plugins/name/R-one-component.grit"]
+    },
+    {
+      "includes": ["src/**/*.tsx", "src/**/*.jsx", "!src/shared/ui/**", "!src/app/layout.tsx"],
+      "plugins": ["./biome-plugins/R-classname.grit"]
+    },
+    {
+      "includes": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.js", "src/**/*.jsx", "src/**/*.mjs"],
+      "plugins": [
+        "./biome-plugins/R-no-function-decl.grit",
+        "./biome-plugins/R-hook-fields.grit",
+        "./biome-plugins/R-manual-memo.grit"
+      ]
+    },
+    {
+      "includes": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "src/**/*.js",
+        "src/**/*.jsx",
+        "!src/shared/lib/patterns/**"
+      ],
+      "plugins": ["./biome-plugins/R-inline-regex.grit"]
+    },
+    {
+      "includes": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "src/**/*.js",
+        "src/**/*.jsx",
+        "!src/shared/api/transport.ts",
+        "!src/shared/api/server.ts",
+        "!src/app/api/**"
+      ],
+      "plugins": ["./biome-plugins/R-fetch.grit"]
+    },
+    {
+      "includes": [
+        "src/**/api/**/*.ts",
+        "src/**/api/**/*.tsx",
+        "src/mocks/**/*.ts",
+        "!src/shared/api/endpoints.ts"
+      ],
+      "plugins": ["./biome-plugins/R-endpoint-literals.grit"]
+    },
+    {
+      "includes": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "src/**/*.js",
+        "src/**/*.jsx",
+        "!src/shared/config/env.ts",
+        "!src/shared/config/env.server.ts",
+        "!src/shared/config/public-env.ts"
+      ],
+      "plugins": ["./biome-plugins/R-env-access.grit"]
+    },
+    {
+      "includes": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "src/**/*.js",
+        "src/**/*.jsx",
+        "!src/shared/lib/storage/**"
+      ],
+      "plugins": ["./biome-plugins/R-storage.grit"]
+    },
+    {
+      "includes": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "src/**/*.js",
+        "src/**/*.jsx",
+        "!src/shared/lib/telegram/**",
+        "!src/app/boot/pre-paint.js"
+      ],
+      "plugins": ["./biome-plugins/R-telegram-global.grit"]
+    },
+    {
+      "includes": [
+        "src/pages/**/*.tsx",
+        "src/views/**/*.tsx",
+        "src/widgets/**/*.tsx",
+        "src/features/**/*.tsx",
+        "src/entities/**/*.tsx",
+        "src/sections/**/*.tsx",
+        "src/shared/ui/**/*.tsx",
+        "src/app/**/*.tsx"
+      ],
+      "plugins": ["./biome-plugins/R-error-message.grit"]
+    },
+    {
+      "includes": [
+        "src/pages/**",
+        "src/views/**",
+        "src/widgets/**",
+        "src/features/**",
+        "src/entities/**",
+        "src/sections/**"
+      ],
+      "plugins": ["./biome-plugins/R-module-scope-side-effects.grit"]
+    },
+    {
+      "includes": ["src/**/*.ts", "src/**/*.tsx", "!src/main.tsx", "!src/app/layout.tsx"],
+      "plugins": ["./biome-plugins/R-global-css-import.grit"]
+    },
+    {
+      "includes": ["src/**/*.css", "!src/shared/styles/global.css"],
+      "plugins": ["./biome-plugins/css/R-global-css-import.grit"]
+    },
+    {
+      "includes": ["src/**/*.css", "!src/shared/styles/tokens/**"],
+      "plugins": ["./biome-plugins/css/R-raw-values.grit"]
+    },
+    {
+      "includes": ["src/**/*.css"],
+      "plugins": ["./biome-plugins/css/R-composes-source.grit"]
+    },
+    {
+      "includes": [
+        "src/shared/styles/tokens/**",
+        "!src/shared/styles/tokens/primitives.css",
+        "!src/shared/styles/tokens/semantic.css",
+        "!src/shared/styles/tokens/components.css",
+        "!src/shared/styles/tokens/media.css",
+        "!src/shared/styles/tokens/fonts.css",
+        "!src/shared/styles/tokens/safe-area.css"
+      ],
+      "plugins": ["./biome-plugins/tokens-unknown/R-token-tiers.grit"]
+    },
+    {
+      "includes": ["src/shared/styles/tokens/semantic.css"],
+      "plugins": ["./biome-plugins/tokens-semantic/R-token-tiers.grit"]
+    },
+    {
+      "includes": ["src/shared/styles/tokens/components.css"],
+      "plugins": ["./biome-plugins/tokens-components/R-token-tiers.grit"]
+    },
+    {
+      "includes": ["src/shared/i18n/locales/*.ts", "!src/shared/i18n/locales/index.ts"],
+      "plugins": ["./biome-plugins/R-typography.grit"]
+    },
+    {
+      "includes": ["src/shared/i18n/locales/ru.ts"],
+      "plugins": ["./biome-plugins/typography/ru/R-typography.grit"]
+    },
+    {
+      "includes": ["src/shared/i18n/locales/en.ts"],
+      "plugins": ["./biome-plugins/typography/en/R-typography.grit"]
+    },
+    {
+      "includes": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "src/**/*.js",
+        "src/**/*.jsx",
+        "src/**/*.mjs",
+        "scripts/**",
+        "tests/**",
+        "*.config.ts",
+        "*.config.mjs"
+      ],
+      "plugins": ["./biome-plugins/R-literal-nbsp.grit"]
+    },
+    {
+      "includes": ["src/**/*.css"],
+      "plugins": ["./biome-plugins/css/R-literal-nbsp.grit"]
     }
   ]
 }

@@ -1,0 +1,9 @@
+language js
+
+or {
+  JsFunctionDeclaration(),
+  JsFunctionExpression(),
+  JsFunctionExportDefaultDeclaration()
+} as $fn where {
+  register_diagnostic(span=$fn, message="R-no-function-decl use an arrow function (CMP-2)")
+}

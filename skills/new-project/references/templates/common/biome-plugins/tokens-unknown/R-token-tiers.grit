@@ -1,0 +1,6 @@
+language css
+
+$program where {
+  $filename <: r".*/([^/]+)"($file),
+  register_diagnostic(span=$program, message=`R-token-tiers unknown token tier file $file (TOK-1)`)
+}

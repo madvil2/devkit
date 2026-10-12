@@ -16,7 +16,7 @@ Package sets per type (add the type's rows only):
 
 | Set | Packages |
 |---|---|
-| all | `react`, `react-dom`, `typescript`, `@biomejs/biome`, `dependency-cruiser`, `oxc-parser`, `postcss`, `postcss-custom-media`, `@csstools/postcss-global-data`, `@tanstack/react-query`, `zustand`, `zod`, `@base-ui/react`, `lucide-react`, `vitest`, `@testing-library/react`, `happy-dom`, `@playwright/test`, `@axe-core/playwright`, `pnpm` |
+| all | `react`, `react-dom`, `typescript`, `@biomejs/biome`, `dependency-cruiser`, `postcss`, `postcss-custom-media`, `@csstools/postcss-global-data`, `@tanstack/react-query`, `zustand`, `zod`, `@base-ui/react`, `lucide-react`, `vitest`, `@testing-library/react`, `happy-dom`, `@playwright/test`, `@axe-core/playwright`, `pnpm` |
 | vite | `create-vite`, `vite`, `@vitejs/plugin-react`, `@tanstack/react-router`, `@tanstack/router-plugin`, `@rolldown/plugin-babel`, `@babel/core`, `babel-plugin-react-compiler` |
 | next | `create-next-app`, `next`, `babel-plugin-react-compiler`, `server-only` |
 | admin | `@tanstack/react-table`, `react-hook-form`, `@hookform/resolvers` |
@@ -59,7 +59,8 @@ Verified on 2026-10-11 (stack.md W-15, W-16):
 - W-4 React Compiler wiring in `@vitejs/plugin-react` and Next.
 - W-6/W-7 PostCSS global-data + custom-media + `composes` from `@/…` in the current Vite and Next.
 - W-10 pnpm build approvals (major 12+: `allowBuilds` via `pnpm approve`; major 10: `onlyBuiltDependencies`).
-- W-12 Vitest major changes; W-13 TanStack Table API; W-14 Base UI state attribute names; W-15/W-16 CLI defaults; W-17 oxc-parser AST; W-18 vite-plugin-pwa.
+- W-12 Vitest major changes; W-13 TanStack Table API; W-14 Base UI state attribute names; W-15/W-16 CLI defaults; W-18 vite-plugin-pwa.
+- W-19 Biome GritQL plugins: install the candidate Biome with npm in the scratchpad and run `node references/rules-selftest/run.mjs --biome <bin>`.
 
 A watch item that can only be settled by an experiment: run it in `<scratchpad>/freshness/<item>/` (never in the devkit repository or `~/Projects`).
 

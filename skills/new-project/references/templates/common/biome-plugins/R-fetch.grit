@@ -1,0 +1,11 @@
+language js
+
+JsCallExpression(callee=$callee) where {
+  $callee <: or {
+    `fetch`,
+    `window.fetch`,
+    `globalThis.fetch`,
+    `self.fetch`
+  },
+  register_diagnostic(span=$callee, message="R-fetch fetch outside the API client (API-1)")
+}

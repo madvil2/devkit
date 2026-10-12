@@ -1,0 +1,2 @@
+.root { composes: root from '../other/other.module.css'; }
+.b { composes: x from global; }
