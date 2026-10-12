@@ -9,4 +9,4 @@ Applies to: tma
 - **TMA-5** Haptics in the kit; `aria-disabled` for blocked feedback.
 - **TMA-6** CloudStorage via the storage port (CFG-5).
 - **TMA-7** Never follow `--tg-theme-*`; push our colors to the Telegram chrome.
-- **TMA-8** HTTPS tunnel for devices (for example `cloudflared tunnel --url http://localhost:<port>`); the tunnel URL is never committed.
+- **TMA-8** HTTPS tunnel for devices.

@@ -1,12 +1,12 @@
 {
   "name": "devkit",
-  "description": "Devkit: a development flow for Claude Code with role agents, a frontend rulebook and a new-project skill.",
+  "description": "Devkit: agents, flow rules, a frontend rulebook and a new-project skill for Claude Code.",
   "owner": { "name": "Kostiantyn Kaimov", "url": "https://github.com/madvil2" },
   "plugins": [
     {
       "name": "devkit",
       "source": ".",
-      "description": "Role agents with bounded review loops, a frontend rulebook with stable rule IDs, a new-project scaffolding skill and a Biome pre-push gate.",
+      "description": "Agents, flow rules, a frontend rulebook and a new-project scaffolding skill.",
       "category": "development",
       "tags": ["agents", "workflow", "frontend", "rulebook"]
     }

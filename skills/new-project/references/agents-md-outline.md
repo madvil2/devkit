@@ -1,6 +1,6 @@
 # Generated AGENTS.md outline
 
-The project's `AGENTS.md` is a self-contained render of the devkit frontend rulebook. Project sessions never read the rulebook folder (WF-6). `CLAUDE.md` holds the single line `@AGENTS.md`.
+The project's `AGENTS.md` is a self-contained render of the devkit frontend rulebook. Project sessions never read the rulebook (WF-6). `CLAUDE.md` holds the single line `@AGENTS.md`.
 
 ## Render rules
 
@@ -10,7 +10,7 @@ The project's `AGENTS.md` is a self-contained render of the devkit frontend rule
 - Substitute project paths and names (`<name>`, port, locales, layer list of the variant). Drop references to `stack.md` and other rulebook files; inline the fact instead (for example "TypeScript stays on 6.x: dependency-cruiser does not support 7").
 - No Cyrillic outside the TXT-1 data examples. No AI attribution.
 - At most 300 lines. Over the cap, shorten "Why" lines first, never drop a rule ID.
-- Line 3: `Rulebook revision: <YYYY-MM-DD>` from the rulebook `README.md`.
+- Line 3: `Rulebook revision: <YYYY-MM-DD>` from `<rulebook>/README.md`.
 
 ## Sections, in order
 

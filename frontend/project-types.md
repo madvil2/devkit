@@ -11,7 +11,7 @@ Styling is CSS Modules + tiered tokens in every row.
 | Type | Stack | Structure | Rendering | Auth | Default deploy |
 |---|---|---|---|---|---|
 | Marketing / SEO landing | Next (App Router) | C | SSG; `output: 'export'` if no server features | none | dokku Docker, or static if export |
-| Landing + product | Next | B (+ `widgets/landing-*`) | RSC marketing + client islands | AUTH-1 BFF | dokku Docker standalone |
+| Landing + product (postcraft-like) | Next | B (+ `widgets/landing-*`) | RSC marketing + client islands | AUTH-1 BFF | dokku Docker standalone |
 | Admin / back-office | Vite + React + TanStack Router/Query/Table | A | CSR | AUTH-4 | static nginx behind auth |
 | Client SPA, no public SEO | Vite | A | CSR | AUTH-4 | static |
 | Client app with public SEO pages | becomes "Landing + product" | | | | |
@@ -36,7 +36,7 @@ Ask in the user's language, at most 3 questions per round, skip derivable ones, 
 7. White-label / multi-tenant?
 8. Money or payments? Realtime?
 9. Design source: Figma link or brand tokens?
-10. Deploy target and domain; parent folder.
+10. Deploy target and domain; group and location.
 
 Skip logic:
 - Answer 4 = Telegram → type is Telegram Mini App; skip 2.
@@ -44,9 +44,9 @@ Skip logic:
 - Answer 2 = yes with a logged-in part → Landing + product; skip the SPA add-ons.
 - Answer 5 = none → skip auth details in 3 unless an external provider issues auth.
 - Answer 6 = remote copy → enable `(i18n-remote)`; answer 7 = yes → enable `(multi-tenant)`; answer 8 = money → enable `(money)`.
-- Ask for the parent folder once; default `~/Projects`.
+- Derive the group and location from the name and the existing `~/Projects/<group>/` folders; ask only when ambiguous.
 
 Rules:
 - Money or auth → a Fable critic on those parts of the scaffold.
 - A combination outside the matrix → stop and propose a Fable planner.
-- The project path is `<parent folder>/<name>`.
+- The project path is `~/Projects/<name>`, or `~/Projects/<group>/<name>` when the group has a folder.

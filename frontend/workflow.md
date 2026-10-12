@@ -16,5 +16,5 @@ Applies to: all
   - docs updated;
   - no raw values or untranslated strings;
   - all locales updated;
-  - screenshots of every changed screen attached to the checker report for UI changes.
-- **WF-6** `AGENTS.md` is the self-contained rulebook render (with its `Rulebook revision` line). `CLAUDE.md` = `@AGENTS.md`. `CLAUDE.local.md` stays local, excluded through `git rev-parse --git-path info/exclude`.
+  - screenshots per the project's verification setup for UI changes.
+- **WF-6** `AGENTS.md` is the self-contained rulebook render (with its `Rulebook revision` line). `CLAUDE.md` = `@AGENTS.md`. `CLAUDE.local.md` and `.verify/` stay local and excluded.

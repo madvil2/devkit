@@ -1,11 +1,11 @@
 # Scaffold: Vite types (admin, client SPA, TMA, + PWA add-on)
 
-Run by `implementer` in step 5. `<skill>` is the `new-project` skill folder, `<rulebook>` the devkit `frontend/` folder, `<path>` the project directory, `<answers>` the answers JSON (shape: `<skill>/references/answers.example.json`). Versions come from the freshness table (step 2), never from memory.
+Run by opus-implementer in step 5. `<skill>` is the new-project skill folder, `<path>` the project directory, `<answers>` the answers JSON (shape: `<skill>/references/answers.example.json`). Versions come from the freshness table (step 2), never from memory.
 
 ## 1. Preflight
 
 - `<path>` is absent or empty.
-- The port chosen in step 1 still has no listener (`lsof -nP -iTCP:<port> -sTCP:LISTEN` prints nothing).
+- The port is free: pick from 3200–3999, skip every listener (`lsof -nP -iTCP:<port> -sTCP:LISTEN`).
 - Node major ≥ 22.12 (Vitest 5, dependency-cruiser).
 
 ## 2. Official CLI
@@ -93,7 +93,7 @@ pnpm exec biome check --write
 - Forms: `react-hook-form` + zod adapters inside the kit (FRM-1, FRM-2).
 - Tokens: from Figma variables (`get_variable_defs`) when a link was given, otherwise keep the neutral starter palette (TOK-*, KIT-10).
 - Project files: `AGENTS.md` per `agents-md-outline.md`; `CLAUDE.md` with the single line `@AGENTS.md`; `README.md` (commands, port, structure, links to docs); `docs/architecture.md`; `docs/decisions/0001-stack.md` per `decision-record.md`.
-- `docs/README.md` with `Port: <port>`, dev start, mock mode and the deploy target; `CLAUDE.local.md` in `$(git rev-parse --git-path info/exclude)`.
+- `.verify/` with `README.md` (dev start, port, mock mode) excluded through `git rev-parse --git-path info/exclude`.
 - No commit (step 9 decides).
 
 ## 7. Type notes

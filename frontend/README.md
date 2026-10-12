@@ -4,7 +4,7 @@ Applies to: all
 
 Rulebook revision: 2026-10-11
 
-The standard for new frontend projects. The `new-project` skill (`skills/new-project/` in this repo) reads this rulebook, renders the in-scope rules verbatim into the project's `AGENTS.md`, and never links back here: project sessions do not read the rulebook.
+The standard for new frontend projects. The `new-project` skill (`skills/new-project/`) reads this rulebook, renders the in-scope rules verbatim into the project's `AGENTS.md`, and never links back here: project sessions do not read the rulebook.
 
 ## Principles
 
@@ -82,23 +82,23 @@ The standard for new frontend projects. The `new-project` skill (`skills/new-pro
 
 | Weak spot | Seen in | Rule IDs |
 |---|---|---|
-| Storage read at module evaluation, before bootstrap hydration (REVIEW Major 1) | TMA project | CMP-9, CFG-5, DAT-7 |
-| Feature imports a widget, inverting layer order (REVIEW Major 3) | TMA project | STR-1, STR-3, TOOL-4 |
-| Empty state flashes before data arrives; `loaded` flags (REVIEW Major 5) | TMA project | DAT-1, DAT-3, DAT-7, TST-3 |
-| Missing `TODO(api):` marker on a stand-in | TMA project | API-5, DAT-8 |
-| `cause.message` and backend text rendered on screen (REVIEW Major 7) | TMA project | API-6 |
-| Mock transport bundled into production | TMA project | API-4 |
-| Custom bundler plugin for shared styles | TMA project | STY-4, TOOL-7 |
-| Global token scale mixed with component one-offs | TMA project | TOK-1, TOK-5 |
-| No lint, typecheck or test gate in CI | TMA project, Next landing | CI-1, TOOL-6 |
-| Domain folders with no direction rule, no enforcement | Next landing | STR-1, STR-2, TOOL-4 |
-| View hook returning about 35 fields | Next landing | CMP-4 |
-| Hooks calling the fetch wrapper directly | Next landing | CMP-6, DAT-2, API-1 |
-| Backend error text shown to users | Next landing | API-6 |
-| Landing effects mixed into UI primitives | Next landing | KIT-5, NXT-9 |
-| No spacing or z-index tokens; landing-only tokens in globals | Next landing | TOK-3, TOK-5 |
-| Conditional class maps in feature code | Next landing | STY-2, STY-3 |
-| `next lint` with no config (removed in Next 16) | Next landing | TOOL-3 |
-| `process.env` read across the codebase | Next landing | CFG-1 |
-| Literal U+00A0 in copy; typography checked by hand | Next landing | TXT-2 |
-| No tests | Next landing | TST-1, TST-3 |
+| Storage read at module evaluation, before bootstrap hydration (REVIEW Major 1) | pintopay miniapp | CMP-9, CFG-5, DAT-7 |
+| Feature imports a widget, inverting layer order (REVIEW Major 3) | pintopay miniapp | STR-1, STR-3, TOOL-4 |
+| Empty state flashes before data arrives; `loaded` flags (REVIEW Major 5) | pintopay miniapp | DAT-1, DAT-3, DAT-7, TST-3 |
+| Missing `TODO(api):` marker on a stand-in | pintopay miniapp | API-5, DAT-8 |
+| `cause.message` and backend text rendered on screen (REVIEW Major 7) | pintopay miniapp | API-6 |
+| Mock transport bundled into production | pintopay miniapp | API-4 |
+| Custom bundler plugin for shared styles | pintopay miniapp | STY-4, TOOL-7 |
+| Global token scale mixed with component one-offs | pintopay miniapp | TOK-1, TOK-5 |
+| No lint, typecheck or test gate in CI | pintopay miniapp, postcraft-web | CI-1, TOOL-6 |
+| Domain folders with no direction rule, no enforcement | postcraft-web | STR-1, STR-2, TOOL-4 |
+| View hook returning about 35 fields | postcraft-web | CMP-4 |
+| Hooks calling the fetch wrapper directly | postcraft-web | CMP-6, DAT-2, API-1 |
+| Backend error text shown to users | postcraft-web | API-6 |
+| Landing effects mixed into UI primitives | postcraft-web | KIT-5, NXT-9 |
+| No spacing or z-index tokens; landing-only tokens in globals | postcraft-web | TOK-3, TOK-5 |
+| Conditional class maps in feature code | postcraft-web | STY-2, STY-3 |
+| `next lint` with no config (removed in Next 16) | postcraft-web | TOOL-3 |
+| `process.env` read across the codebase | postcraft-web | CFG-1 |
+| Literal U+00A0 in copy; typography checked by hand | postcraft-web | TXT-2 |
+| No tests | postcraft-web | TST-1, TST-3 |

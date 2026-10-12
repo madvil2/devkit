@@ -1,6 +1,6 @@
 # Freshness check
 
-Run by `context` in step 2. The goal: the stack the skill is about to install matches what is current today, and every difference from the rulebook is surfaced to the user. Never diverge from `<rulebook>/stack.md` silently.
+Run by opus-context in step 2. The goal: the stack the skill is about to install matches what is current today, and every difference from the rulebook is surfaced to the user. Never diverge from `<rulebook>/stack.md` silently.
 
 Inputs: the chosen project type, add-ons, and `<rulebook>/stack.md` (versions table + watch items `W-*`, each with a `Verified` date).
 
@@ -61,7 +61,7 @@ Verified on 2026-10-11 (stack.md W-15, W-16):
 - W-10 pnpm build approvals (major 12+: `allowBuilds` via `pnpm approve`; major 10: `onlyBuiltDependencies`).
 - W-12 Vitest major changes; W-13 TanStack Table API; W-14 Base UI state attribute names; W-15/W-16 CLI defaults; W-17 oxc-parser AST; W-18 vite-plugin-pwa.
 
-A watch item that can only be settled by an experiment: run it in `<scratchpad>/freshness/<item>/` (never in the devkit repository or the user's projects).
+A watch item that can only be settled by an experiment: run it in `<scratchpad>/freshness/<item>/` (never in the devkit repository or `~/Projects`).
 
 ## 5. Output
 
@@ -77,7 +77,7 @@ Return one table and one list to the main session:
 
 Ask the user per contradiction, in the user's language:
 
-- (a) update the rulebook now: `implementer` edits the rule text, the `stack.md` row, appends a `freshness-log.md` entry and bumps `Rulebook revision` in `<rulebook>/README.md` (order per README). If a template is affected, edit the template and re-run the dry run. Devkit commit only on the user's command.
+- (a) update the rulebook now: opus-implementer edits the rule text, the `stack.md` row, appends a `freshness-log.md` entry and bumps `Rulebook revision` in `<rulebook>/README.md` (order per README). If a template is affected, edit the template and re-run the dry run. Devkit commit only on the user's command.
 - (b) keep the rulebook; the reason goes into the project ADR (`docs/decisions/0001-stack.md`).
 - (c) adopt for this project only; recorded in the ADR.
 

@@ -26,7 +26,7 @@ Rulebook revision: <YYYY-MM-DD>
 | Multi-tenant | <yes/no> |
 | Money, realtime | <no/no> |
 | Design source | <Figma link / brand tokens / neutral starter> |
-| Deploy, domain, path | <static nginx; none; ~/Projects/<name>> |
+| Deploy, domain, group, path | <static nginx; none; personal; ~/Projects/<name>> |
 
 ## Decision
 

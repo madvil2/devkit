@@ -1,6 +1,6 @@
 # Scaffold: Next types (marketing, landing + product)
 
-Run by `implementer` in step 5. `<skill>`, `<path>`, `<answers>` as in `scaffold-vite.md`. Marketing uses structure variant C (`src/app → sections → shared`); landing + product uses variant B (`src/app → views → widgets → features → entities → shared`). The renderer derives `{{layers}}` from `type`.
+Run by opus-implementer in step 5. `<skill>`, `<path>`, `<answers>` as in `scaffold-vite.md`. Marketing uses structure variant C (`src/app → sections → shared`); landing + product uses variant B (`src/app → views → widgets → features → entities → shared`). The renderer derives `{{layers}}` from `type`.
 
 ## 1. Preflight
 
@@ -80,7 +80,7 @@ As `scaffold-vite.md` §6, with Next specifics:
 ## 9. Verification specifics (step 6)
 
 - `pnpm test:e2e` builds into `.next-e2e` with `NEXT_PUBLIC_API_MODE=mock`, copies `public` and `<distDir>/static` into the standalone folder and runs `node .next-e2e/standalone/server.js` (handled by `playwright.config.ts`).
-- Dev smoke: as in SKILL.md step 6 (Playwright against `pnpm dev`, then stop the listener on the port).
+- Dev smoke: start `pnpm dev`, smoke through the project's `.verify/` setup, then stop the listener on the port.
 
 - The root layout stays static: `NEXT_DIST_DIR=.next-build pnpm build` output marks `/` as static (`○`).
 - PostCSS custom media and `composes` from `@/…` resolve under Turbopack (stack.md W-7); a custom `webpack` config is not allowed (NXT-14).
