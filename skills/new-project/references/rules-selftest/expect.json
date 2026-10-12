@@ -451,6 +451,12 @@
   "src/shared/i18n/locales/ru.ts:3": {
     "R-typography": "fail"
   },
+  "src/shared/i18n/locales/ru.ts:30": {
+    "R-typography": "fail"
+  },
+  "src/shared/i18n/locales/ru.ts:31": {
+    "R-typography": "pass"
+  },
   "src/shared/i18n/locales/ru.ts:4": {
     "R-typography": "fail"
   },
