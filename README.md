@@ -21,7 +21,7 @@ A knowledge base for Claude Code: agents, global rules, skills and a frontend ru
 
 ## Pocock skills
 
-Vendored: `grill-with-docs`, `grilling`, `domain-modeling`, `research` (used by `new-project`), `to-spec`, `to-tickets`, `implement-spec`, `implement` (spec to code), `tdd`, `codebase-design`, `code-review` (their dependencies) and `setup-matt-pocock-skills` (configures the issue tracker the others need).
+Vendored: `grill-with-docs`, `grilling`, `domain-modeling`, `research` (used by `new-project`), `to-spec`, `to-tickets`, `implement-spec`, `implement` (spec to code), `tdd`, `codebase-design`, `code-review` (their dependencies), `setup-matt-pocock-skills` (configures the issue tracker the others need), and `writing-for-agents`, `prototype`, `pr`, `handoff`, `retro`.
 
 Never edit them here; the sync overwrites them. To update, run:
 
