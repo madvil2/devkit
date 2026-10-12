@@ -1,0 +1,15 @@
+.root {
+  flex: none;
+  width: var(--icon-size-md);
+  height: var(--icon-size-md);
+}
+
+.root[data-size='sm'] {
+  width: var(--icon-size-sm);
+  height: var(--icon-size-sm);
+}
+
+.root[data-size='lg'] {
+  width: var(--icon-size-lg);
+  height: var(--icon-size-lg);
+}

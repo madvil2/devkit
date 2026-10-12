@@ -1,0 +1,7 @@
+@custom-media --bp-sm (min-width: 40rem);
+@custom-media --bp-md (min-width: 48rem);
+@custom-media --bp-lg (min-width: 64rem);
+@custom-media --bp-xl (min-width: 80rem);
+@custom-media --motion-ok (prefers-reduced-motion: no-preference);
+@custom-media --motion-reduce (prefers-reduced-motion: reduce);
+@custom-media --hover (hover: hover) and (pointer: fine);

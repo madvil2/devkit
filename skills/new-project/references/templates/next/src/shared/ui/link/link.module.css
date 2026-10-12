@@ -1,0 +1,27 @@
+.root {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-decoration-thickness: from-font;
+  border-radius: var(--radius-xs);
+}
+
+.root:hover {
+  color: var(--color-accent-hover);
+}
+
+.root:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.root[data-variant='standalone'] {
+  text-decoration: none;
+}
+
+.root[data-variant='standalone']:hover {
+  text-decoration: underline;
+}
+
+.root[aria-current='page'] {
+  color: var(--color-fg);
+}

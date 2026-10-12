@@ -1,0 +1,17 @@
+.surface {
+  background: var(--color-surface);
+  border: var(--hairline) solid var(--color-border);
+  border-radius: var(--card-radius);
+}
+
+.raised {
+  background: var(--color-surface-raised);
+  border: var(--hairline) solid var(--color-border);
+  border-radius: var(--card-radius);
+  box-shadow: var(--shadow-sm);
+}
+
+.subtle {
+  background: var(--color-bg-subtle);
+  border-radius: var(--card-radius);
+}

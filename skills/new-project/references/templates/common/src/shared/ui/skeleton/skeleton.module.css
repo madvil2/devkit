@@ -1,0 +1,19 @@
+.root {
+  composes: pulse from '@/shared/styles/animations.module.css';
+  display: block;
+  width: 100%;
+  height: var(--skeleton-text-height);
+  border-radius: var(--radius-sm);
+  background: var(--color-skeleton);
+}
+
+.root[data-shape='block'] {
+  height: var(--skeleton-block-height);
+  border-radius: var(--radius-md);
+}
+
+.root[data-shape='circle'] {
+  width: var(--skeleton-circle-size);
+  height: var(--skeleton-circle-size);
+  border-radius: var(--radius-full);
+}

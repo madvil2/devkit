@@ -1,0 +1,26 @@
+.root {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-decoration-thickness: var(--hairline);
+  text-underline-offset: var(--space-3xs);
+  border-radius: var(--radius-xs);
+}
+
+.root[data-tone='inherit'] {
+  color: inherit;
+}
+
+.root[data-tone='muted'] {
+  color: var(--color-fg-muted);
+}
+
+.root[aria-current='page'] {
+  font-weight: var(--weight-semibold);
+  text-decoration: none;
+}
+
+@media (--hover) {
+  .root:hover {
+    color: var(--color-accent-hover);
+  }
+}

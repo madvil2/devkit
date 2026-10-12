@@ -1,0 +1,5 @@
+.root {
+  max-width: var(--content-medium);
+  margin-inline: auto;
+  padding: var(--page-padding-y) var(--page-padding-x);
+}

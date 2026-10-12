@@ -1,0 +1,84 @@
+.root {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--button-gap);
+  min-height: var(--control-height-md);
+  padding-inline: var(--control-padding-x-md);
+  border: var(--hairline) solid transparent;
+  border-radius: var(--control-radius);
+  background: var(--color-accent);
+  color: var(--color-fg-on-accent);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+}
+
+.root[data-size='sm'] {
+  min-height: var(--control-height-sm);
+  padding-inline: var(--control-padding-x-sm);
+  font-size: var(--text-sm);
+}
+
+.root[data-size='lg'] {
+  min-height: var(--control-height-lg);
+  padding-inline: var(--control-padding-x-lg);
+  font-size: var(--text-lg);
+}
+
+.root[data-variant='secondary'] {
+  background: var(--color-surface);
+  border-color: var(--color-border-strong);
+  color: var(--color-fg);
+}
+
+.root[data-variant='ghost'] {
+  background: transparent;
+  color: var(--color-accent);
+}
+
+.root[data-variant='danger'] {
+  background: var(--color-danger);
+}
+
+.root[data-full] {
+  width: 100%;
+}
+
+.root[aria-disabled='true'] {
+  cursor: not-allowed;
+  opacity: var(--opacity-disabled);
+}
+
+.root[data-loading] {
+  cursor: progress;
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--button-gap);
+}
+
+@media (--hover) {
+  .root:not([aria-disabled='true']):hover {
+    background: var(--color-accent-hover);
+  }
+
+  .root[data-variant='secondary']:not([aria-disabled='true']):hover {
+    background: var(--color-bg-subtle);
+  }
+
+  .root[data-variant='ghost']:not([aria-disabled='true']):hover {
+    background: var(--color-accent-subtle);
+  }
+
+  .root[data-variant='danger']:not([aria-disabled='true']):hover {
+    background: var(--color-danger-hover);
+  }
+}

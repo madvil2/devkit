@@ -1,0 +1,51 @@
+.textXs {
+  font-size: var(--text-xs);
+  line-height: var(--leading-normal);
+}
+
+.textSm {
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+}
+
+.textMd {
+  font-size: var(--text-md);
+  line-height: var(--leading-normal);
+}
+
+.textLg {
+  font-size: var(--text-lg);
+  line-height: var(--leading-normal);
+}
+
+.textXl {
+  font-size: var(--text-xl);
+  line-height: var(--leading-snug);
+}
+
+.text2xl {
+  font-size: var(--text-2xl);
+  line-height: var(--leading-snug);
+}
+
+.text3xl {
+  font-size: var(--text-3xl);
+  line-height: var(--leading-tight);
+}
+
+.text4xl {
+  font-size: var(--text-4xl);
+  line-height: var(--leading-tight);
+}
+
+.heading {
+  font-family: var(--font-display);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-tight);
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

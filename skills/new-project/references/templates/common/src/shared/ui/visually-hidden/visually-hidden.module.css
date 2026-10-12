@@ -1,0 +1,3 @@
+.root {
+  composes: srOnly from '@/shared/styles/layouts.module.css';
+}

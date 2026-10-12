@@ -1,0 +1,4 @@
+.root {
+  composes: stack from '@/shared/styles/layouts.module.css';
+  gap: var(--space-md);
+}

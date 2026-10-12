@@ -1,0 +1,81 @@
+{
+  "roots": ["src", "scripts", "tests"],
+  "rootFiles": [
+    "*.config.ts",
+    "*.config.mjs",
+    "*.config.js",
+    "*.config.cjs",
+    ".dependency-cruiser.cjs"
+  ],
+  "hookFieldLimit": 10,
+  "componentNameExempt": [
+    "src/app/routes/**",
+    "src/app/**/page.tsx",
+    "src/app/**/layout.tsx",
+    "src/app/**/template.tsx",
+    "src/app/**/loading.tsx",
+    "src/app/**/error.tsx",
+    "src/app/**/global-error.tsx",
+    "src/app/**/not-found.tsx",
+    "src/app/**/default.tsx"
+  ],
+  "globs": {
+    "generated": [
+      "src/app/routeTree.gen.ts",
+      "**/*.gen.ts",
+      "src/shared/api/generated/**",
+      "next-env.d.ts"
+    ],
+    "ui": ["src/shared/ui/**"],
+    "slices": [
+      "src/pages/**",
+      "src/views/**",
+      "src/widgets/**",
+      "src/features/**",
+      "src/entities/**",
+      "src/sections/**"
+    ],
+    "classNameExempt": ["src/app/layout.tsx"],
+    "fetchAllowed": ["src/shared/api/transport.ts", "src/shared/api/server.ts", "src/app/api/**"],
+    "endpoints": ["src/shared/api/endpoints.ts"],
+    "endpointScope": ["src/**/api/**", "src/mocks/**"],
+    "env": [
+      "src/shared/config/env.ts",
+      "src/shared/config/env.server.ts",
+      "src/shared/config/public-env.ts"
+    ],
+    "storage": ["src/shared/lib/storage/**"],
+    "telegram": ["src/shared/lib/telegram/**", "src/app/boot/pre-paint.js"],
+    "patterns": ["src/shared/lib/patterns/**"],
+    "locales": ["src/shared/i18n/locales/**"],
+    "tokens": ["src/shared/styles/tokens/**"],
+    "recipes": ["src/shared/styles/*.module.css"],
+    "globalCss": ["src/shared/styles/global.css"],
+    "globalCssEntries": ["src/main.tsx", "src/app/layout.tsx"]
+  },
+  "ruShortWords": [
+    "в",
+    "во",
+    "и",
+    "к",
+    "с",
+    "со",
+    "у",
+    "о",
+    "об",
+    "на",
+    "за",
+    "по",
+    "до",
+    "из",
+    "от",
+    "не",
+    "ни",
+    "а",
+    "но",
+    "же",
+    "ли",
+    "бы"
+  ],
+  "allow": []
+}

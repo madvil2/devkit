@@ -1,0 +1,44 @@
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@keyframes pulse {
+  50% {
+    opacity: var(--opacity-muted);
+  }
+}
+
+.fadeIn {
+  animation: fade-in var(--duration-base) var(--ease-standard) both;
+}
+
+.spin {
+  animation: spin var(--duration-loop) var(--ease-linear) infinite;
+}
+
+.pulse {
+  animation: pulse calc(var(--duration-loop) * 2) var(--ease-standard) infinite;
+}
+
+@media (--motion-reduce) {
+  .fadeIn,
+  .pulse {
+    animation: none;
+  }
+
+  .spin {
+    animation-duration: calc(var(--duration-loop) * 3);
+  }
+}

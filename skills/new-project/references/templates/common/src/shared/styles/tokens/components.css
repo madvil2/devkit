@@ -1,0 +1,30 @@
+:root {
+  --control-height-sm: var(--size-32);
+  --control-height-md: var(--size-40);
+  --control-height-lg: var(--size-48);
+  --control-padding-x-sm: var(--space-sm);
+  --control-padding-x-md: var(--space-md);
+  --control-padding-x-lg: var(--space-lg);
+  --control-radius: var(--radius-md);
+  --focus-ring-width: var(--size-2);
+  --focus-ring-offset: var(--size-2);
+  --button-gap: var(--space-xs);
+  --field-gap: var(--space-2xs);
+  --card-padding: var(--space-lg);
+  --card-radius: var(--radius-lg);
+  --icon-size-sm: var(--size-16);
+  --icon-size-md: var(--size-20);
+  --icon-size-lg: var(--size-24);
+  --spinner-size-sm: var(--size-16);
+  --spinner-size-md: var(--size-24);
+  --spinner-size-lg: var(--size-40);
+  --spinner-stroke: var(--size-2);
+  --skeleton-text-height: var(--size-16);
+  --skeleton-block-height: var(--size-96);
+  --skeleton-circle-size: var(--size-40);
+  --grid-min-sm: var(--size-160);
+  --grid-min-md: var(--size-240);
+  --grid-min-lg: var(--size-320);
+  --page-padding-x: var(--space-md);
+  --page-padding-y: var(--space-xl);
+}

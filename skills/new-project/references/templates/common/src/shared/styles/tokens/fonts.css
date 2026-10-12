@@ -1,0 +1,5 @@
+:where(:root) {
+  --font-sans-face: system-ui;
+  --font-display-face: system-ui;
+  --font-mono-face: ui-monospace;
+}

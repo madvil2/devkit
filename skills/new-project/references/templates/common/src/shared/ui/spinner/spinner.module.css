@@ -1,0 +1,20 @@
+.root {
+  composes: spin from '@/shared/styles/animations.module.css';
+  display: inline-block;
+  flex: none;
+  width: var(--spinner-size-md);
+  height: var(--spinner-size-md);
+  border: var(--spinner-stroke) solid currentColor;
+  border-inline-end-color: transparent;
+  border-radius: var(--radius-full);
+}
+
+.root[data-size='sm'] {
+  width: var(--spinner-size-sm);
+  height: var(--spinner-size-sm);
+}
+
+.root[data-size='lg'] {
+  width: var(--spinner-size-lg);
+  height: var(--spinner-size-lg);
+}

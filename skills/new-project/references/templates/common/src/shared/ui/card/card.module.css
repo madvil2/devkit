@@ -1,0 +1,26 @@
+.root {
+  composes: surface from '@/shared/styles/surfaces.module.css';
+  padding: var(--card-padding);
+}
+
+.root[data-padding='none'] {
+  padding: 0;
+}
+
+.root[data-padding='sm'] {
+  padding: var(--space-sm);
+}
+
+.root[data-padding='lg'] {
+  padding: var(--space-xl);
+}
+
+.root[data-tone='subtle'] {
+  background: var(--color-bg-subtle);
+  border-color: transparent;
+}
+
+.root[data-tone='raised'] {
+  background: var(--color-surface-raised);
+  box-shadow: var(--shadow-sm);
+}

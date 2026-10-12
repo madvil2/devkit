@@ -1,0 +1,36 @@
+{
+  "type": "admin",
+  "name": "dryrun-admin",
+  "summary": "Back-office for managing orders",
+  "domain": "orders",
+  "locales": [
+    "en",
+    "ru"
+  ],
+  "defaultLocale": "en",
+  "remoteCopy": false,
+  "backend": {
+    "status": "mock",
+    "url": null,
+    "openapi": null
+  },
+  "auth": "backend-session",
+  "multiTenant": false,
+  "money": false,
+  "realtime": false,
+  "design": {
+    "figma": null
+  },
+  "deploy": "static",
+  "domainName": null,
+  "siteUrl": null,
+  "addons": [],
+  "port": 3990,
+  "rulebookRevision": "2026-10-11",
+  "versions": {
+    "biome": "2.5.15",
+    "nodeMajor": "24",
+    "pnpm": "12.11.2",
+    "typescript": "~6.0"
+  }
+}

@@ -1,0 +1,9 @@
+.root {
+  min-width: 0;
+}
+
+.error {
+  composes: stack from '@/shared/styles/layouts.module.css';
+  align-items: flex-start;
+  gap: var(--space-sm);
+}
