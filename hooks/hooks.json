@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/biome-push-check.sh\"",
+            "timeout": 180,
+            "statusMessage": "Running Biome before push"
+          }
+        ]
+      }
+    ]
+  }
+}

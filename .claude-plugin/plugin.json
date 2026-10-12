@@ -1,0 +1,16 @@
+{
+  "name": "devkit",
+  "displayName": "Devkit",
+  "description": "A development flow for Claude Code: implementer, checker, critic, context and Fable agents with bounded review loops, a frontend rulebook with stable rule IDs enforced by tools, a new-project skill that scaffolds from it, and a Biome pre-push gate.",
+  "author": {
+    "name": "Kostiantyn Kaimov",
+    "url": "https://github.com/madvil2"
+  },
+  "homepage": "https://github.com/madvil2/devkit",
+  "repository": "https://github.com/madvil2/devkit",
+  "license": "MIT",
+  "keywords": ["claude-code", "agents", "workflow", "frontend", "rulebook", "react", "vite", "nextjs", "biome"],
+  "agents": "./agents/",
+  "skills": "./skills/",
+  "hooks": "./hooks/hooks.json"
+}

@@ -1,0 +1,5 @@
+interface:
+  display_name: "New Project"
+  short_description: "Scaffold a frontend project from the devkit rulebook."
+policy:
+  allow_implicit_invocation: false
