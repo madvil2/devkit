@@ -1,12 +1,36 @@
 {
+  ".dependency-cruiser.cjs": {
+    "R-literal-nbsp": "fail"
+  },
+  "scripts/nbsp.mts": {
+    "R-literal-nbsp": "fail"
+  },
   "src/app/routes/index.tsx": {
     "R-one-component": "pass"
+  },
+  "src/features/demo/api/allow-broad.ts:1": {
+    "R-comments": "fail"
   },
   "src/features/demo/api/allow-file.ts": {
     "R-fetch": "pass"
   },
+  "src/features/demo/api/allow-file.ts:1": {
+    "R-comments": "pass"
+  },
+  "src/features/demo/api/allow-group.ts:1": {
+    "R-comments": "fail"
+  },
   "src/features/demo/api/allow-line.ts": {
     "R-fetch": "pass"
+  },
+  "src/features/demo/api/allow-line.ts:1": {
+    "R-comments": "pass"
+  },
+  "src/features/demo/api/allow-lint.ts:1": {
+    "R-comments": "fail"
+  },
+  "src/features/demo/api/allow-rule.ts:1": {
+    "R-comments": "pass"
   },
   "src/features/demo/api/allow-wrong.ts": {
     "R-fetch": "fail"
@@ -35,6 +59,33 @@
   "src/features/demo/lib/fn-pass.ts": {
     "R-no-function-decl": "pass"
   },
+  "src/features/demo/lib/increment.ts:2": {
+    "R-comments": "fail"
+  },
+  "src/features/demo/lib/increment.ts:3": {
+    "R-comments": "pass"
+  },
+  "src/features/demo/lib/nbsp-ext.cjs": {
+    "R-literal-nbsp": "fail"
+  },
+  "src/features/demo/lib/nbsp-ext.cts": {
+    "R-literal-nbsp": "fail"
+  },
+  "src/features/demo/lib/nbsp-ext.mjs": {
+    "R-literal-nbsp": "fail"
+  },
+  "src/features/demo/lib/nbsp-ext.mts": {
+    "R-literal-nbsp": "fail"
+  },
+  "src/features/demo/lib/nbsp-types.ts:1": {
+    "R-literal-nbsp": "fail"
+  },
+  "src/features/demo/lib/nbsp-types.ts:2": {
+    "R-literal-nbsp": "fail"
+  },
+  "src/features/demo/lib/nbsp-types.ts:3": {
+    "R-literal-nbsp": "pass"
+  },
   "src/features/demo/lib/regex-fail.ts": {
     "R-inline-regex": "fail"
   },
@@ -58,6 +109,9 @@
   },
   "src/features/demo/model/scope-fail.ts": {
     "R-module-scope-side-effects": "fail"
+  },
+  "src/features/demo/model/scope-getter-pass.ts": {
+    "R-module-scope-side-effects": "pass"
   },
   "src/features/demo/model/scope-pass.ts": {
     "R-module-scope-side-effects": "pass"
@@ -102,6 +156,9 @@
   "src/features/demo/ui/composes-pass.module.css": {
     "R-composes-source": "pass"
   },
+  "src/features/demo/ui/container-pass.module.css": {
+    "R-raw-values": "pass"
+  },
   "src/features/demo/ui/error-fail.tsx": {
     "R-error-message": "fail"
   },
@@ -123,11 +180,38 @@
   "src/features/demo/ui/hook-twelve.tsx": {
     "R-hook-fields": "fail"
   },
+  "src/features/demo/ui/html-view.tsx": {
+    "R-one-component": "pass"
+  },
   "src/features/demo/ui/import-fail.module.css": {
     "R-global-css-import": "fail"
   },
   "src/features/demo/ui/invite-form.tsx": {
     "R-one-component": "pass"
+  },
+  "src/features/demo/ui/invitef-orm.tsx": {
+    "R-one-component": "fail"
+  },
+  "src/features/demo/ui/inviteform.tsx": {
+    "R-one-component": "fail"
+  },
+  "src/features/demo/ui/jsx-comments.tsx:1": {
+    "R-comments": "fail"
+  },
+  "src/features/demo/ui/jsx-comments.tsx:10": {
+    "R-comments": "pass"
+  },
+  "src/features/demo/ui/jsx-comments.tsx:4": {
+    "R-comments": "fail"
+  },
+  "src/features/demo/ui/jsx-comments.tsx:7": {
+    "R-comments": "fail"
+  },
+  "src/features/demo/ui/jsx-comments.tsx:8": {
+    "R-comments": "pass"
+  },
+  "src/features/demo/ui/jsx-comments.tsx:9": {
+    "R-comments": "pass"
   },
   "src/features/demo/ui/native-fail.tsx": {
     "R-native-elements": "fail"
@@ -157,6 +241,9 @@
     "R-raw-values": "pass",
     "R-composes-source": "pass"
   },
+  "src/features/demo/ui/step2-form.tsx": {
+    "R-one-component": "pass"
+  },
   "src/features/demo/ui/style-fail.tsx": {
     "R-inline-style": "fail"
   },
@@ -165,6 +252,15 @@
   },
   "src/features/demo/ui/two-components.tsx": {
     "R-one-component": "fail"
+  },
+  "src/features/demo/ui/user-avatar-card.tsx": {
+    "R-one-component": "pass"
+  },
+  "src/features/demo/ui/user-profil-eedit-form.tsx": {
+    "R-one-component": "fail"
+  },
+  "src/features/demo/ui/user-profile-edit-form.tsx": {
+    "R-one-component": "pass"
   },
   "src/features/demo/ui/wrong-name.tsx": {
     "R-one-component": "fail"
@@ -181,13 +277,133 @@
   "src/shared/config/env.ts": {
     "R-env-access": "pass"
   },
-  "src/shared/i18n/locales/de.ts": {
+  "src/shared/i18n/locales/de.ts:2": {
     "R-typography": "fail"
   },
-  "src/shared/i18n/locales/en.ts": {
+  "src/shared/i18n/locales/de.ts:3": {
     "R-typography": "fail"
   },
-  "src/shared/i18n/locales/ru.ts": {
+  "src/shared/i18n/locales/de.ts:4": {
+    "R-typography": "pass"
+  },
+  "src/shared/i18n/locales/de.ts:5": {
+    "R-typography": "pass"
+  },
+  "src/shared/i18n/locales/de.ts:6": {
+    "R-typography": "pass"
+  },
+  "src/shared/i18n/locales/de.ts:7": {
+    "R-typography": "pass"
+  },
+  "src/shared/i18n/locales/en.ts:10": {
+    "R-typography": "pass"
+  },
+  "src/shared/i18n/locales/en.ts:11": {
+    "R-typography": "pass"
+  },
+  "src/shared/i18n/locales/en.ts:12": {
+    "R-typography": "pass"
+  },
+  "src/shared/i18n/locales/en.ts:13": {
+    "R-typography": "pass"
+  },
+  "src/shared/i18n/locales/en.ts:14": {
+    "R-typography": "pass"
+  },
+  "src/shared/i18n/locales/en.ts:2": {
+    "R-typography": "fail"
+  },
+  "src/shared/i18n/locales/en.ts:3": {
+    "R-typography": "fail"
+  },
+  "src/shared/i18n/locales/en.ts:4": {
+    "R-typography": "fail"
+  },
+  "src/shared/i18n/locales/en.ts:5": {
+    "R-typography": "fail"
+  },
+  "src/shared/i18n/locales/en.ts:6": {
+    "R-typography": "fail"
+  },
+  "src/shared/i18n/locales/en.ts:7": {
+    "R-typography": "pass"
+  },
+  "src/shared/i18n/locales/en.ts:8": {
+    "R-typography": "pass"
+  },
+  "src/shared/i18n/locales/en.ts:9": {
+    "R-typography": "pass"
+  },
+  "src/shared/i18n/locales/ru.ts:10": {
+    "R-typography": "fail"
+  },
+  "src/shared/i18n/locales/ru.ts:11": {
+    "R-typography": "fail"
+  },
+  "src/shared/i18n/locales/ru.ts:12": {
+    "R-typography": "fail"
+  },
+  "src/shared/i18n/locales/ru.ts:13": {
+    "R-typography": "fail"
+  },
+  "src/shared/i18n/locales/ru.ts:14": {
+    "R-typography": "fail"
+  },
+  "src/shared/i18n/locales/ru.ts:15": {
+    "R-typography": "pass"
+  },
+  "src/shared/i18n/locales/ru.ts:16": {
+    "R-typography": "pass"
+  },
+  "src/shared/i18n/locales/ru.ts:17": {
+    "R-typography": "pass"
+  },
+  "src/shared/i18n/locales/ru.ts:18": {
+    "R-typography": "pass"
+  },
+  "src/shared/i18n/locales/ru.ts:19": {
+    "R-typography": "pass"
+  },
+  "src/shared/i18n/locales/ru.ts:2": {
+    "R-typography": "fail"
+  },
+  "src/shared/i18n/locales/ru.ts:20": {
+    "R-typography": "pass"
+  },
+  "src/shared/i18n/locales/ru.ts:21": {
+    "R-typography": "pass"
+  },
+  "src/shared/i18n/locales/ru.ts:22": {
+    "R-typography": "pass"
+  },
+  "src/shared/i18n/locales/ru.ts:23": {
+    "R-typography": "pass"
+  },
+  "src/shared/i18n/locales/ru.ts:24": {
+    "R-typography": "pass"
+  },
+  "src/shared/i18n/locales/ru.ts:25": {
+    "R-typography": "pass"
+  },
+  "src/shared/i18n/locales/ru.ts:3": {
+    "R-typography": "fail"
+  },
+  "src/shared/i18n/locales/ru.ts:4": {
+    "R-typography": "fail"
+  },
+  "src/shared/i18n/locales/ru.ts:5": {
+    "R-typography": "fail"
+  },
+  "src/shared/i18n/locales/ru.ts:6": {
+    "R-typography": "fail"
+  },
+  "src/shared/i18n/locales/ru.ts:7": {
+    "R-typography": "fail"
+  },
+  "src/shared/i18n/locales/ru.ts:8": {
+    "R-typography": "fail"
+  },
+  "src/shared/i18n/locales/ru.ts:9": {
     "R-typography": "fail"
   },
   "src/shared/lib/patterns/digits.ts": {
@@ -211,6 +427,12 @@
   "src/shared/styles/tokens/components.css": {
     "R-token-tiers": "fail"
   },
+  "src/shared/styles/tokens/components.css:3": {
+    "R-token-tiers": "pass"
+  },
+  "src/shared/styles/tokens/components.css:6": {
+    "R-token-tiers": "fail"
+  },
   "src/shared/styles/tokens/media.css": {
     "R-token-tiers": "pass",
     "R-raw-values": "pass"
@@ -219,7 +441,16 @@
     "R-raw-values": "pass",
     "R-token-tiers": "pass"
   },
-  "src/shared/styles/tokens/semantic.css": {
+  "src/shared/styles/tokens/semantic.css:3": {
+    "R-token-tiers": "pass"
+  },
+  "src/shared/styles/tokens/semantic.css:4": {
+    "R-token-tiers": "pass"
+  },
+  "src/shared/styles/tokens/semantic.css:5": {
+    "R-token-tiers": "pass"
+  },
+  "src/shared/styles/tokens/semantic.css:6": {
     "R-token-tiers": "fail"
   },
   "src/shared/ui/card/classname-ui.tsx": {
@@ -236,5 +467,11 @@
   },
   "src/vite-env.d.ts": {
     "R-comments": "pass"
+  },
+  "tool.config.cjs": {
+    "R-literal-nbsp": "fail"
+  },
+  "tool.config.js": {
+    "R-literal-nbsp": "fail"
   }
 }

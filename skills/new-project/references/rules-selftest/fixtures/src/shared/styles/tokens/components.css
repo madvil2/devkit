@@ -3,4 +3,5 @@
   --button-height: 2.5rem;
   --button-bg: var(--palette-blue-5);
   --card-fg: red;
+  --chip-fg: var(--color-fg, red);
 }

@@ -4,6 +4,15 @@ or {
   JsStringLiteralExpression(),
   JsTemplateExpression()
 } as $copy where {
-  $copy <: r"(?i)[\s\S]*(?:[^\p{L}\p{N}]|\\[nrt])(в|во|и|к|с|со|у|о|об|на|за|по|до|из|от|не|ни|а|но|же|ли|бы) [\s\S]*"($word),
-  register_diagnostic(span=$copy, message=`R-typography short word "$word" followed by a plain space; bind it with \\u00a0 (TXT-1, ru list)`)
+  or {
+    and {
+      $copy <: r"(?i)[\s\S]*(?:[^\p{L}\p{N}\\]|\\[nrt]|\\u[0-9A-Fa-f]{4})(в|во|и|к|с|со|у|о|об|на|за|по|до|из|от|не|ни|а|но|же|ли|бы) [\s\S]*"($word),
+      $problem = `short word "$word" followed by a plain space`
+    },
+    and {
+      $copy <: r"[\s\S]*(?:(?:[^\p{L}\p{N}\\]|\\[nrt]|\\u[0-9A-Fa-f]{4})\d+(?:[.,]\d+)?|\{\w+\}) (км|м|см|мм|кг|г|т|л|мл|ч|мин|сек|с|₽|руб\.|%|°)(?:[^\p{L}\p{N}][\s\S]*)"($unit),
+      $problem = `plain space between a number and the unit "$unit"`
+    }
+  },
+  register_diagnostic(span=$copy, message=`R-typography $problem; bind it with \\u00a0 (TXT-4, ru list)`)
 }

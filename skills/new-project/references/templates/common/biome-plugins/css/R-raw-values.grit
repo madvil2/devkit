@@ -19,6 +19,7 @@ or {
   CssRegularDimension() as $raw where {
     not $raw <: within CssFunction(name=r"(?i)var"),
     not $raw <: within CssMediaFeatureInParens(),
+    not $raw <: within CssContainerAtRule(),
     or {
       and { $raw <: r"(?i)[+-]?[\d.]+px", not $raw <: r"[+-]?1(?:\.0+)?px" },
       $raw <: r"(?i)[+-]?[\d.]+r?em",
@@ -30,7 +31,7 @@ or {
     $prop <: r"(?i)z-index",
     $z <: r"-?\d+",
     not $z <: r"(?:0|-1)",
-    register_diagnostic(span=$z, message=`R-raw-values z-index $z; use a --z-* token (TOK-3)`)
+    register_diagnostic(span=$z, message=`R-raw-values z-index $z; use a --z-* token (TOK-1)`)
   },
   CssMediaFeatureInParens() as $raw where {
     $raw <: within CssMediaAtRule(),

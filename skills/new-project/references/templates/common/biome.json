@@ -321,15 +321,21 @@
         "src/**/*.js",
         "src/**/*.jsx",
         "src/**/*.mjs",
+        "src/**/*.cjs",
+        "src/**/*.mts",
+        "src/**/*.cts",
         "scripts/**",
         "tests/**",
         "*.config.ts",
-        "*.config.mjs"
+        "*.config.mjs",
+        "*.config.js",
+        "*.config.cjs",
+        ".dependency-cruiser.cjs"
       ],
       "plugins": ["./biome-plugins/R-literal-nbsp.grit"]
     },
     {
-      "includes": ["src/**/*.css"],
+      "includes": ["src/**/*.css", "scripts/**/*.css", "tests/**/*.css"],
       "plugins": ["./biome-plugins/css/R-literal-nbsp.grit"]
     }
   ]

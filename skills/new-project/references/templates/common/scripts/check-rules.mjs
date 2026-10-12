@@ -11,8 +11,9 @@ const SKIP = [
   /^next-env\.d\.ts$/,
 ]
 const SCRIPT = new Set(['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs', '.mts', '.cts'])
+const SUPPRESSION = /^\s*biome-ignore(?:-all|-start|-end)?\s+([^:]*)/
+const NARROW = /^lint\/(?:plugin\/R-[\w-]+|(?!plugin\/)\w+\/\w+)$/
 const ALLOWED = [
-  /^\s*biome-ignore(?:-all|-start|-end)?\s/,
   /^\s*TODO\(api\):/,
   /^\s*@vite-ignore\s*$/,
 ]
@@ -47,27 +48,84 @@ const walk = (dir) => {
   })
 }
 
-const scanScript = (source) => {
+const JSX = new Set(['.tsx', '.jsx'])
+
+const scanScript = (source, jsx) => {
   const comments = []
-  const braces = []
+  const stack = []
+  let mode = 'code'
   let last = ''
   let index = 0
   const line = (at) => source.slice(0, at).split('\n').length
+  const comment = () => {
+    const block = source[index + 1] === '*'
+    const end = block ? source.indexOf('*/', index + 2) : source.indexOf('\n', index)
+    const stop = end === -1 ? source.length : block ? end + 2 : end
+    comments.push({
+      text: source.slice(index + 2, block ? stop - 2 : stop),
+      line: line(index),
+      block,
+    })
+    index = stop
+  }
+  const leaveElement = () => {
+    if (stack.at(-1) === 'element') mode = 'text'
+    else {
+      mode = 'code'
+      last = 'value'
+    }
+  }
+  const opensElement = () => {
+    if (!jsx || last === 'value') return false
+    const rest = source.slice(index + 1, index + 80)
+    if (rest.startsWith('>')) return true
+    const name = rest.match(/^[A-Za-z_$][\w$.:-]*/)
+    if (!name) return false
+    return !/^\s*,|^\s+extends\s/.test(rest.slice(name[0].length))
+  }
   while (index < source.length) {
     const char = source[index]
     const next = source[index + 1]
-    if (char === '/' && next === '/') {
-      const end = source.indexOf('\n', index)
-      const stop = end === -1 ? source.length : end
-      comments.push({ text: source.slice(index + 2, stop), line: line(index), block: false })
-      index = stop
+    if (mode === 'text') {
+      if (char === '{') {
+        stack.push('child')
+        mode = 'code'
+        last = ''
+      } else if (char === '<' && next === '/') {
+        const close = source.indexOf('>', index)
+        index = close === -1 ? source.length : close
+        stack.pop()
+        leaveElement()
+      } else if (char === '<') mode = 'tag'
+      index += 1
       continue
     }
-    if (char === '/' && next === '*') {
-      const end = source.indexOf('*/', index + 2)
-      const stop = end === -1 ? source.length : end + 2
-      comments.push({ text: source.slice(index + 2, stop - 2), line: line(index), block: true })
-      index = stop
+    if (mode === 'tag') {
+      if (char === '/' && (next === '/' || next === '*')) {
+        comment()
+        continue
+      }
+      if (char === '"' || char === "'") {
+        const close = source.indexOf(char, index + 1)
+        index = close === -1 ? source.length : close + 1
+        continue
+      }
+      if (char === '{') {
+        stack.push('attr')
+        mode = 'code'
+        last = ''
+      } else if (char === '/' && next === '>') {
+        index += 1
+        leaveElement()
+      } else if (char === '>') {
+        stack.push('element')
+        mode = 'text'
+      }
+      index += 1
+      continue
+    }
+    if (char === '/' && (next === '/' || next === '*')) {
+      comment()
       continue
     }
     if (char === "'" || char === '"') {
@@ -78,8 +136,8 @@ const scanScript = (source) => {
       last = 'value'
       continue
     }
-    if (char === '`' || (char === '}' && braces.at(-1) === 'template')) {
-      if (char === '}') braces.pop()
+    if (char === '`' || (char === '}' && stack.at(-1) === 'template')) {
+      if (char === '}') stack.pop()
       index += 1
       while (
         index < source.length &&
@@ -88,13 +146,18 @@ const scanScript = (source) => {
       )
         index += source[index] === '\\' ? 2 : 1
       if (source[index] === '$') {
-        braces.push('template')
+        stack.push('template')
         index += 2
         last = ''
       } else {
         index += 1
         last = 'value'
       }
+      continue
+    }
+    if (char === '<' && opensElement()) {
+      mode = 'tag'
+      index += 1
       continue
     }
     if (char === '/' && last !== 'value') {
@@ -113,8 +176,20 @@ const scanScript = (source) => {
       last = 'value'
       continue
     }
-    if (char === '{') braces.push('code')
-    if (char === '}') braces.pop()
+    if ((char === '+' || char === '-') && next === char) {
+      index += 2
+      last = 'value'
+      continue
+    }
+    if (char === '{') stack.push('code')
+    if (char === '}') {
+      const frame = stack.pop()
+      index += 1
+      if (frame === 'attr') mode = 'tag'
+      else if (frame === 'child') mode = 'text'
+      else last = 'value'
+      continue
+    }
     if (/[\w$]/.test(char)) {
       let end = index
       while (end < source.length && /[\w$]/.test(source[end])) end += 1
@@ -122,7 +197,7 @@ const scanScript = (source) => {
       index = end
       continue
     }
-    if (!/\s/.test(char)) last = char === ')' || char === ']' || char === '}' ? 'value' : ''
+    if (!/\s/.test(char)) last = char === ')' || char === ']' ? 'value' : ''
     index += 1
   }
   return comments
@@ -165,10 +240,23 @@ let errors = 0
 for (const file of files) {
   const source = readFileSync(file, 'utf8')
   const css = extname(file) === '.css'
-  for (const comment of css ? scanCss(source) : scanScript(source)) {
+  for (const comment of css ? scanCss(source) : scanScript(source, JSX.has(extname(file)))) {
     const reference =
       !comment.block && /^\/\s*<reference /.test(comment.text) && file.endsWith('.d.ts')
     if (reference || ALLOWED.some((pattern) => pattern.test(comment.text))) continue
+    const suppression = comment.text.match(SUPPRESSION)
+    if (suppression) {
+      const broad = suppression[1]
+        .trim()
+        .split(/\s+/)
+        .filter((category) => /^lint(?:\/|$)/.test(category) && !NARROW.test(category))
+      if (broad.length === 0) continue
+      console.log(
+        `${file}:${comment.line} R-comments suppression ${broad.join(' ')} is too broad; name the check, lint/plugin/R-<check> or lint/<group>/<rule> (TOOL-5)`,
+      )
+      errors += 1
+      continue
+    }
     console.log(`${file}:${comment.line} R-comments comment in ${css ? 'CSS' : 'code'} (WF-1)`)
     errors += 1
   }

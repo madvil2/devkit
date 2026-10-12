@@ -1,7 +1,15 @@
 export const dict = {
   a: 'Take a break',
   b: 'I agree',
-  c: '5 minutes',
-  ok1: 'Take a break',
-  ok2: 'Data saved',
+  c: 'Weight 5 kg',
+  d: 'Done 10 %',
+  e: 'Wait {count} min',
+  ok1: 'Take a\u00a0break',
+  ok2: 'Step 2 of 5',
+  ok3: 'Since 2019 we help',
+  ok4: 'Works on iOS 17 and later',
+  ok5: 'Weight 5\u00a0kg',
+  ok6: 'Done 10\u00a0%',
+  ok7: '{count} items',
+  ok8: 'Data saved',
 }

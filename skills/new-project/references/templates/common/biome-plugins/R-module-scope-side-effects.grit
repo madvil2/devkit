@@ -7,7 +7,12 @@ or {
       JsArrowFunctionExpression(),
       JsStaticInitializationBlockClassMember(),
       JsMethodClassMember(),
-      JsMethodObjectMember()
+      JsMethodObjectMember(),
+      JsGetterClassMember(),
+      JsSetterClassMember(),
+      JsGetterObjectMember(),
+      JsSetterObjectMember(),
+      JsIfStatement(test=contains `import.meta.hot`)
     },
     register_diagnostic(span=$effect, message="R-module-scope-side-effects statement runs at module scope; move it into an init* function (CMP-9)", severity="warn")
   },
@@ -16,7 +21,8 @@ or {
       JsFunctionBody(),
       JsArrowFunctionExpression(),
       JsMethodClassMember(),
-      JsMethodObjectMember()
+      JsMethodObjectMember(),
+      JsIfStatement(test=contains `import.meta.hot`)
     },
     $init <: contains or {
       JsReferenceIdentifier() as $read where {
@@ -27,7 +33,10 @@ or {
       `import.meta.env` as $read
     } until or {
       JsArrowFunctionExpression(),
-      JsFunctionExpression()
+      JsFunctionExpression(),
+      JsMethodObjectMember(),
+      JsGetterObjectMember(),
+      JsSetterObjectMember()
     },
     register_diagnostic(span=$read, message=`R-module-scope-side-effects $read read at module scope (CMP-9)`, severity="warn")
   }

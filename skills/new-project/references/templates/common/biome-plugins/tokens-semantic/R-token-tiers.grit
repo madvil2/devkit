@@ -2,6 +2,12 @@ language css
 
 CssGenericProperty(name=$prop, value=$value) where {
   not $prop <: "color-scheme",
-  or { not $prop <: CssDashedIdentifier(), not $value <: every CssFunction(name=r"(?i)var") },
+  or {
+    not $prop <: CssDashedIdentifier(),
+    not $value <: every or {
+      CssFunction(name=r"(?i)var"),
+      CssGenericDelimiter()
+    }
+  },
   register_diagnostic(span=$value, message=`R-token-tiers semantic token $prop must reference other tokens with var() only (TOK-1)`)
 }

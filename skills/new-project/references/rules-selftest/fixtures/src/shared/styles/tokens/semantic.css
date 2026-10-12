@@ -2,5 +2,6 @@
   color-scheme: light;
   --color-bg: var(--palette-gray-0);
   --color-fg: var(--palette-gray-9, var(--palette-gray-8));
+  --shadow-card: var(--shadow-1), var(--shadow-2);
   --color-raw: #fff;
 }

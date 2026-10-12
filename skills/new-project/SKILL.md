@@ -52,13 +52,13 @@ Show: name, path, type; stack with exact versions; structure variant and layers;
 - Vite types: `references/scaffold-vite.md`. Next types: `references/scaffold-next.md`.
 - Both use the official CLI non-interactively, then `node <skill>/references/render.mjs --answers <answers> --target <path>` to overlay `references/templates/{common,vite|next,tma}` with the placeholders filled, then the decided `pnpm add` set with versions from step 2 (TypeScript on the `~6.0` line while stack.md W-1 stands).
 - pnpm build approvals per TOOL-1: detect the running major with `pnpm --version` inside the project; 12+ uses `pnpm approve <pkg>` (`allowBuilds`), 10/11 uses `onlyBuiltDependencies`; never approve all.
-- Generated, not templated: the golden slice (mock-backed, named after the domain), translations of non-default locales, tokens from Figma variables when given, `AGENTS.md` per `references/agents-md-outline.md`, `CLAUDE.md` (`@AGENTS.md`), `README.md`, `docs/architecture.md`, the ADRs from step 1 in `docs/adr/`, `GLOSSARY.md`, a short-word list plugin `biome-plugins/typography/<lang>/R-typography.grit` plus its `biome.json` override for every locale without one, or an ADR saying the language binds none (TXT-4).
+- Generated, not templated: the golden slice (mock-backed, named after the domain), translations of non-default locales, tokens from Figma variables when given, `AGENTS.md` per `references/agents-md-outline.md`, `CLAUDE.md` (`@AGENTS.md`), `README.md`, `docs/architecture.md`, the ADRs from step 1 in `docs/adr/`, `GLOSSARY.md`, a short-word and unit list plugin `biome-plugins/typography/<lang>/R-typography.grit` plus its `biome.json` override for every locale without one, or an ADR saying the language binds none (TXT-4).
 - `git init -b main`, no commit. `CLAUDE.local.md` goes into `$(git rev-parse --git-path info/exclude)` (WF-6).
 
 ### 6. [opus-checker] Verify
 
 - `pnpm install --frozen-lockfile`, `pnpm check`, `pnpm test:e2e`.
-- Negative probes, each must fail with the right ID, then revert: `<span>x</span>` in a page → `R-native-elements`; `// note` → `R-comments`; `color: #fff` in a component module → `R-raw-values`; `className={cx(a, b)}` in a feature → `R-classname`; `composes` from a feature module → `R-composes-source`; `'Осталось 5 минут'` in `ru.ts` → `R-typography`; a sibling-slice import → `no-sibling-slices`.
+- Negative probes, each must fail with the right ID, then revert: `<span>x</span>` in a page → `R-native-elements`; `// note` → `R-comments`; `color: #fff` in a component module → `R-raw-values`; `className={cx(a, b)}` in a feature → `R-classname`; `composes` from a feature module → `R-composes-source`; `'Путь 5 км'` in `ru.ts` → `R-typography`; a sibling-slice import → `no-sibling-slices`.
 - `grep -r mock-transport dist` is empty after `pnpm build` (vite); (next) the root layout is static in the build output.
 - `AGENTS.md` contains every in-scope rule ID and is at most 300 lines.
 

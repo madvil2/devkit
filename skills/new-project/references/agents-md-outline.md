@@ -8,7 +8,7 @@ The project's `AGENTS.md` is a self-contained render of the devkit frontend rule
 - Scope filter: include a rule when its scope tag matches the project. Scopes: `all` always; `vite` for admin/spa/tma; `next` for marketing and landing + product; `tma`; `money` when the project handles money; `auth` rules per the chosen pattern (AUTH-1..3, AUTH-8 for next with BFF; AUTH-4, AUTH-9 for vite; AUTH-5 for tma; AUTH-6, AUTH-7 always); `marketing`; `pwa`; `i18n-remote` when copy is edited remotely; `multi-tenant` (TOK-7) when white-label.
 - Inside an included rule, drop sub-bullets whose suffix tag is out of scope (for example the `(next)` line of CMP-8 in a Vite project).
 - Substitute project paths and names (`<name>`, port, locales, layer list of the variant). Drop references to `stack.md` and other rulebook files; inline the fact instead (for example "TypeScript stays on 6.x: dependency-cruiser does not support 7").
-- No Cyrillic outside the TXT-1 data examples. No AI attribution.
+- No Cyrillic outside the TXT-4 data examples. No AI attribution.
 - At most 300 lines. Over the cap, shorten "Why" lines first, never drop a rule ID.
 - Line 3: `Rulebook revision: <YYYY-MM-DD>` from `<rulebook>/README.md`.
 
@@ -41,7 +41,7 @@ Rule IDs added after rev. 1 that must appear when in scope: TOOL-8, STY-11, NXT-
 
 ## Check-rules and dependency-cruiser tables
 
-Section 18 carries the two catalogue tables from `tooling.md` (check → rule → level → plugin; dependency-cruiser rule → rule ID), so a failing check in the project points to the rule text in the same file. The allowlist is Biome suppression comments: `// biome-ignore lint/plugin/R-<check>: <reason>`, or `biome-ignore-all` for a file; an empty reason fails `biome check`.
+Section 18 carries the two catalogue tables from `tooling.md` (check → rule → level → plugin; dependency-cruiser rule → rule ID), so a failing check in the project points to the rule text in the same file. The allowlist is Biome suppression comments: `// biome-ignore lint/plugin/R-<check>: <reason>`, or `biome-ignore-all` for a file; an empty reason fails `biome check`, and a broad category (`lint`, `lint/plugin`, `lint/<group>`) fails `lint:rules`.
 
 ## Verification of the render
 

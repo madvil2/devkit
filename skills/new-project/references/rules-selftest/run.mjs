@@ -15,8 +15,8 @@ const config = JSON.parse(readFileSync(join(COMMON, 'biome.json'), 'utf8'))
 delete config.$schema
 writeFileSync(join(work, 'biome.json'), JSON.stringify(config))
 cpSync(join(COMMON, 'biome-plugins'), join(work, 'biome-plugins'), { recursive: true })
+cpSync(join(HERE, 'fixtures'), work, { recursive: true })
 cpSync(join(COMMON, 'scripts', 'check-rules.mjs'), join(work, 'scripts', 'check-rules.mjs'))
-cpSync(join(HERE, 'fixtures', 'src'), join(work, 'src'), { recursive: true })
 spawnSync('git', ['init', '-q'], { cwd: work })
 
 const lint = spawnSync(biome, ['lint', '--reporter=json', '--max-diagnostics=none'], {
@@ -35,21 +35,25 @@ for (const diagnostic of JSON.parse(lint.stdout).diagnostics) {
   const id = diagnostic.message.match(/^(R-[\w-]+) /)?.[1]
   if (diagnostic.category === 'plugin' && / errored: /.test(diagnostic.message))
     found.push({ file: diagnostic.location?.path, id: 'plugin-failure' })
-  else if (id && diagnostic.location?.path) found.push({ file: diagnostic.location.path, id })
+  else if (id && diagnostic.location?.path)
+    found.push({ file: diagnostic.location.path, line: diagnostic.location.start?.line, id })
 }
 for (const line of rules.stdout.split('\n')) {
-  const match = line.match(/^(\S+):\d+ (R-comments) /)
-  if (match) found.push({ file: match[1], id: match[2] })
+  const match = line.match(/^(\S+):(\d+) (R-comments) /)
+  if (match) found.push({ file: match[1], line: Number(match[2]), id: match[3] })
 }
 
 const expect = JSON.parse(readFileSync(join(HERE, 'expect.json'), 'utf8'))
 let failures = found.filter((item) => item.id === 'plugin-failure').length
-for (const [file, checks] of Object.entries(expect)) {
+for (const [sample, checks] of Object.entries(expect)) {
+  const [, file, line] = sample.match(/^(.+?)(?::(\d+))?$/)
   for (const [id, want] of Object.entries(checks)) {
-    const hit = found.some((item) => item.file === file && item.id === id)
+    const hit = found.some(
+      (item) => item.file === file && item.id === id && (!line || item.line === Number(line)),
+    )
     if (hit === (want === 'fail')) continue
     failures += 1
-    console.log(`${file}: expected ${id} to ${want}`)
+    console.log(`${sample}: expected ${id} to ${want}`)
   }
 }
 rmSync(work, { recursive: true, force: true })
