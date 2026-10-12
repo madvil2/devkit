@@ -10,7 +10,7 @@ or {
       $problem = `short word "$word" followed by a plain space`
     },
     and {
-      $copy <: r"[\s\S]*(?:(?:[^\p{L}\p{N}\\]|\\[nrt]|\\u[0-9A-Fa-f]{4})\d+(?:[.,]\d+)?|\{\w+\}) (km|m|cm|mm|kg|g|lb|oz|l|ml|h|min|s|ms|%|°|AM|PM)(?:[^\p{L}\p{N}][\s\S]*)"($unit),
+      $copy <: r"[\s\S]*(?:(?:[^\p{L}\p{N}\\]|\\[nrt]|\\u[0-9A-Fa-f]{4})\d+(?:[.,]\d+)?|\{\w+\}) (km|m|cm|mm|kg|g|lb|oz|l|ml|h|min|s|ms|%|°[CF]?|AM|PM)[²³]?(?:[^\p{L}\p{N}][\s\S]*)"($unit),
       $problem = `plain space between a number and the unit "$unit"`
     }
   },

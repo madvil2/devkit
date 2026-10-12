@@ -1,0 +1,12 @@
+@container (min-width: 30rem) {
+  .card {
+    padding: 24px;
+    gap: 1.5rem;
+    transition: opacity 200ms;
+  }
+}
+@container card (width > 40rem) {
+  .title {
+    font-size: 18px;
+  }
+}

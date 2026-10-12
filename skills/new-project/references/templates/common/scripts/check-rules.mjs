@@ -12,7 +12,8 @@ const SKIP = [
 ]
 const SCRIPT = new Set(['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs', '.mts', '.cts'])
 const SUPPRESSION = /^\s*biome-ignore(?:-all|-start|-end)?\s+([^:]*)/
-const NARROW = /^lint\/(?:plugin\/R-[\w-]+|(?!plugin\/)\w+\/\w+)$/
+const NARROW = /^lint\/(?:plugin\/R-[\w-]+|(?!plugin\/)\w+\/\w+)(?:\([^)]*\))?$/
+const BROAD = /^lint(?:\/\w+)?$/
 const ALLOWED = [
   /^\s*TODO\(api\):/,
   /^\s*@vite-ignore\s*$/,
@@ -55,6 +56,7 @@ const scanScript = (source, jsx) => {
   const stack = []
   let mode = 'code'
   let last = ''
+  let angles = 0
   let index = 0
   const line = (at) => source.slice(0, at).split('\n').length
   const comment = () => {
@@ -96,7 +98,15 @@ const scanScript = (source, jsx) => {
         index = close === -1 ? source.length : close
         stack.pop()
         leaveElement()
-      } else if (char === '<') mode = 'tag'
+      } else if (char === '>' || char === '}') {
+        while (stack.at(-1) === 'element') stack.pop()
+        mode = 'code'
+        last = ''
+        continue
+      } else if (char === '<') {
+        mode = 'tag'
+        angles = 0
+      }
       index += 1
       continue
     }
@@ -114,7 +124,9 @@ const scanScript = (source, jsx) => {
         stack.push('attr')
         mode = 'code'
         last = ''
-      } else if (char === '/' && next === '>') {
+      } else if (char === '<') angles += 1
+      else if (char === '>' && angles > 0) angles -= 1
+      else if (char === '/' && next === '>') {
         index += 1
         leaveElement()
       } else if (char === '>') {
@@ -157,6 +169,7 @@ const scanScript = (source, jsx) => {
     }
     if (char === '<' && opensElement()) {
       mode = 'tag'
+      angles = 0
       index += 1
       continue
     }
@@ -246,14 +259,16 @@ for (const file of files) {
     if (reference || ALLOWED.some((pattern) => pattern.test(comment.text))) continue
     const suppression = comment.text.match(SUPPRESSION)
     if (suppression) {
-      const broad = suppression[1]
-        .trim()
-        .split(/\s+/)
-        .filter((category) => /^lint(?:\/|$)/.test(category) && !NARROW.test(category))
-      if (broad.length === 0) continue
-      console.log(
-        `${file}:${comment.line} R-comments suppression ${broad.join(' ')} is too broad; name the check, lint/plugin/R-<check> or lint/<group>/<rule> (TOOL-5)`,
+      const wrong = (suppression[1].match(/[^\s(]+(?:\([^)]*\))?/g) ?? []).filter(
+        (category) => /^lint(?:\/|$)/.test(category) && !NARROW.test(category),
       )
+      if (wrong.length === 0) continue
+      for (const category of wrong)
+        console.log(
+          BROAD.test(category)
+            ? `${file}:${comment.line} R-comments suppression ${category} is too broad; name the check, lint/plugin/R-<check> or lint/<group>/<rule> (TOOL-5)`
+            : `${file}:${comment.line} R-comments suppression ${category} names no known check; check the name and its case, lint/plugin/R-<check> or lint/<group>/<rule> (TOOL-5)`,
+        )
       errors += 1
       continue
     }

@@ -35,6 +35,9 @@
   "src/features/demo/api/allow-wrong.ts": {
     "R-fetch": "fail"
   },
+  "src/features/demo/api/allow-wrong.ts:1": {
+    "R-comments": "fail"
+  },
   "src/features/demo/api/endpoint-fail.ts": {
     "R-endpoint-literals": "fail"
   },
@@ -91,6 +94,9 @@
   },
   "src/features/demo/lib/regex-pass.ts": {
     "R-inline-regex": "pass"
+  },
+  "src/features/demo/model/allow-instance.ts:1": {
+    "R-comments": "pass"
   },
   "src/features/demo/model/env-fail.ts": {
     "R-env-access": "fail"
@@ -156,6 +162,24 @@
   "src/features/demo/ui/composes-pass.module.css": {
     "R-composes-source": "pass"
   },
+  "src/features/demo/ui/container-body-fail.module.css:1": {
+    "R-raw-values": "pass"
+  },
+  "src/features/demo/ui/container-body-fail.module.css:10": {
+    "R-raw-values": "fail"
+  },
+  "src/features/demo/ui/container-body-fail.module.css:3": {
+    "R-raw-values": "fail"
+  },
+  "src/features/demo/ui/container-body-fail.module.css:4": {
+    "R-raw-values": "fail"
+  },
+  "src/features/demo/ui/container-body-fail.module.css:5": {
+    "R-raw-values": "fail"
+  },
+  "src/features/demo/ui/container-body-fail.module.css:8": {
+    "R-raw-values": "pass"
+  },
   "src/features/demo/ui/container-pass.module.css": {
     "R-raw-values": "pass"
   },
@@ -212,6 +236,27 @@
   },
   "src/features/demo/ui/jsx-comments.tsx:9": {
     "R-comments": "pass"
+  },
+  "src/features/demo/ui/jsx-misread.tsx:10": {
+    "R-comments": "fail"
+  },
+  "src/features/demo/ui/jsx-misread.tsx:12": {
+    "R-comments": "fail"
+  },
+  "src/features/demo/ui/jsx-misread.tsx:14": {
+    "R-comments": "fail"
+  },
+  "src/features/demo/ui/jsx-misread.tsx:15": {
+    "R-comments": "pass"
+  },
+  "src/features/demo/ui/jsx-misread.tsx:4": {
+    "R-comments": "fail"
+  },
+  "src/features/demo/ui/jsx-misread.tsx:6": {
+    "R-comments": "fail"
+  },
+  "src/features/demo/ui/jsx-misread.tsx:8": {
+    "R-comments": "fail"
   },
   "src/features/demo/ui/native-fail.tsx": {
     "R-native-elements": "fail"
@@ -310,6 +355,12 @@
   "src/shared/i18n/locales/en.ts:14": {
     "R-typography": "pass"
   },
+  "src/shared/i18n/locales/en.ts:15": {
+    "R-typography": "fail"
+  },
+  "src/shared/i18n/locales/en.ts:16": {
+    "R-typography": "pass"
+  },
   "src/shared/i18n/locales/en.ts:2": {
     "R-typography": "fail"
   },
@@ -383,6 +434,18 @@
     "R-typography": "pass"
   },
   "src/shared/i18n/locales/ru.ts:25": {
+    "R-typography": "pass"
+  },
+  "src/shared/i18n/locales/ru.ts:26": {
+    "R-typography": "fail"
+  },
+  "src/shared/i18n/locales/ru.ts:27": {
+    "R-typography": "fail"
+  },
+  "src/shared/i18n/locales/ru.ts:28": {
+    "R-typography": "pass"
+  },
+  "src/shared/i18n/locales/ru.ts:29": {
     "R-typography": "pass"
   },
   "src/shared/i18n/locales/ru.ts:3": {

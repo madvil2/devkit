@@ -43,7 +43,7 @@ Biome GritQL plugins (stack.md W-19) plus a parser-free comment scanner. A failu
 
 | Check | Rule | Level | Plugin |
 |---|---|---|---|
-| `R-comments` | WF-1 | error | `scripts/check-rules.mjs` |
+| `R-comments` | WF-1, TOOL-5 | error | `scripts/check-rules.mjs` |
 | `R-native-elements` | KIT-1 | error | `R-native-elements.grit` |
 | `R-one-component` | CMP-1 | error | `R-one-component.grit`, `name/` |
 | `R-hook-fields` | CMP-4 | error | `R-hook-fields.grit` |

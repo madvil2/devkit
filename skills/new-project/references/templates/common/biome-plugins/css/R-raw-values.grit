@@ -19,7 +19,7 @@ or {
   CssRegularDimension() as $raw where {
     not $raw <: within CssFunction(name=r"(?i)var"),
     not $raw <: within CssMediaFeatureInParens(),
-    not $raw <: within CssContainerAtRule(),
+    not $raw <: within CssContainerSizeFeatureInParens(),
     or {
       and { $raw <: r"(?i)[+-]?[\d.]+px", not $raw <: r"[+-]?1(?:\.0+)?px" },
       $raw <: r"(?i)[+-]?[\d.]+r?em",

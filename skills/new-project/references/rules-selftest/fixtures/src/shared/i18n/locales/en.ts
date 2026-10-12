@@ -12,4 +12,6 @@ export const dict = {
   ok6: 'Done 10\u00a0%',
   ok7: '{count} items',
   ok8: 'Data saved',
+  t1: '20 °C',
+  ok9: '20\u00a0°C',
 }
