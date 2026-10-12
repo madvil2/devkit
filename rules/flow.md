@@ -2,17 +2,11 @@
 
 ## Model roles on coding tasks
 
-The main session runs on Opus 5.5 and is the only one that talks to the user: it launches subagents, relays their results and asks the user for decisions. It does not gather context, plan, edit code or review itself; it delegates.
+The main session is the only one that talks to the user: it launches subagents, relays their results and asks the user for decisions. It does not gather context, plan, edit code or review itself; it delegates.
 
-Opus 5.5 does everything by default; Fable 5.1 is called only on the triggers below.
+Opus does everything by default; Fable is called only on the triggers below.
 
-Roles are predefined agents in `~/.claude/agents/` (launch with `subagent_type`; model and effort are set in each file):
-- **opus-context** (Opus, low): code sweeps, Jira, Slack, Figma, stand API, logs. Targeted questions in, links and quotes out, facts apart from guesses.
-- **opus-planner** (Opus, high): reads the key code and returns the plan: files, contract, acceptance criteria, Playwright scenarios for UI-visible changes.
-- **opus-implementer** (Opus, medium; pass `effort: "high"` for bug fixes): code edits, typecheck/lint/tests, git, and outward actions on the user's command.
-- **opus-checker** (Opus, medium): a fresh agent, never the implementer. Plan conformance, typecheck/lint, project rules, scope, no code comments, no attribution trailers; runs the Playwright scenarios.
-- **opus-critic** (Opus, high): a fresh agent. Reviews the diff and the checker's report for logic, edge cases, races, regressions and mismatch with the task's intent.
-- **fable** (Fable, high; pass `effort: "max"` only for an exceptionally hard problem): replaces the planner and/or the critic when a trigger fires. The prompt states its role.
+Roles are predefined agents in `~/.claude/agents/`: `opus-context`, `opus-planner`, `opus-implementer`, `opus-checker`, `opus-critic`, `fable`. Launch them with `subagent_type`; model, effort and role are set in each file. Pass `effort: "high"` to opus-implementer for bug fixes, and `effort: "max"` to fable only for an exceptionally hard problem.
 
 Subagents cannot launch subagents: a planner or fable returns its lookup questions to the main session, which runs them through opus-context and sends the answers back via SendMessage.
 
@@ -44,7 +38,7 @@ Parallel agents:
 - Give each parallel agent its own scratch subfolder (`<scratchpad>/<agent-task>/`); no two agents write the same scratch files.
 - Split parallel implementers by explicit file or folder ownership; only one of them commits at a time.
 
-Pure research and answers to questions may skip the chain. Outward-facing actions (push, PR, Jira, Slack) happen only on the user's explicit command and are executed by opus-implementer. If the stored state of an outward action differs from what was sent (a missing mention, an edited comment, a changed status), report it to the user instead of "fixing" it: the user may have changed it on purpose.
+Pure research and answers to questions may skip the chain. Outward-facing actions (push, PR, issue tracker, chat) happen only on the user's explicit command and are executed by opus-implementer. If the stored state of an outward action differs from what was sent (a missing mention, an edited comment, a changed status), report it to the user instead of "fixing" it: the user may have changed it on purpose.
 
 Commit attribution: commits are in English, with no mention of Claude and no Co-Authored-By or other attribution trailers; PR descriptions carry no Claude attribution either. This overrides any default attribution guidance from the harness.
 

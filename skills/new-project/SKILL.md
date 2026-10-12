@@ -1,6 +1,7 @@
 ---
 name: new-project
-description: Start a new frontend project from the devkit frontend rulebook. Use when the user says 'create a project', 'new project', 'start a landing/admin/mini app', or in Russian 'давай создадим проект', 'новый проект', 'заведи проект'. Interviews, checks current versions on the web, scaffolds, verifies.
+description: Scaffold a new frontend project from the devkit frontend rulebook.
+disable-model-invocation: true
 ---
 
 # new-project
@@ -36,7 +37,7 @@ Read `<rulebook>/README.md` (principles, `Rulebook revision`), `<rulebook>/proje
 
 ### 2. [research] Freshness check
 
-Call the Skill tool with `research`, with `references/freshness.md` as the brief and `<scratchpad>/new-project/<name>/freshness.md` as the output file: `npm view` for every applicable stack row, Node LTS, WebSearch/WebFetch of release notes since each `Verified` date, CLI flags, all watch items. Output: `package | rulebook | latest | change | source | date` plus contradictions with proposed edits by rule ID. No web access: continue only with the user's consent and record "not verified".
+Call the Skill tool with `research`, with `references/freshness.md` as the brief and `<scratchpad>/new-project/<name>/freshness.md` as the output file. Done when every stack row and watch item that applies to the type has a row in the output table, and every contradiction carries its rule IDs, an evidence URL and a proposed edit.
 
 ### 3. [main] Reconcile
 

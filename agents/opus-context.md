@@ -1,6 +1,6 @@
 ---
 name: opus-context
-description: Gathers context for a coding task. Code sweeps, Jira, Slack, Figma, stand API, logs. Answers targeted questions; does not edit files.
+description: Gathers context for a coding task. Code sweeps, issue tracker, chat, design files, staging API, logs. Answers targeted questions; does not edit files.
 model: opus
 effort: low
 ---
