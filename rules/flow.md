@@ -44,8 +44,6 @@ Parallel agents:
 - Give each parallel agent its own scratch subfolder (`<scratchpad>/<agent-task>/`); no two agents write the same scratch files.
 - Split parallel implementers by explicit file or folder ownership; only one of them commits at a time.
 
-Verification tooling: each project keeps one reusable verification setup (login, dev server start, typical scenarios). The checker reuses it, and creates or extends it when it is missing.
-
 Pure research and answers to questions may skip the chain. Outward-facing actions (push, PR, Jira, Slack) happen only on the user's explicit command and are executed by opus-implementer. If the stored state of an outward action differs from what was sent (a missing mention, an edited comment, a changed status), report it to the user instead of "fixing" it: the user may have changed it on purpose.
 
 Commit attribution: commits are in English, with no mention of Claude and no Co-Authored-By or other attribution trailers; PR descriptions carry no Claude attribution either. This overrides any default attribution guidance from the harness.
