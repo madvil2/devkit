@@ -1,0 +1,33 @@
+{
+  "source": "https://github.com/mattpocock/skills.git",
+  "ref": "main",
+  "commit": "49dd158d1076134a641b33efb035946536778336",
+  "skills": [
+    "code-review",
+    "codebase-design",
+    "domain-modeling",
+    "grill-with-docs",
+    "grilling",
+    "implement",
+    "implement-spec",
+    "research",
+    "setup-matt-pocock-skills",
+    "tdd",
+    "to-spec",
+    "to-tickets"
+  ],
+  "hashes": {
+    "code-review": "fee7bb5fdddc069d58cbea09b2c36b5a859eac05",
+    "codebase-design": "07ba1cd60efc12d0d3a083005c1d9651cf15e39a",
+    "domain-modeling": "ea30ee454ba264543dbe40737973b1a5afb9f0e6",
+    "grill-with-docs": "eedaf2562c83155115e9c649fa3ecaac2e10e81d",
+    "grilling": "28aceb4c9567b985cb47f7db88cf23c9f33af8b8",
+    "implement": "4804b466ab26c9b9d8d42917547db133d1f20a9f",
+    "implement-spec": "0cfefc751d0cb64f0c948ffcb17e13b94e778f08",
+    "research": "0a6796c5667e95ed2301ba7381c123b4acb2ae1a",
+    "setup-matt-pocock-skills": "aafaabf96fa3945d8a4069317a7a6d36b7169670",
+    "tdd": "667dbdd00c09d0e2189e082986e6a4d61a67c2a6",
+    "to-spec": "136b9651747cfccbfbb7c50a6b0dfb757e7547d2",
+    "to-tickets": "2dee20ad722a31c04ededf9f2d83842473573045"
+  }
+}

@@ -1,0 +1,40 @@
+name: Sync Pocock skills
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: node scripts/sync-pocock-skills.mjs
+      - name: Open a pull request when upstream changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet && [ -z "$(git ls-files --others --exclude-standard)" ]; then
+            echo "Pocock skills are up to date"
+            exit 0
+          fi
+          branch="sync/pocock-skills-$(date -u +%Y%m%d)"
+          commit=$(jq -r .commit pocock-skills.json)
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git add pocock-skills.json skills
+          git commit -m "Sync Pocock skills to ${commit:0:12}"
+          git push --force origin "$branch"
+          gh pr create --base main --head "$branch" \
+            --title "Sync Pocock skills to ${commit:0:12}" \
+            --body "Upstream: https://github.com/mattpocock/skills/commit/${commit}. Check the diff for renamed skills or changed Skill tool calls before merging." \
+            || echo "A pull request for $branch already exists"
