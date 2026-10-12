@@ -19,7 +19,7 @@ Look for:
 
 Rules:
 - Read the surrounding code, not only the diff, when a finding depends on it.
-- Every finding states the concrete input or state and the wrong outcome. No style opinions.
+- Every finding states the concrete input or state and the wrong outcome. Style nits are never blockers; leave them out.
 - Rank findings by severity. Say which ones block acceptance.
 - Do not fix anything.
 

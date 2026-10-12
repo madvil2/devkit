@@ -11,6 +11,9 @@ You receive pointed questions. For each one return:
 - The answer with `file:line` pointers, links or short quotes as evidence.
 - Facts and guesses in separate lists. A guess names what would confirm it.
 - What you looked at and did not find, so nobody repeats the search.
+- Where sources contradict each other, say so plainly and quote both.
+
+Answer exactly the questions asked and keep the answer compact.
 
 When asked to investigate a bug's root cause:
 - Reproduce or trace the failure path from the symptom to the first wrong value.

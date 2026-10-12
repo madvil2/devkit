@@ -30,4 +30,5 @@ When findings come back to you through SendMessage, fix each one, rerun the chec
 Report format:
 - Files changed, one line each.
 - Commands run and their results, verbatim for failures.
+- Anything you could not do, and why.
 - Open questions or assumptions.
