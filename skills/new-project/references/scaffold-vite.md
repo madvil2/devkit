@@ -93,7 +93,7 @@ pnpm exec biome check --write
 - Forms: `react-hook-form` + zod adapters inside the kit (FRM-1, FRM-2).
 - Tokens: from Figma variables (`get_variable_defs`) when a link was given, otherwise keep the neutral starter palette (TOK-*, KIT-10).
 - Project files: `AGENTS.md` per `agents-md-outline.md`; `CLAUDE.md` with the single line `@AGENTS.md`; `README.md` (commands, port, structure, links to docs); `docs/architecture.md`; `docs/decisions/0001-stack.md` per `decision-record.md`.
-- `.verify/` with `README.md` (dev start, port, mock mode) excluded through `git rev-parse --git-path info/exclude`.
+- `CLAUDE.local.md` goes into `$(git rev-parse --git-path info/exclude)` (WF-6).
 - No commit (step 9 decides).
 
 ## 7. Type notes

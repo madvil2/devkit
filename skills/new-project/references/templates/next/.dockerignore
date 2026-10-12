@@ -2,7 +2,6 @@
 .github
 .next
 .next-*
-.verify
 .vitest
 node_modules
 coverage
