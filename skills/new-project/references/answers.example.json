@@ -18,6 +18,6 @@
   "siteUrl": null,
   "addons": [],
   "port": 3990,
-  "rulebookRevision": "2026-10-11",
+  "rulebookRevision": "2026-10-12",
   "versions": { "biome": "2.5.15", "nodeMajor": "24", "pnpm": "12.11.2", "typescript": "~6.0" }
 }

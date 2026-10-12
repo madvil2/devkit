@@ -4,6 +4,14 @@ Applies to: all
 
 Append-only, newest first. Each entry: date and trigger, packages old → new, findings with sources, a decision per finding. Ledger: [stack.md](stack.md).
 
+## 2026-10-12 — interview and ADRs through Pocock skills
+
+Trigger: explicit request. No package changes.
+
+| Finding | Source | Decision |
+|---|---|---|
+| The interview and decision records duplicated the `grill-with-docs` and `domain-modeling` skills | skills | project-types interview runs through `grill-with-docs`; WF-2 ADRs move to `docs/adr/` in the domain-modeling format |
+
 ## 2026-10-11 — initial rulebook
 
 Trigger: rulebook created (revision 2026-10-11). Experiments: create-next-app 16.4.0, create-vite 9.2.1 and pnpm 12 scratch projects; Node 24.15.0.

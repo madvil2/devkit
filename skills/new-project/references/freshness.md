@@ -1,6 +1,6 @@
 # Freshness check
 
-Run by opus-context in step 2. The goal: the stack the skill is about to install matches what is current today, and every difference from the rulebook is surfaced to the user. Never diverge from `<rulebook>/stack.md` silently.
+Brief for the `research` skill in step 2. The goal: the stack the skill is about to install matches what is current today, and every difference from the rulebook is surfaced to the user. Never diverge from `<rulebook>/stack.md` silently.
 
 Inputs: the chosen project type, add-ons, and `<rulebook>/stack.md` (versions table + watch items `W-*`, each with a `Verified` date).
 
@@ -78,7 +78,7 @@ Return one table and one list to the main session:
 Ask the user per contradiction, in the user's language:
 
 - (a) update the rulebook now: opus-implementer edits the rule text, the `stack.md` row, appends a `freshness-log.md` entry and bumps `Rulebook revision` in `<rulebook>/README.md` (order per README). If a template is affected, edit the template and re-run the dry run. Devkit commit only on the user's command.
-- (b) keep the rulebook; the reason goes into the project ADR (`docs/decisions/0001-stack.md`).
+- (b) keep the rulebook; the reason goes into a project ADR in `docs/adr/`.
 - (c) adopt for this project only; recorded in the ADR.
 
 With no contradictions, still refresh the `Verified` dates in `stack.md` and append a log entry (outside dry-run mode).

@@ -3,7 +3,7 @@
 Applies to: all
 
 - **WF-1** No comments in code. Exceptions: `biome-ignore` with a reason, `TODO(api):`, `.d.ts` triple-slash directives, generated files, build markers. [rules: R-comments]
-- **WF-2** `docs/<feature>.md` updated in the same change. Index in `docs/README.md`. ADRs in `docs/decisions/`.
+- **WF-2** `docs/<feature>.md` updated in the same change. Index in `docs/README.md`. ADRs in `docs/adr/` (domain-modeling format); domain terms in `GLOSSARY.md`.
 - **WF-3** English in code, commits and agent rules. UI copy only via i18n.
 - **WF-4** Commits:
   - English imperative subject ≤ 72 chars; body explains why;

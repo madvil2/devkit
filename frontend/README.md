@@ -2,7 +2,7 @@
 
 Applies to: all
 
-Rulebook revision: 2026-10-11
+Rulebook revision: 2026-10-12
 
 The standard for new frontend projects. The `new-project` skill (`skills/new-project/`) reads this rulebook, renders the in-scope rules verbatim into the project's `AGENTS.md`, and never links back here: project sessions do not read the rulebook.
 

@@ -25,7 +25,7 @@ Out of scope: backend, React Native/Expo. The skill says so and stops.
 
 ## Interview
 
-Ask in the user's language, at most 3 questions per round, skip derivable ones, use AskUserQuestion when available.
+Run through the `grill-with-docs` skill, in the user's language: the questions below seed its design tree and the skip logic settles branches; skip derivable ones.
 
 1. What is it, in one sentence, and the name/slug?
 2. Must public pages rank in search or render link previews? (yes → Next)

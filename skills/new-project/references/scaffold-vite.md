@@ -92,7 +92,7 @@ pnpm exec biome check --write
 - admin: kit additions `Table` (TanStack Table v9: `useTable`/`createTableHook`, `FlexRender`; the v8 `useReactTable` API exists only as `useLegacyTable`, do not use it), `Select`, `Tabs`, `Pagination`, `Badge`, `EmptyState`, built on `@base-ui/react` inside `shared/ui` and styled through Base UI state attributes (`data-open`, `data-checked`, `data-selected`, `data-highlighted`, `data-disabled`, ...; never `data-state`, KIT-3).
 - Forms: `react-hook-form` + zod adapters inside the kit (FRM-1, FRM-2).
 - Tokens: from Figma variables (`get_variable_defs`) when a link was given, otherwise keep the neutral starter palette (TOK-*, KIT-10).
-- Project files: `AGENTS.md` per `agents-md-outline.md`; `CLAUDE.md` with the single line `@AGENTS.md`; `README.md` (commands, port, structure, links to docs); `docs/architecture.md`; `docs/decisions/0001-stack.md` per `decision-record.md`.
+- Project files: `AGENTS.md` per `agents-md-outline.md`; `CLAUDE.md` with the single line `@AGENTS.md`; `README.md` (commands, port, structure, links to docs); `docs/architecture.md`; ADRs in `docs/adr/` and `GLOSSARY.md` from the interview.
 - `CLAUDE.local.md` goes into `$(git rev-parse --git-path info/exclude)` (WF-6).
 - No commit (step 9 decides).
 

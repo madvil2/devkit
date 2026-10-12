@@ -27,20 +27,20 @@ Read `<rulebook>/README.md` (principles, `Rulebook revision`), `<rulebook>/proje
 
 ### 1. [main] Interview
 
-- Ask the questions from `project-types.md` with AskUserQuestion, at most 3 per round, in the user's language; skip anything derivable from earlier answers or `--answers`.
+- Call the Skill tool with `grill-with-docs` (grilling + domain-modeling). The questions and skip logic from `project-types.md` seed its design tree; anything derivable from earlier answers or `--answers` is already settled. Ask in the user's language.
 - Derive the type, structure variant (A/B/C), auth pattern and default deploy from the matrix.
 - Path: `~/Projects/<name>`, or `~/Projects/<group>/<name>` when that group folder exists.
 - Port: first free one in 3200–3999 (`lsof -nP -iTCP:<port> -sTCP:LISTEN` prints nothing).
-- Draft the decision record at `<scratchpad>/new-project/<name>/decision.md` from `references/decision-record.md` and the answers JSON next to it.
+- Keep the answers JSON at `<scratchpad>/new-project/<name>/answers.json`. Decisions that pass domain-modeling's ADR test (stack and type, auth pattern, deploy target, every deviation from the rulebook) are drafted as ADRs next to it and written to `<path>/docs/adr/` in step 5; domain terms go to `GLOSSARY.md`.
 - Money or auth in scope: plan a Fable critic for those parts (step 7).
 
-### 2. [opus-context] Freshness check
+### 2. [research] Freshness check
 
-Follow `references/freshness.md`: `npm view` for every applicable stack row, Node LTS, WebSearch/WebFetch of release notes since each `Verified` date, CLI flags, all watch items. Output: `package | rulebook | latest | change | source | date` plus contradictions with proposed edits by rule ID. No web access: continue only with the user's consent and record "not verified".
+Call the Skill tool with `research`, with `references/freshness.md` as the brief and `<scratchpad>/new-project/<name>/freshness.md` as the output file: `npm view` for every applicable stack row, Node LTS, WebSearch/WebFetch of release notes since each `Verified` date, CLI flags, all watch items. Output: `package | rulebook | latest | change | source | date` plus contradictions with proposed edits by rule ID. No web access: continue only with the user's consent and record "not verified".
 
 ### 3. [main] Reconcile
 
-For every contradiction ask the user: (a) update the rulebook now (opus-implementer: rule text, `stack.md`, `freshness-log.md`, revision bump; templates and a re-run of the dry run if a template changes; devkit commit only on command), (b) keep the rulebook with the reason in the ADR, (c) adopt for this project only, recorded in the ADR. Never diverge silently. With no contradictions, still refresh the `Verified` dates and append a log entry (not in dry-run mode).
+For every contradiction ask the user: (a) update the rulebook now (opus-implementer: rule text, `stack.md`, `freshness-log.md`, revision bump; templates and a re-run of the dry run if a template changes; devkit commit only on command), (b) keep the rulebook with the reason in an ADR, (c) adopt for this project only, recorded in an ADR. Never diverge silently. With no contradictions, still refresh the `Verified` dates and append a log entry (not in dry-run mode).
 
 ### 4. [main] Confirmation summary
 
@@ -51,7 +51,7 @@ Show: name, path, type; stack with exact versions; structure variant and layers;
 - Vite types: `references/scaffold-vite.md`. Next types: `references/scaffold-next.md`.
 - Both use the official CLI non-interactively, then `node <skill>/references/render.mjs --answers <answers> --target <path>` to overlay `references/templates/{common,vite|next,tma}` with the placeholders filled, then the decided `pnpm add` set with versions from step 2 (TypeScript on the `~6.0` line while stack.md W-1 stands).
 - pnpm build approvals per TOOL-1: detect the running major with `pnpm --version` inside the project; 12+ uses `pnpm approve <pkg>` (`allowBuilds`), 10/11 uses `onlyBuiltDependencies`; never approve all.
-- Generated, not templated: the golden slice (mock-backed, named after the domain), translations of non-default locales, tokens from Figma variables when given, `AGENTS.md` per `references/agents-md-outline.md`, `CLAUDE.md` (`@AGENTS.md`), `README.md`, `docs/architecture.md`, `docs/decisions/0001-stack.md`.
+- Generated, not templated: the golden slice (mock-backed, named after the domain), translations of non-default locales, tokens from Figma variables when given, `AGENTS.md` per `references/agents-md-outline.md`, `CLAUDE.md` (`@AGENTS.md`), `README.md`, `docs/architecture.md`, the ADRs from step 1 in `docs/adr/`, `GLOSSARY.md`.
 - `git init -b main`, no commit. `CLAUDE.local.md` goes into `$(git rev-parse --git-path info/exclude)` (WF-6).
 
 ### 6. [opus-checker] Verify
@@ -71,14 +71,13 @@ When the user says so, opus-implementer stages explicit paths (never `git add -A
 
 ### 9. [main] Hand-off
 
-Path, port, commands (`pnpm dev`, `pnpm check`, `pnpm test:e2e`), `cd <path> && claude`, and open items: `TODO(api)` endpoints, tokens to replace, deploy secrets, pending approvals, pending Fable review, "not verified" freshness if any.
+Path, port, commands (`pnpm dev`, `pnpm check`, `pnpm test:e2e`), `cd <path> && claude`, and open items: `TODO(api)` endpoints, tokens to replace, deploy secrets, pending approvals, pending Fable review, "not verified" freshness if any, and `/setup-matt-pocock-skills` in the new project before using `to-spec`, `to-tickets`, `implement-spec` or `code-review` there.
 
 ## Files
 
 - `references/freshness.md`: commands, output table, reconcile procedure.
 - `references/scaffold-vite.md`, `references/scaffold-next.md`: exact scaffold steps per framework.
 - `references/agents-md-outline.md`: sections of the generated `AGENTS.md` with source files, rule IDs and the scope filter.
-- `references/decision-record.md`: ADR template.
 - `references/answers.example.json`: answers for the admin dry run.
 - `references/render.mjs`: template renderer.
 - `references/templates/`: `common/`, `vite/`, `tma/`, `next/`.
