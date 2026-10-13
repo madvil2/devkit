@@ -10,7 +10,6 @@
   "repository": "https://github.com/madvil2/devkit",
   "license": "MIT",
   "keywords": ["claude-code", "agents", "workflow", "frontend", "rulebook", "react", "vite", "nextjs", "biome"],
-  "agents": "./agents/",
   "skills": "./skills/",
   "hooks": "./hooks/hooks.json"
 }
