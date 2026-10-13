@@ -29,21 +29,28 @@ jobs:
             echo "Vendored skills and plugins are up to date"
             exit 0
           fi
-          branch="sync/vendor-$(date -u +%Y%m%d)"
+          branch="sync/vendor"
           compare=$(jq -r --slurpfile old <(git show HEAD:vendor.json) '
             .sources[] as $s
-            | ($old[0].sources[] | select(.name == $s.name)) as $o
+            | ($s.source | sub("\\.git$"; "")) as $repo
+            | (([$old[0].sources[] | select(.name == $s.name)][0]) // {commit: ""}) as $o
             | select($o.commit != $s.commit)
-            | "- \($s.name): \($s.source | sub("\\.git$"; ""))/compare/\($o.commit)...\($s.commit)"' vendor.json)
+            | if $o.commit == "" then "- \($s.name): new source at \($repo)/tree/\($s.commit)"
+              else "- \($s.name): \($repo)/compare/\($o.commit)...\($s.commit)" end' vendor.json)
+          summary=$(grep -E '^[a-z0-9-]+: (upstream [0-9a-f]{12}; changed: [a-z0-9, -]+|content changed but version [0-9A-Za-z.+-]+ did not; installers may need to reinstall|[0-9]+ folders match their upstream tree hashes)$' "$RUNNER_TEMP/sync.log" || true)
+          run_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git switch -c "$branch"
+          git switch -C "$branch"
           git add vendor.json skills plugins
           git commit -m "Sync vendored skills and plugins" -m "$compare"
           git push --force origin "$branch"
-          body=$(printf '%s\n\n```\n%s\n```\n\n%s\n' "$compare" "$(cat "$RUNNER_TEMP/sync.log")" \
-            "Before merging: check skills/ for renamed skills or changed Skill tool calls, and re-run the security audit on every changed folder under plugins/ (they ship hooks and scripts that run on the installing machine). Never merge a plugins/ change unaudited.")
-          gh pr create --base main --head "$branch" \
-            --title "Sync vendored skills and plugins ($(date -u +%Y-%m-%d))" \
-            --body "$body" \
-            || echo "A pull request for $branch already exists"
+          policy="Before merging: re-run the security audit on every changed folder under plugins/ against the upstream compare diff below (they ship hooks and scripts that run on the installing machine), and check skills/ for renamed skills or changed Skill tool calls. Never merge a plugins/ change unaudited. A plugin whose content changed without a version bump is flagged below; installers have to reinstall it."
+          body=$(printf '%s\n\nUpstream changes:\n\n%s\n\nSync summary:\n\n```\n%s\n```\n\nThe full sync log is in the workflow run: %s\n' "$policy" "$compare" "$summary" "$run_url")
+          title="Sync vendored skills and plugins ($(date -u +%Y-%m-%d))"
+          open=$(gh pr list --head "$branch" --state open --json number --jq '.[0].number // empty')
+          if [ -n "$open" ]; then
+            gh pr edit "$open" --title "$title" --body "$body"
+          else
+            gh pr create --base main --head "$branch" --title "$title" --body "$body"
+          fi
