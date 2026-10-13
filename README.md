@@ -19,7 +19,7 @@ A knowledge base for Claude Code: agents, global rules, skills and a frontend ru
 - **Agents:** copy the files you want from `agents/` into `~/.claude/agents/` or a project's `.claude/agents/`.
 - **Flow rules:** paste `rules/flow.md`, or the parts you agree with, into your `CLAUDE.md`.
 - **new-project:** copy `skills/new-project/` together with `frontend/`; the skill reads the rulebook from `../../frontend`. It relies on Matt Pocock's `grill-with-docs`, `domain-modeling` and `research` skills.
-- **Plugins:** run `claude plugin marketplace add madvil2/devkit`, then `claude plugin install <name>@devkit` for each plugin you want, or try one with `claude --plugin-dir plugins/<name>`. The plugins' own READMEs say `@cc-millz`; from devkit use `@devkit`. Install a plugin from one marketplace only: devkit's copy is pinned and audited, while cc-millz and cc-thingz track upstream HEAD. After a devkit update, run `claude plugin update <name>@devkit`.
+- **Plugins:** run `claude plugin marketplace add madvil2/devkit`, then `claude plugin install <name>@devkit` for each plugin you want, or try one with `claude --plugin-dir plugins/<name>`. The plugins' own READMEs say `@cc-millz`; from devkit use `@devkit`. Install a plugin from one marketplace only: devkit's copy is pinned and audited, while cc-millz and cc-thingz track upstream HEAD. To take a devkit update, run `claude plugin marketplace update devkit`, then `claude plugin update <name>@devkit`. If a vendored plugin changed without a version bump (the sync warns and its pull request says so), reinstall it with `claude plugin uninstall <name>@devkit` and then `claude plugin install <name>@devkit`.
 
 ## Vendored skills and plugins
 
@@ -29,12 +29,12 @@ Vendored plugins, each listed in the devkit marketplace and installed only when 
 
 | Plugin | Source | What it needs | Caveat from the audit |
 |---|---|---|---|
-| `security-audit` | Millon15/cc-millz | git, ripgrep; semgrep optional | None. |
+| `security-audit` | Millon15/cc-millz | git, ripgrep; semgrep optional | When run, it clones or downloads the audit target into `$TMPDIR/security-audit/` and writes its reports to `$TMPDIR/security-audits/`. |
 | `merge-kit` | Millon15/cc-millz | bash, git, jq | Runs the test command from a `.merge-kit.json` it finds by searching upward from the working directory to `/`, so an untrusted checkout or a parent folder can supply that command. |
-| `toolsmith` | Millon15/cc-millz | bash, jq; bun for the skill finder | Its vendor script clones third-party skills without scanning them, and its skill finder needs bun. |
-| `codex-delegation` | Millon15/cc-millz | the codex CLI and `codex@openai-codex` installed from `openai/codex-plugin-cc` | Needs the codex CLI and `codex@openai-codex` from its own marketplace, and runs Codex with `danger-full-access` for GUI checks. |
-| `agterm-lanes` | Millon15/cc-millz | macOS, agterm, jq | Registers hooks on every prompt, tool call and stop, types `/rename` into its pane, and duplicates agterm status hooks you may already have. |
-| `skill-eval` | umputun/cc-thingz | sh | A hook that tells Claude to activate all relevant skills on every prompt, which pulls against the flow rule that the main session delegates. |
+| `toolsmith` | Millon15/cc-millz | bash, jq; bun for the skill finder | Its vendor script clones third-party skills without scanning them, its skill finder needs bun, and the finder's `--remote` tier queries skills.sh and GitHub code search. |
+| `codex-delegation` | Millon15/cc-millz | the codex CLI and `codex@openai-codex` installed from `openai/codex-plugin-cc` | Needs the codex CLI and `codex@openai-codex` from its own marketplace, runs Codex with `danger-full-access` for GUI checks, and sends delegated work and repository content to OpenAI through Codex. |
+| `agterm-lanes` | Millon15/cc-millz | macOS, agterm, jq | Six hooks fire on every prompt, tool call and stop (they spawn sh even outside agterm, then exit). Inside agterm the Stop hook types `/rename` into its own pane, state goes to `~/.claude/agterm-lanes`, and SessionStart pins the pane's restore command to `claude --resume <id>`; that pin survives uninstalling the plugin (clear it with `agtermctl session restore --none --target <session id>`). Duplicates agterm's own status hooks if you installed them. |
+| `skill-eval` | umputun/cc-thingz | sh | A hook that prepends about 20 lines of "MANDATORY SKILL ACTIVATION" text to every prompt (a token cost on every turn, and an insistent tone), telling Claude to activate all relevant skills, which pulls against the flow rule that the main session delegates. |
 
 skill-eval has no README of its own: it is a single `UserPromptSubmit` hook that prints a skill-activation instruction into every prompt.
 
