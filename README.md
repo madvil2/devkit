@@ -10,7 +10,7 @@ A knowledge base for Claude Code: agents, global rules, skills and a frontend ru
 | `rules/flow.md` | Global rules for every session: roles, chains by task size, Fable triggers, review loops, hygiene. Meant for a global `CLAUDE.md`. |
 | `frontend/` | The frontend rulebook: Next.js or Vite + React 19, CSS Modules with tiered tokens, TanStack, zustand, zod, Base UI. Every rule has a stable ID and a bracket naming the tool that enforces it. |
 | `skills/new-project/` | Scaffolds a frontend project from the rulebook: interview, freshness check, official CLI, templates, rendered `AGENTS.md`, verification. |
-| `skills/<others>` | Matt Pocock's skills this flow relies on, vendored unchanged from [mattpocock/skills](https://github.com/mattpocock/skills). The list and the upstream commit live in `pocock-skills.json`. |
+| `skills/<others>` | Matt Pocock's skills this flow relies on, vendored unchanged from [mattpocock/skills](https://github.com/mattpocock/skills). The list and the upstream commit live in `vendor.json`. |
 | `hooks/` | A `PreToolUse` hook that runs the project's Biome check before `git push` and denies the push when it fails. |
 
 ## How to use
@@ -26,10 +26,10 @@ Vendored: `grill-with-docs`, `grilling`, `domain-modeling`, `research` (used by 
 Never edit them here; the sync overwrites them. To update, run:
 
 ```bash
-node scripts/sync-pocock-skills.mjs
+node scripts/sync-vendor.mjs
 ```
 
-It fetches only the listed skill folders, replaces them, records the upstream commit and per-skill hashes, and warns when a skill is renamed upstream or starts calling a skill that is not vendored. A GitHub Action runs it every Monday and opens a pull request when something changed. To add or drop a skill, edit the list in `pocock-skills.json` and run the sync.
+It fetches only the listed skill folders, replaces them, records the upstream commit and per-skill hashes, and warns when a skill is renamed upstream or starts calling a skill that is not vendored. A GitHub Action runs it every Monday and opens a pull request when something changed. To add or drop a skill, edit `items` in `vendor.json` and run the sync.
 
 ## Credits
 

@@ -1,0 +1,49 @@
+name: Sync vendored skills and plugins
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Sync
+        shell: bash
+        run: node scripts/sync-vendor.mjs 2>&1 | tee "$RUNNER_TEMP/sync.log"
+      - name: Open a pull request when upstream changed
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet && [ -z "$(git ls-files --others --exclude-standard)" ]; then
+            echo "Vendored skills and plugins are up to date"
+            exit 0
+          fi
+          branch="sync/vendor-$(date -u +%Y%m%d)"
+          compare=$(jq -r --slurpfile old <(git show HEAD:vendor.json) '
+            .sources[] as $s
+            | ($old[0].sources[] | select(.name == $s.name)) as $o
+            | select($o.commit != $s.commit)
+            | "- \($s.name): \($s.source | sub("\\.git$"; ""))/compare/\($o.commit)...\($s.commit)"' vendor.json)
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git add vendor.json skills plugins
+          git commit -m "Sync vendored skills and plugins" -m "$compare"
+          git push --force origin "$branch"
+          body=$(printf '%s\n\n```\n%s\n```\n\n%s\n' "$compare" "$(cat "$RUNNER_TEMP/sync.log")" \
+            "Before merging: check skills/ for renamed skills or changed Skill tool calls, and re-run the security audit on every changed folder under plugins/ (they ship hooks and scripts that run on the installing machine). Never merge a plugins/ change unaudited.")
+          gh pr create --base main --head "$branch" \
+            --title "Sync vendored skills and plugins ($(date -u +%Y-%m-%d))" \
+            --body "$body" \
+            || echo "A pull request for $branch already exists"
