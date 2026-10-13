@@ -117,11 +117,11 @@ try {
       const relative = filesIn(join(upstream, found[0])).map((file) => `${layout.target}/${name}/${file.slice(join(upstream, found[0]).length + 1)}`)
       let ignored = ''
       try {
-        ignored = execFileSync('git', ['check-ignore', '--no-index', '--stdin'], { cwd: ROOT, input: relative.join('\n'), encoding: 'utf8' }).trim()
+        ignored = execFileSync('git', ['check-ignore', '--no-index', '--stdin', '-z'], { cwd: ROOT, input: relative.join('\0'), encoding: 'utf8' })
       } catch (error) {
         if (error.status !== 1) throw error
       }
-      if (ignored) throw new Error(`${source.name}/${name}: devkit's .gitignore would drop ${ignored.split('\n').map((path) => JSON.stringify(path)).join(', ')}`)
+      if (ignored) throw new Error(`${source.name}/${name}: devkit's .gitignore would drop ${ignored.split('\0').filter(Boolean).map((path) => JSON.stringify(path)).join(', ')}`)
     }
     return { source, layout, upstream, commit, paths, hashes }
   })
