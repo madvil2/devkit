@@ -8,6 +8,7 @@ const ROOT = process.env.VENDOR_ROOT ?? join(dirname(fileURLToPath(import.meta.u
 const MANIFEST = join(ROOT, 'vendor.json')
 const MARKETPLACE = join(ROOT, '.claude-plugin', 'marketplace.json')
 const NAME = /^[a-z0-9-]+$/
+const VERSION = /^[0-9A-Za-z.+-]{1,64}$/
 
 const git = (cwd, ...args) => execFileSync('git', args, { cwd, encoding: 'utf8' }).trim()
 const dirsIn = (dir) => readdirSync(dir, { withFileTypes: true }).filter((entry) => entry.isDirectory()).map((entry) => entry.name)
@@ -15,6 +16,16 @@ const filesIn = (dir) =>
   readdirSync(dir, { withFileTypes: true, recursive: true })
     .filter((entry) => entry.isFile())
     .map((entry) => join(entry.parentPath, entry.name))
+const readVersion = (dir) => {
+  const file = join(dir, '.claude-plugin', 'plugin.json')
+  if (!existsSync(file)) return undefined
+  return JSON.stringify(JSON.parse(readFileSync(file, 'utf8')).version ?? null)
+}
+const showVersion = (raw) => {
+  const version = JSON.parse(raw)
+  if (version === null) return 'unset'
+  return typeof version === 'string' && VERSION.test(version) ? version : 'unprintable'
+}
 
 const LAYOUTS = {
   skills: {
@@ -43,8 +54,9 @@ const LAYOUTS = {
     locate: (upstream, name) => [`plugins/${name}`].filter((path) => existsSync(join(upstream, path, '.claude-plugin', 'plugin.json'))),
     inspect(upstream, name, path) {
       const declared = JSON.parse(readFileSync(join(upstream, path, '.claude-plugin', 'plugin.json'), 'utf8')).name
-      if (declared !== name) throw new Error(`${name}: plugin.json declares "${declared}"; the folder and the plugin name must agree`)
+      if (declared !== name) throw new Error(`${name}: plugin.json declares ${JSON.stringify(declared)}; the folder and the plugin name must agree`)
     },
+    version: readVersion,
     after(names) {
       const listed = JSON.parse(readFileSync(MARKETPLACE, 'utf8')).plugins
       for (const name of names) {
@@ -53,7 +65,7 @@ const LAYOUTS = {
         }
         for (const file of filesIn(join(ROOT, 'plugins', name))) {
           if (readFileSync(file, 'utf8').includes('${CLAUDE_PLUGIN_ROOT}/..')) {
-            console.warn(`${name}: ${file.slice(ROOT.length + 1)} reaches outside its plugin folder`)
+            console.warn(`${name}: ${JSON.stringify(file.slice(ROOT.length + 1))} reaches outside its plugin folder`)
           }
         }
       }
@@ -95,6 +107,13 @@ try {
       layout.inspect(upstream, name, found[0])
       paths[name] = found[0]
       hashes[name] = git(upstream, 'rev-parse', `HEAD:${found[0]}`)
+      const modes = git(upstream, 'ls-tree', '-r', `HEAD:${found[0]}`)
+        .split('\n')
+        .filter(Boolean)
+        .map((line) => line.split(' ')[0])
+      if (modes.some((mode) => mode === '120000' || mode === '160000')) {
+        throw new Error(`${source.name}/${name}: upstream folder contains a symlink or submodule; refusing to vendor it`)
+      }
       const relative = filesIn(join(upstream, found[0])).map((file) => `${layout.target}/${name}/${file.slice(join(upstream, found[0]).length + 1)}`)
       let ignored = ''
       try {
@@ -102,22 +121,40 @@ try {
       } catch (error) {
         if (error.status !== 1) throw error
       }
-      if (ignored) throw new Error(`${source.name}/${name}: devkit's .gitignore would drop ${ignored.split('\n').join(', ')}`)
+      if (ignored) throw new Error(`${source.name}/${name}: devkit's .gitignore would drop ${ignored.split('\n').map((path) => JSON.stringify(path)).join(', ')}`)
     }
     return { source, layout, upstream, commit, paths, hashes }
   })
 
+  const index = join(tmp, 'verify-index')
+  let verified = 0
   for (const { source, layout, upstream, commit, paths, hashes } of resolved) {
     const changed = source.items.filter((name) => hashes[name] !== source.hashes[name])
     mkdirSync(join(ROOT, layout.target), { recursive: true })
     for (const name of source.items) {
-      rmSync(join(ROOT, layout.target, name), { recursive: true, force: true })
-      cpSync(join(upstream, paths[name]), join(ROOT, layout.target, name), { recursive: true })
+      const target = join(ROOT, layout.target, name)
+      const before = layout.version && existsSync(target) ? layout.version(target) : undefined
+      rmSync(target, { recursive: true, force: true })
+      cpSync(join(upstream, paths[name]), target, { recursive: true })
+      if (before !== undefined && changed.includes(name) && layout.version(target) === before) {
+        console.warn(`${name}: content changed but version ${showVersion(before)} did not; installers may need to reinstall`)
+      }
+    }
+    for (const name of source.items) {
+      const prefix = `${layout.target}/${name}`
+      rmSync(index, { force: true })
+      const env = { ...process.env, GIT_INDEX_FILE: index }
+      execFileSync('git', ['add', '-f', '--', prefix], { cwd: ROOT, env })
+      const tree = execFileSync('git', ['write-tree', `--prefix=${prefix}/`], { cwd: ROOT, env, encoding: 'utf8' }).trim()
+      rmSync(index, { force: true })
+      if (tree !== hashes[name]) throw new Error(`${source.name}/${name}: copied tree ${tree} differs from upstream ${hashes[name]}`)
+      verified += 1
     }
     cpSync(join(upstream, 'LICENSE'), join(ROOT, source.license))
     Object.assign(source, { commit, hashes })
     console.log(`${source.name}: upstream ${commit.slice(0, 12)}; changed: ${changed.length ? changed.join(', ') : 'none'}`)
   }
+  console.log(`verified: ${verified} folders match their upstream tree hashes`)
   for (const { source, layout } of resolved) layout.after(source.items)
 
   writeFileSync(MANIFEST, `${JSON.stringify(manifest, null, 2)}\n`)
