@@ -12,29 +12,46 @@ A knowledge base for Claude Code: agents, global rules, skills and a frontend ru
 | `skills/new-project/` | Scaffolds a frontend project from the rulebook: interview, freshness check, official CLI, templates, rendered `AGENTS.md`, verification. |
 | `skills/<others>` | Matt Pocock's skills this flow relies on, vendored unchanged from [mattpocock/skills](https://github.com/mattpocock/skills). The list and the upstream commit live in `vendor.json`. |
 | `hooks/` | A `PreToolUse` hook that runs the project's Biome check before `git push` and denies the push when it fails. |
+| `plugins/` | Six third-party Claude Code plugins, vendored unchanged: security-audit, merge-kit, toolsmith, codex-delegation, agterm-lanes from Millon15/cc-millz, and skill-eval from umputun/cc-thingz. Listed in the devkit marketplace; install the ones you want. |
 
 ## How to use
 
 - **Agents:** copy the files you want from `agents/` into `~/.claude/agents/` or a project's `.claude/agents/`.
 - **Flow rules:** paste `rules/flow.md`, or the parts you agree with, into your `CLAUDE.md`.
 - **new-project:** copy `skills/new-project/` together with `frontend/`; the skill reads the rulebook from `../../frontend`. It relies on Matt Pocock's `grill-with-docs`, `domain-modeling` and `research` skills.
+- **Plugins:** run `claude plugin marketplace add madvil2/devkit`, then `claude plugin install <name>@devkit` for each plugin you want, or try one with `claude --plugin-dir plugins/<name>`. The plugins' own READMEs say `@cc-millz`; from devkit use `@devkit`. Install a plugin from one marketplace only: devkit's copy is pinned and audited, while cc-millz and cc-thingz track upstream HEAD. After a devkit update, run `claude plugin update <name>@devkit`.
 
-## Pocock skills
+## Vendored skills and plugins
 
 Vendored: `grill-with-docs`, `grilling`, `domain-modeling`, `research` (used by `new-project`), `to-spec`, `to-tickets`, `implement-spec`, `implement` (spec to code), `tdd`, `codebase-design`, `code-review` (their dependencies), `setup-matt-pocock-skills` (configures the issue tracker the others need), and `writing-for-agents`, `prototype`, `pr`, `handoff`, `retro`.
 
-Never edit them here; the sync overwrites them. To update, run:
+Vendored plugins, each listed in the devkit marketplace and installed only when you ask for it:
+
+| Plugin | Source | What it needs | Caveat from the audit |
+|---|---|---|---|
+| `security-audit` | Millon15/cc-millz | git, ripgrep; semgrep optional | None. |
+| `merge-kit` | Millon15/cc-millz | bash, git, jq | Runs the test command from a `.merge-kit.json` it finds by searching upward from the working directory to `/`, so an untrusted checkout or a parent folder can supply that command. |
+| `toolsmith` | Millon15/cc-millz | bash, jq; bun for the skill finder | Its vendor script clones third-party skills without scanning them, and its skill finder needs bun. |
+| `codex-delegation` | Millon15/cc-millz | the codex CLI and `codex@openai-codex` installed from `openai/codex-plugin-cc` | Needs the codex CLI and `codex@openai-codex` from its own marketplace, and runs Codex with `danger-full-access` for GUI checks. |
+| `agterm-lanes` | Millon15/cc-millz | macOS, agterm, jq | Registers hooks on every prompt, tool call and stop, types `/rename` into its pane, and duplicates agterm status hooks you may already have. |
+| `skill-eval` | umputun/cc-thingz | sh | A hook that tells Claude to activate all relevant skills on every prompt, which pulls against the flow rule that the main session delegates. |
+
+skill-eval has no README of its own: it is a single `UserPromptSubmit` hook that prints a skill-activation instruction into every prompt.
+
+Never edit vendored folders; the sync overwrites them. Customize a plugin through its own config files or environment variables. To update everything, run:
 
 ```bash
 node scripts/sync-vendor.mjs
 ```
 
-It fetches only the listed skill folders, replaces them, records the upstream commit and per-skill hashes, and warns when a skill is renamed upstream or starts calling a skill that is not vendored. A GitHub Action runs it every Monday and opens a pull request when something changed. To add or drop a skill, edit `items` in `vendor.json` and run the sync.
+It reads `vendor.json`, fetches only the listed skill and plugin folders of each source, replaces them, copies each upstream license, and records the upstream commit and per-folder hashes. It stops without touching anything when a listed folder is renamed or removed upstream, and warns when a skill starts calling a skill that is not vendored. To add or drop an item, edit `items` in `vendor.json`; for a new upstream, add a source. A GitHub Action runs the sync every Monday and opens one pull request when something changed. **A pull request that changes `plugins/` is merged only after a security audit of the upstream diff**, because those plugins ship hooks and scripts that run on the installing machine.
 
 ## Credits
 
 The agents, the flow rules, the frontend rulebook and the `new-project` skill with its templates are Vlad's, with the parts that depended on his hub repository removed. Additions: the "Skills that spawn subagents" section at the end of `rules/flow.md`, and `new-project` running its interview, ADRs and freshness check through Matt Pocock's skills.
 
 The vendored skills are Matt Pocock's, MIT, license in `skills/LICENSE-mattpocock-skills`.
+
+The vendored plugins are Vitautas Brazas's (Millon15) and Umputun's, MIT, licenses in `plugins/LICENSE-cc-millz` and `plugins/LICENSE-cc-thingz`.
 
 MIT.
