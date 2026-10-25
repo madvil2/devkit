@@ -12,14 +12,14 @@ A knowledge base for Claude Code: agents, global rules, skills and a frontend ru
 | `skills/new-project/` | Scaffolds a frontend project from the rulebook: interview, freshness check, official CLI, templates, rendered `AGENTS.md`, verification. |
 | `skills/<others>` | Matt Pocock's skills this flow relies on, vendored unchanged from [mattpocock/skills](https://github.com/mattpocock/skills). The list and the upstream commit live in `vendor.json`. |
 | `hooks/` | A `PreToolUse` hook that runs the project's Biome check before `git push` and denies the push when it fails. |
-| `plugins/` | Six third-party Claude Code plugins, vendored unchanged: security-audit, merge-kit, toolsmith, codex-delegation, agterm-lanes from Millon15/cc-millz, and skill-eval from umputun/cc-thingz. Listed in the devkit marketplace; install the ones you want. |
+| `plugins/` | Three third-party Claude Code plugins, vendored unchanged from Millon15/cc-millz: security-audit, toolsmith, codex-delegation. Listed in the devkit marketplace; install the ones you want. |
 
 ## How to use
 
 - **Agents:** copy the files you want from `agents/` into `~/.claude/agents/` or a project's `.claude/agents/`.
 - **Flow rules:** import `global/CLAUDE.md` from your `~/.claude/CLAUDE.md` with a line like `@~/Projects/devkit/global/CLAUDE.md` (adjust the path to your clone), so edits to the kit reach every session. Or paste the parts you agree with into your `CLAUDE.md`.
 - **new-project:** copy `skills/new-project/` together with `frontend/`; the skill reads the rulebook from `../../frontend`. It relies on Matt Pocock's `grill-with-docs`, `domain-modeling` and `research` skills.
-- **Plugins:** run `claude plugin marketplace add madvil2/devkit`, then `claude plugin install <name>@devkit` for each plugin you want, or try one with `claude --plugin-dir plugins/<name>`. The plugins' own READMEs say `@cc-millz`; from devkit use `@devkit`. Install a plugin from one marketplace only: devkit's copy is pinned and audited, while cc-millz and cc-thingz track upstream HEAD. To take a devkit update, run `claude plugin marketplace update devkit`, then `claude plugin update <name>@devkit`. If a vendored plugin changed without a version bump (the sync warns and its pull request says so), reinstall it with `claude plugin uninstall <name>@devkit` and then `claude plugin install <name>@devkit`.
+- **Plugins:** run `claude plugin marketplace add madvil2/devkit`, then `claude plugin install <name>@devkit` for each plugin you want, or try one with `claude --plugin-dir plugins/<name>`. The plugins' own READMEs say `@cc-millz`; from devkit use `@devkit`. Install a plugin from one marketplace only: devkit's copy is pinned and audited, while cc-millz tracks upstream HEAD. To take a devkit update, run `claude plugin marketplace update devkit`, then `claude plugin update <name>@devkit`. If a vendored plugin changed without a version bump (the sync warns and its pull request says so), reinstall it with `claude plugin uninstall <name>@devkit` and then `claude plugin install <name>@devkit`.
 
 ## Vendored skills and plugins
 
@@ -30,13 +30,10 @@ Vendored plugins, each listed in the devkit marketplace and installed only when 
 | Plugin | Source | What it needs | Caveat from the audit |
 |---|---|---|---|
 | `security-audit` | Millon15/cc-millz | git, ripgrep; semgrep optional | When run, it clones or downloads the audit target into `$TMPDIR/security-audit/` and writes its reports to `$TMPDIR/security-audits/`. |
-| `merge-kit` | Millon15/cc-millz | bash, git, jq | Runs the test command from a `.merge-kit.json` it finds by searching upward from the working directory to `/`, so an untrusted checkout or a parent folder can supply that command. |
 | `toolsmith` | Millon15/cc-millz | bash, jq; bun for the skill finder | Its vendor script clones third-party skills without scanning them, its skill finder needs bun, and the finder's `--remote` tier queries skills.sh and GitHub code search. |
 | `codex-delegation` | Millon15/cc-millz | the codex CLI and `codex@openai-codex` installed from `openai/codex-plugin-cc` | Needs the codex CLI and `codex@openai-codex` from its own marketplace, runs Codex with `danger-full-access` for GUI checks, and sends delegated work and repository content to OpenAI through Codex. |
-| `agterm-lanes` | Millon15/cc-millz | macOS, agterm, jq | Six hooks fire on every prompt, tool call and stop (they spawn sh even outside agterm, then exit). Inside agterm the Stop hook types `/rename` into its own pane, state goes to `~/.claude/agterm-lanes`, and SessionStart pins the pane's restore command to `claude --resume <id>`; that pin survives uninstalling the plugin (undo it with `agtermctl session restore --clear --target <session id>`, adding `--pane-id <pane id>` for a split pane). Duplicates agterm's own status hooks if you installed them. |
-| `skill-eval` | umputun/cc-thingz | sh | A hook that prepends about 20 lines of "MANDATORY SKILL ACTIVATION" text to every prompt (a token cost on every turn, and an insistent tone), telling Claude to activate all relevant skills, which pulls against the flow rule that the main session delegates. |
 
-skill-eval has no README of its own: it is a single `UserPromptSubmit` hook that prints a skill-activation instruction into every prompt.
+If you installed agterm-lanes, merge-kit or skill-eval from devkit, run `claude plugin uninstall <name>@devkit`; agterm-lanes' restore pin survives that, so also run `agtermctl session restore --clear --target <session id>`, adding `--pane-id <pane id>` for a split pane.
 
 Never edit vendored folders; the sync overwrites them. Customize a plugin through its own config files or environment variables. To update everything, run:
 
@@ -44,7 +41,7 @@ Never edit vendored folders; the sync overwrites them. Customize a plugin throug
 node scripts/sync-vendor.mjs
 ```
 
-It reads `vendor.json`, fetches only the listed skill and plugin folders of each source, replaces them, copies each upstream license, and records the upstream commit and per-folder hashes. It stops without touching anything when a listed folder is renamed or removed upstream, and warns when a skill starts calling a skill that is not vendored. To add or drop an item, edit `items` in `vendor.json`; for a new upstream, add a source. A GitHub Action runs the sync every Monday and opens one pull request when something changed. **A pull request that changes `plugins/` is merged only after a security audit of the upstream diff**, because those plugins ship hooks and scripts that run on the installing machine. A local sync that fails the post-copy verification leaves `plugins/` or `skills/` modified, and `git checkout -- plugins skills && git clean -fd plugins skills` restores them; in CI the sync step fails before the pull request step runs.
+It reads `vendor.json`, fetches only the listed skill and plugin folders of each source, replaces them, copies each upstream license, and records the upstream commit and per-folder hashes. It stops without touching anything when a listed folder is renamed or removed upstream, and warns when a skill starts calling a skill that is not vendored. To add an item, add it to `items` in `vendor.json`; for a new upstream, add a source. The sync never deletes folders: to drop an item, remove it from `items` and `hashes`, `git rm -r` its folder, and for a plugin also remove its `.claude-plugin/marketplace.json` entry and its README rows; no sync run is needed. Drop a source left with no items together with its license file. A GitHub Action runs the sync every Monday and opens one pull request when something changed. **A pull request that changes `plugins/` is merged only after a security audit of the upstream diff**, because those plugins ship hooks and scripts that run on the installing machine. A local sync that fails the post-copy verification leaves `plugins/` or `skills/` modified, and `git checkout -- plugins skills && git clean -fd plugins skills` restores them; in CI the sync step fails before the pull request step runs.
 
 ## Credits
 
@@ -52,6 +49,6 @@ The agents, the flow rules, the frontend rulebook and the `new-project` skill wi
 
 The vendored skills are Matt Pocock's, MIT, license in `skills/LICENSE-mattpocock-skills`.
 
-The vendored plugins are Vitautas Brazas's (Millon15) and Umputun's, MIT, licenses in `plugins/LICENSE-cc-millz` and `plugins/LICENSE-cc-thingz`.
+The vendored plugins are Vitautas Brazas's (Millon15), MIT, license in `plugins/LICENSE-cc-millz`.
 
 MIT.

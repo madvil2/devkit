@@ -54,32 +54,14 @@
       "layout": "plugins",
       "license": "plugins/LICENSE-cc-millz",
       "items": [
-        "agterm-lanes",
         "codex-delegation",
-        "merge-kit",
         "security-audit",
         "toolsmith"
       ],
       "hashes": {
-        "agterm-lanes": "249469eb4fc84976bc0b72ab2f582fbf8d698b36",
         "codex-delegation": "2d09bf0bcd03582b37f4c258313e6d605e489c22",
-        "merge-kit": "977517fa9a4f2d93cd1e01bae70ec3ac9d89f0a6",
         "security-audit": "9fab841372786f1bc1ecae39933dba272693ff85",
         "toolsmith": "bdf72b16eeb37eaf91ea8ad1b76426fbafaaa223"
-      }
-    },
-    {
-      "name": "cc-thingz",
-      "source": "https://github.com/umputun/cc-thingz.git",
-      "ref": "master",
-      "commit": "99e1c8dec3e9fb396108f6b1d70288e0a247b0c6",
-      "layout": "plugins",
-      "license": "plugins/LICENSE-cc-thingz",
-      "items": [
-        "skill-eval"
-      ],
-      "hashes": {
-        "skill-eval": "57f802c14bb4a0c11561cac96daff39efc14932f"
       }
     }
   ]

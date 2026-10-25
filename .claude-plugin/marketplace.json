@@ -18,13 +18,6 @@
       "homepage": "https://github.com/Millon15/cc-millz/tree/master/plugins/security-audit"
     },
     {
-      "name": "merge-kit",
-      "source": "./plugins/merge-kit",
-      "description": "Merge-conflict resolution and merge forensics: /merge-kit:resolve and /merge-kit:verify. Needs jq. Vendored unchanged from Millon15/cc-millz.",
-      "category": "development",
-      "homepage": "https://github.com/Millon15/cc-millz/tree/master/plugins/merge-kit"
-    },
-    {
       "name": "toolsmith",
       "source": "./plugins/toolsmith",
       "description": "Create, check, retire and look up agent dev tools in any agent-config layout. Needs jq; the skill finder needs bun. Vendored unchanged from Millon15/cc-millz.",
@@ -37,20 +30,6 @@
       "description": "Route second-tier work to Codex CLI: routing rubric, workflow fan-out worker, computer-use verification. Requires the codex CLI and codex@openai-codex. Vendored unchanged from Millon15/cc-millz.",
       "category": "development",
       "homepage": "https://github.com/Millon15/cc-millz/tree/master/plugins/codex-delegation"
-    },
-    {
-      "name": "agterm-lanes",
-      "source": "./plugins/agterm-lanes",
-      "description": "Self-labelling agterm lanes: each Claude pane names, tints and re-pins itself. macOS, agterm and jq; hooks are no-ops elsewhere. Vendored unchanged from Millon15/cc-millz.",
-      "category": "productivity",
-      "homepage": "https://github.com/Millon15/cc-millz/tree/master/plugins/agterm-lanes"
-    },
-    {
-      "name": "skill-eval",
-      "source": "./plugins/skill-eval",
-      "description": "UserPromptSubmit hook that makes Claude check and load relevant skills before every response. Vendored unchanged from umputun/cc-thingz.",
-      "category": "productivity",
-      "homepage": "https://github.com/umputun/cc-thingz/tree/master/plugins/skill-eval"
     }
   ]
 }
