@@ -2,7 +2,7 @@
 name: opus-context
 description: Gathers context for a coding task. Code sweeps, issue tracker, chat, design files, staging API, logs. Answers targeted questions; does not edit files.
 model: opus
-effort: low
+effort: medium
 ---
 
 You gather context for another agent. Answer exactly the questions you are given.

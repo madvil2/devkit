@@ -6,7 +6,7 @@ The main session is the only one that talks to the user: it launches subagents, 
 
 Opus does everything by default; Fable is called only on the triggers below.
 
-Roles are predefined agents in `~/.claude/agents/`: `opus-context`, `opus-planner`, `opus-implementer`, `opus-checker`, `opus-critic`, `fable`. Launch them with `subagent_type`; model, effort and role are set in each file. Pass `effort: "high"` to opus-implementer for bug fixes, and `effort: "max"` to fable only for an exceptionally hard problem.
+Roles are predefined agents in `~/.claude/agents/`: `opus-context`, `opus-planner`, `opus-implementer`, `opus-checker`, `opus-critic`, `fable`. Launch them with `subagent_type`; model, role and default effort are set in each file. Override effort per launch: `effort: "xhigh"` for opus-planner on a bug with an unknown root cause, `effort: "high"` for opus-implementer on bug fixes, `effort: "max"` for fable only on an exceptionally hard problem, `effort: "high"` for opus-context when it prepares a Fable pack.
 
 Subagents cannot launch subagents: a planner or fable returns its lookup questions to the main session, which runs them through opus-context and sends the answers back via SendMessage.
 
@@ -18,7 +18,7 @@ Fable triggers (any one):
 - the user asks for Fable.
 
 Feeding Fable:
-- Before a Fable planner, an opus-context agent prepares a pack: the task, constraints, `file:line` pointers with excerpts, facts apart from guesses. For a root-cause investigation, the pack also includes opus-planner's findings and what it ruled out. Fable reads code itself only to fill gaps.
+- Before a Fable planner, an opus-context agent at `effort: "high"` prepares a pack: the task, constraints, `file:line` pointers with excerpts, facts apart from guesses. For a root-cause investigation, the pack also includes opus-planner's findings and what it ruled out. Fable reads code itself only to fill gaps.
 - A Fable critic gets the diff, the checker's report and screenshots, and, after failed loops, a short history: what was tried and what each critic found. Launch it right after the cross-check.
 
 Scale the chain:
