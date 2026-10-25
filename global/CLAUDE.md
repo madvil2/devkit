@@ -46,6 +46,8 @@ Commit attribution: commits are in English, with no mention of Claude and no Co-
 
 Every agent instruction file is written in English: `CLAUDE.md`, `CLAUDE.local.md`, `AGENTS.md`, `.claude/rules/*`, `.agents/*`, skill and hook instructions. A rule found in another language is translated in place, not added to. Replies to the user follow the user's language; the rules stay English.
 
-## Skills that spawn subagents
+## Skills and plugins
 
-When a skill says "implementer subagent" or "merger subagent", use `opus-implementer`; "exploration subagent" or "research subagent" means `opus-context`. Each implementer's result goes through `opus-checker` before it is merged; `opus-critic` reviews the integrated result.
+Before delegating or answering, the main session checks the available skills and plugin commands for ones that fit the task; one the user names always fits. A skill built around talking to the user or launching subagents (grilling, code-review, implement-spec) runs in the main session, which follows its steps with the role mapping below. Any other fitting skill is named in the prompt of the subagent whose role covers it (tdd for opus-implementer), and that subagent invokes it; subagents may also invoke skills that fit their own role. When a subagent's skill reaches a step that needs the user, another subagent or an outward action, the subagent returns that step in its report: the main session asks the user or launches the agent and sends the answer back via SendMessage, and outward steps go to opus-implementer on the user's explicit command. A skill does not move work between roles: its context gathering, planning, edits and reviews still go to the agents that own them.
+
+When a skill says "implementer subagent" or "merger subagent", use `opus-implementer`; "exploration subagent" or "research subagent" means `opus-context`; a review sub-agent (code-review's Standards and Spec) means `opus-critic`. Each implementer's result goes through `opus-checker` before it is merged; `opus-critic` reviews the integrated result. code-review's report goes to the user; it is not the chain's critic step and does not count toward critic loops.

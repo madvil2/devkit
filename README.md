@@ -7,7 +7,7 @@ A knowledge base for Claude Code: agents, global rules, skills and a frontend ru
 | Path | What it is |
 |---|---|
 | `agents/` | Six agents: `opus-context`, `opus-planner`, `opus-implementer`, `opus-checker`, `opus-critic`, `fable`. Model and effort live in each file's frontmatter. |
-| `global/CLAUDE.md` | The global `CLAUDE.md`: rules for every session, covering roles, chains by task size, Fable triggers, review loops, hygiene. |
+| `global/CLAUDE.md` | The global `CLAUDE.md`: rules for every session, covering roles, chains by task size, Fable triggers, review loops, skill use, hygiene. |
 | `frontend/` | The frontend rulebook: Next.js or Vite + React 19, CSS Modules with tiered tokens, TanStack, zustand, zod, Base UI. Every rule has a stable ID and a bracket naming the tool that enforces it. |
 | `skills/new-project/` | Scaffolds a frontend project from the rulebook: interview, freshness check, official CLI, templates, rendered `AGENTS.md`, verification. |
 | `skills/<others>` | Matt Pocock's skills this flow relies on, vendored unchanged from [mattpocock/skills](https://github.com/mattpocock/skills). The list and the upstream commit live in `vendor.json`. |
@@ -45,7 +45,7 @@ It reads `vendor.json`, fetches only the listed skill and plugin folders of each
 
 ## Credits
 
-The agents, the flow rules, the frontend rulebook and the `new-project` skill with its templates are Vlad's, with the parts that depended on his hub repository removed. Additions: the "Skills that spawn subagents" section at the end of `global/CLAUDE.md`, and `new-project` running its interview, ADRs and freshness check through Matt Pocock's skills.
+The agents, the flow rules, the frontend rulebook and the `new-project` skill with its templates are Vlad's, with the parts that depended on his hub repository removed. Additions: the "Skills and plugins" section at the end of `global/CLAUDE.md`, and `new-project` running its interview, ADRs and freshness check through Matt Pocock's skills.
 
 The vendored skills are Matt Pocock's, MIT, license in `skills/LICENSE-mattpocock-skills`.
 
