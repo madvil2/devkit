@@ -4,7 +4,7 @@
       "name": "mattpocock-skills",
       "source": "https://github.com/mattpocock/skills.git",
       "ref": "main",
-      "commit": "49dd158d1076134a641b33efb035946536778336",
+      "commit": "5beb35b040e3de97e54fa9e386d7e42d15c295c2",
       "layout": "skills",
       "license": "skills/LICENSE-mattpocock-skills",
       "items": [
@@ -50,7 +50,7 @@
       "name": "cc-millz",
       "source": "https://github.com/Millon15/cc-millz.git",
       "ref": "master",
-      "commit": "57663572d35a36c6609fb13ff5715525bbedc958",
+      "commit": "59863ed9eddbcf7890a9f4b0a2a891acd49de00c",
       "layout": "plugins",
       "license": "plugins/LICENSE-cc-millz",
       "items": [
