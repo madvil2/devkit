@@ -33,6 +33,8 @@ Loops (findings always go back to the same implementer via SendMessage):
 - opus-critic: at most 2 returns; the next review is by fable instead of a third Opus round.
 - fable critic: one re-review after its findings are fixed; if it still does not converge, stop and bring the user a summary of where it is stuck.
 - After every fix the checker runs again before the critic sees it. The main session reports to the user only after the critic (Opus or Fable) accepts; on a small task, after the checker is clean.
+- Every opus-checker, opus-critic and fable critic report ends with one line, `Verdict: <clean|findings>; blocking: n; non-blocking: m` (the critics write `accept|return`); clean and accept mean no blocking findings. The main session acts on that line and on a doubt note at the top of a checker's report, which still makes a small task regular: blocking findings go back to the implementer and count as a round; non-blocking findings alone do not start one and are listed in the report to the user.
+- A critic's re-review gets its earlier findings and the diff since that review.
 
 Parallel agents:
 - Give each parallel agent its own scratch subfolder (`<scratchpad>/<agent-task>/`); no two agents write the same scratch files.
