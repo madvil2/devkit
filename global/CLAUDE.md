@@ -28,7 +28,7 @@ Scale the chain:
 - **Trigger task**: the same chain with fable as the planner and/or the critic, as the trigger requires.
 - **When in doubt**: treat it as regular.
 
-Loops (findings always go back to the same implementer via SendMessage):
+Loops (findings always go back to the same implementer via SendMessage, unless it came back unfinished; then they go to its successor, see Worker notes and successors):
 - implementer ↔ checker: at most 2 rounds; if still not clean, escalate to fable as critic with the checker's open findings.
 - opus-critic: at most 2 returns; the next review is by fable instead of a third Opus round.
 - fable critic: one re-review after its findings are fixed; if it still does not converge, stop and bring the user a summary of where it is stuck.
@@ -39,6 +39,18 @@ Loops (findings always go back to the same implementer via SendMessage):
 Parallel agents:
 - Give each parallel agent its own scratch subfolder (`<scratchpad>/<agent-task>/`); no two agents write the same scratch files.
 - Split parallel implementers by explicit file or folder ownership; only one of them commits at a time.
+- Tell each parallel implementer in its prompt that it works in parallel in a shared worktree, so the squash and test limits in its agent file apply.
+- Parallel implementers in one worktree each run only the tests for their own files; after integration the main session has an opus-checker run the full suite once.
+
+Waiting (every session and agent; each turn re-reads the whole context, so idle turns cost as much as working ones):
+- Wait for background commands and agents through their completion notifications, never by polling or by loops that print.
+- Run every background command, and any foreground command that may outlast the Bash tool's timeout, under a hard time limit, so it always ends and notifies: `timeout <seconds>` or `gtimeout <seconds>`; where neither exists (stock macOS), `node ~/.claude/scripts/bounded.mjs <seconds> -- <command> [args...]` or `node ~/.claude/scripts/bounded.mjs <seconds> "<shell command>"`. On its own timeout (exit 124) or on TERM, INT or HUP it stops the command's whole process group. It closes stdin, so put a pipeline inside the quoted shell form. If none of them is installed, run the command in the foreground under the Bash tool's timeout.
+- Wait for a server with one silent until-loop under the same limit, not with repeated checks. When a notification does not come, check the job's status at most 3 times, each with one until-loop or Monitor under a limit rather than a sleep, then report it stuck.
+
+Worker notes and successors:
+- The main session gives every implementer and checker its own scratch subfolder (`<scratchpad>/<agent-task>/`) in its prompt; the worker keeps its `progress.md` there.
+- Before returning, a worker stops its own background tasks or lists their IDs in `progress.md`.
+- When an implementer or checker comes back unfinished (marked partial, or out of turns or context), the main session launches a fresh agent of the same role with the plan and its predecessor's `progress.md` instead of resuming the old one. It first stops any background tasks listed there with TaskStop, so two agents never edit the same files. The successor inherits the loop rounds already spent; a second unfinished return of the same role on the same work goes to the user.
 
 Pure research and answers to questions may skip the chain. Outward-facing actions (push, PR, issue tracker, chat) happen only on the user's explicit command and are executed by opus-implementer. If the stored state of an outward action differs from what was sent (a missing mention, an edited comment, a changed status), report it to the user instead of "fixing" it: the user may have changed it on purpose.
 
