@@ -12,12 +12,14 @@ A knowledge base for Claude Code: agents, global rules, skills and a frontend ru
 | `skills/new-project/` | Scaffolds a frontend project from the rulebook: interview, freshness check, official CLI, templates, rendered `AGENTS.md`, verification. |
 | `skills/<others>` | Matt Pocock's skills this flow relies on, vendored unchanged from [mattpocock/skills](https://github.com/mattpocock/skills). The list and the upstream commit live in `vendor.json`. |
 | `hooks/` | A `PreToolUse` hook that runs the project's Biome check before `git push` and denies the push when it fails. |
+| `scripts/bounded.mjs` | A time limit for waited commands where `timeout` and `gtimeout` are missing (stock macOS): it runs the command in its own process group, stops the whole group on timeout and exits 124. The flow rules call it as `~/.claude/scripts/bounded.mjs`. |
 | `plugins/` | Three third-party Claude Code plugins, vendored unchanged from Millon15/cc-millz: security-audit, toolsmith, codex-delegation. Listed in the devkit marketplace; install the ones you want. |
 
 ## How to use
 
 - **Agents:** copy the files you want from `agents/` into `~/.claude/agents/` or a project's `.claude/agents/`.
 - **Flow rules:** import `global/CLAUDE.md` from your `~/.claude/CLAUDE.md` with a line like `@~/Projects/devkit/global/CLAUDE.md` (adjust the path to your clone), so edits to the kit reach every session. Or paste the parts you agree with into your `CLAUDE.md`.
+- **Time limit:** link `scripts/bounded.mjs` where the flow rules look for it; from the clone, run `mkdir -p ~/.claude/scripts && ln -s "$PWD/scripts/bounded.mjs" ~/.claude/scripts/bounded.mjs`. It needs Node 20 or later and macOS or Linux; `node --test scripts/test/bounded.test.mjs` checks it. Skip it if `timeout` or `gtimeout` (coreutils) is installed.
 - **new-project:** copy `skills/new-project/` together with `frontend/`; the skill reads the rulebook from `../../frontend`. It relies on Matt Pocock's `grill-with-docs`, `domain-modeling` and `research` skills.
 - **Plugins:** run `claude plugin marketplace add madvil2/devkit`, then `claude plugin install <name>@devkit` for each plugin you want, or try one with `claude --plugin-dir plugins/<name>`. The plugins' own READMEs say `@cc-millz`; from devkit use `@devkit`. Install a plugin from one marketplace only: devkit's copy is pinned and audited, while cc-millz tracks upstream HEAD. To take a devkit update, run `claude plugin marketplace update devkit`, then `claude plugin update <name>@devkit`. If a vendored plugin changed without a version bump (the sync warns and its pull request says so), reinstall it with `claude plugin uninstall <name>@devkit` and then `claude plugin install <name>@devkit`.
 
@@ -50,5 +52,7 @@ The agents, the flow rules, the frontend rulebook and the `new-project` skill wi
 The vendored skills are Matt Pocock's, MIT, license in `skills/LICENSE-mattpocock-skills`.
 
 The vendored plugins are Vitautas Brazas's (Millon15), MIT, license in `plugins/LICENSE-cc-millz`.
+
+`scripts/bounded.mjs` and its test come from [devhub](https://github.com/sambet1997/devhub), MIT, license in `scripts/LICENSE-devhub`; the test's helper server binds to 127.0.0.1 here.
 
 MIT.

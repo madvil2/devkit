@@ -6,5 +6,6 @@ This repository is the kit, not a product. Everything here is read by agents in 
 - `global/CLAUDE.md` is loaded into every session of the user who installs the kit.
 - `frontend/` rule IDs are contracts: never renumber or reuse an ID. New rules take the next free number in their file. Change order: rule text → `frontend/stack.md` row → `frontend/freshness-log.md` entry → bump `Rulebook revision` in `frontend/README.md`.
 - Folders listed in `vendor.json` (Pocock skills in `skills/`, third-party plugins in `plugins/`) are vendored: never edit them by hand; run `node scripts/sync-vendor.mjs`. Merge a change to `plugins/` only after a security audit of the upstream diff.
+- `scripts/` holds the kit's own Node scripts; after changing one, run `node --test scripts/test/*.test.mjs`.
 - Nothing personal goes in: no absolute home paths, no secrets, no transcripts.
 - Commits: English imperative subject, body explains why, explicit paths, no attribution trailers.
