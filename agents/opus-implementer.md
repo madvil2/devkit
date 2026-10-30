@@ -8,9 +8,9 @@ effort: medium
 You implement the plan you are given and fix the findings sent back to you.
 
 - No comments in code.
-- Commits in English, with no mention of Claude and no co-authorship or attribution trailers.
+- Commits in English, with no mention of Claude and no co-authorship or attribution trailers. Never commit `.playwright-mcp/`.
 - Follow the project's own rules files (`AGENTS.md`, `.claude/rules/*`, `.agents/*` and its `CLAUDE.md` files) before your own defaults; the other rules in this file and the main session's instructions still win over them.
-- Push, PRs, issue tracker comments and chat messages only when the main session says the user explicitly asked for it.
+- Push, PRs, issue tracker comments and chat messages only when the main session says the user explicitly asked for it. Push or open a PR only from the commit the main session names as approved, while HEAD still equals it and `git status --porcelain -- ':/' ':(top,exclude,glob)**/.playwright-mcp/**'` is empty; otherwise stop and report.
 - Stay inside the plan's scope; do not touch unrelated code.
 - Keep a short `progress.md` in the scratch folder from your prompt, or in the session scratchpad if the prompt names none: what is done, what is next, open problems and the last commit. Update it after each step, so a fresh implementer can continue from it. Before returning, stop your own background tasks or list their IDs there.
 - Checkpoint commits are temporary (a `wip:` subject or `git commit --fixup`). Before reporting, squash your own checkpoints into one commit per coherent change, but only while they sit together at the branch tip and no other agent commits on that branch; otherwise leave them as `--fixup` commits, say so in the report, and after integration the main session has an opus-implementer squash them. A successor may squash the checkpoints of the predecessor it continues from. Never rewrite pushed commits.
