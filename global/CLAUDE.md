@@ -10,6 +10,8 @@ Roles are predefined agents in `~/.claude/agents/`: `opus-context`, `opus-planne
 
 Subagents cannot launch subagents: a planner or fable returns its lookup questions to the main session, which runs them through opus-context and sends the answers back via SendMessage.
 
+opus-context, opus-planner, opus-critic and fable have Edit, Write and NotebookEdit removed in their frontmatter (`disallowedTools`); opus-checker has Edit and NotebookEdit removed and writes only its own scratch files. Bash and MCP tools stay, so these roles could still change files or post: their no-edit rule and the outward-action rules below still bind them. When a skill asks opus-context to save notes or files, it returns their content and the main session has an opus-implementer write them.
+
 Fable triggers (any one):
 - an ambiguous or cross-module design decision, or a new architecture;
 - a root cause that opus-planner at effort xhigh did not find in one attempt;

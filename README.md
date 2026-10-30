@@ -6,7 +6,7 @@ A knowledge base for Claude Code: agents, global rules, skills and a frontend ru
 
 | Path | What it is |
 |---|---|
-| `agents/` | Six agents: `opus-context`, `opus-planner`, `opus-implementer`, `opus-checker`, `opus-critic`, `fable`. Model and effort live in each file's frontmatter. |
+| `agents/` | Six agents: `opus-context`, `opus-planner`, `opus-implementer`, `opus-checker`, `opus-critic`, `fable`. Model, effort and, for the read-only roles, the removed edit tools live in each file's frontmatter. |
 | `global/CLAUDE.md` | The global `CLAUDE.md`: rules for every session, covering roles, chains by task size, Fable triggers, review loops, skill use, hygiene. |
 | `frontend/` | The frontend rulebook: Next.js or Vite + React 19, CSS Modules with tiered tokens, TanStack, zustand, zod, Base UI. Every rule has a stable ID and a bracket naming the tool that enforces it. |
 | `skills/new-project/` | Scaffolds a frontend project from the rulebook: interview, freshness check, official CLI, templates, rendered `AGENTS.md`, verification. |
