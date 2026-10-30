@@ -19,3 +19,5 @@ blob-report
 .vscode/*
 !.vscode/extensions.json
 .idea
+.playwright-mcp/
+next-env.d.ts
