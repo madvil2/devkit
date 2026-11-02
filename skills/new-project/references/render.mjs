@@ -7,7 +7,11 @@ const HERE = dirname(fileURLToPath(import.meta.url))
 const TEMPLATES = join(HERE, 'templates')
 
 const TYPES = {
-  marketing: { sets: ['common', 'next'], layers: ['app', 'sections', 'shared'] },
+  marketing: {
+    sets: ['common', 'next'],
+    staticSets: ['next-export'],
+    layers: ['app', 'sections', 'shared'],
+  },
   'landing-product': {
     sets: ['common', 'next'],
     layers: ['app', 'views', 'widgets', 'features', 'entities', 'shared'],
@@ -45,6 +49,18 @@ const CLI_LEFTOVERS = {
     'public/next.svg',
     'public/vercel.svg',
     'public/window.svg',
+  ],
+}
+
+const REMOVED_BY_SET = {
+  'next-export': [
+    'src/proxy.ts',
+    'src/instrumentation.ts',
+    'src/app/api',
+    'src/shared/api/bff.server.ts',
+    'src/shared/api/server.ts',
+    'src/shared/auth',
+    'src/shared/lib/safe-redirect',
   ],
 }
 
@@ -146,7 +162,11 @@ for (const [key, value] of Object.entries(vars)) {
   if (value === undefined || value === null || value === 'undefined') fail(`missing value for {{${key}}}`)
 }
 
-const sets = args.sets ?? [...type.sets, ...(answers.addons ?? []).filter((addon) => existsSync(join(TEMPLATES, addon)))]
+const sets = args.sets ?? [
+  ...type.sets,
+  ...(answers.deploy === 'static' ? (type.staticSets ?? []) : []),
+  ...(answers.addons ?? []).filter((addon) => existsSync(join(TEMPLATES, addon))),
+]
 const target = resolve(args.target)
 
 const fill = (text) =>
@@ -164,6 +184,14 @@ for (const set of sets) {
       continue
     }
     files.set(rel.replaceAll('__defaultLocale__', defaultLocale), file)
+  }
+}
+
+for (const set of sets) {
+  for (const removed of REMOVED_BY_SET[set] ?? []) {
+    for (const rel of [...files.keys()]) {
+      if (rel === removed || rel.startsWith(`${removed}/`)) files.delete(rel)
+    }
   }
 }
 

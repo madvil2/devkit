@@ -2,7 +2,8 @@ import { existsSync } from 'node:fs'
 import { defineConfig, devices } from '@playwright/test'
 
 const PORT = {{port}}
-const BASE_URL = `http://127.0.0.1:${PORT}`
+const DEPLOYED_URL = process.env.E2E_BASE_URL
+const BASE_URL = DEPLOYED_URL ?? `http://127.0.0.1:${PORT}`
 const IS_NEXT = existsSync('next.config.ts')
 
 const NEXT_DIST = '.next-e2e'
@@ -42,10 +43,12 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } },
     },
   ],
-  webServer: {
-    command: SERVER_COMMAND,
-    url: BASE_URL,
-    reuseExistingServer: false,
-    timeout: 180_000,
-  },
+  webServer: DEPLOYED_URL
+    ? undefined
+    : {
+        command: SERVER_COMMAND,
+        url: BASE_URL,
+        reuseExistingServer: false,
+        timeout: 180_000,
+      },
 })

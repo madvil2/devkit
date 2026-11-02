@@ -50,7 +50,7 @@ Show: name, path, type; stack with exact versions; structure variant and layers;
 ### 5. [opus-implementer] Scaffold
 
 - Vite types: `references/scaffold-vite.md`. Next types: `references/scaffold-next.md`.
-- Both use the official CLI non-interactively, then `node <skill>/references/render.mjs --answers <answers> --target <path>` to overlay `references/templates/{common,vite|next,tma}` with the placeholders filled, then the decided `pnpm add` set with versions from step 2 (TypeScript on the `~6.0` line while stack.md W-1 stands).
+- Both use the official CLI non-interactively, then `node <skill>/references/render.mjs --answers <answers> --target <path>` to overlay `references/templates/{common,vite|next,tma}` (plus `next-export` for marketing with `deploy: static`) with the placeholders filled, then the decided `pnpm add` set with versions from step 2 (TypeScript on the `~6.0` line while stack.md W-1 stands).
 - pnpm build approvals per TOOL-1: detect the running major with `pnpm --version` inside the project; 12+ uses `pnpm approve <pkg>` (`allowBuilds`), 10/11 uses `onlyBuiltDependencies`; never approve all.
 - Generated, not templated: the golden slice (mock-backed, named after the domain), translations of non-default locales, tokens from Figma variables when given, `AGENTS.md` per `references/agents-md-outline.md`, `CLAUDE.md` (`@AGENTS.md`), `README.md`, `docs/architecture.md`, the ADRs from step 1 in `docs/adr/`, `GLOSSARY.md`, a short-word and unit list plugin `biome-plugins/typography/<lang>/R-typography.grit` plus its `biome.json` override for every locale without one, or an ADR saying the language binds none (TXT-4).
 - `git init -b main`, no commit. `CLAUDE.local.md` goes into `$(git rev-parse --git-path info/exclude)` (WF-6).
@@ -59,7 +59,7 @@ Show: name, path, type; stack with exact versions; structure variant and layers;
 
 - `pnpm install --frozen-lockfile`, `pnpm check`, `pnpm test:e2e`.
 - Negative probes, each must fail with the right ID, then revert: `<span>x</span>` in a page → `R-native-elements`; `// note` → `R-comments`; `color: #fff` in a component module → `R-raw-values`; `className={cx(a, b)}` in a feature → `R-classname`; `composes` from a feature module → `R-composes-source`; `'Путь 5 км'` in `ru.ts` → `R-typography`; a sibling-slice import → `no-sibling-slices`.
-- `grep -r mock-transport dist` is empty after `pnpm build` (vite); (next) the root layout is static in the build output.
+- `grep -r mock-transport dist` is empty after `pnpm build` (vite); (next) the root layout is static in the build output; (export) every route is static and the export directory holds `index.html`, `404.html`, `robots.txt`, `sitemap.xml`; when Docker is available, TST-7 against the image, otherwise listed as not run in the hand-off.
 - `AGENTS.md` contains every in-scope rule ID and is at most 300 lines.
 
 ### 7. [opus-critic] Review
@@ -72,7 +72,7 @@ When the user says so, opus-implementer stages explicit paths (never `git add -A
 
 ### 9. [main] Hand-off
 
-Path, port, commands (`pnpm dev`, `pnpm check`, `pnpm test:e2e`), `cd <path> && claude`, and open items: `TODO(api)` endpoints, tokens to replace, deploy secrets, pending approvals, pending Fable review, "not verified" freshness if any, and `/setup-matt-pocock-skills` in the new project before using `to-spec`, `to-tickets`, `implement-spec` or `code-review` there.
+Path, port, commands (`pnpm dev`, `pnpm check`, `pnpm test:e2e`; (next) after each deploy: `E2E_BASE_URL=<url> pnpm test:e2e`), `cd <path> && claude`, and open items: `TODO(api)` endpoints, tokens to replace, deploy secrets, pending approvals, pending Fable review, "not verified" freshness if any, and `/setup-matt-pocock-skills` in the new project before using `to-spec`, `to-tickets`, `implement-spec` or `code-review` there.
 
 ## Files
 
@@ -82,4 +82,4 @@ Path, port, commands (`pnpm dev`, `pnpm check`, `pnpm test:e2e`), `cd <path> && 
 - `references/answers.example.json`: answers for the admin dry run.
 - `references/render.mjs`: template renderer.
 - `references/rules-selftest/`: failing and passing samples for every check-rules plugin; `node references/rules-selftest/run.mjs --biome <bin>` runs them against a Biome binary.
-- `references/templates/`: `common/`, `vite/`, `tma/`, `next/`.
+- `references/templates/`: `common/`, `vite/`, `tma/`, `next/`, `next-export/`.

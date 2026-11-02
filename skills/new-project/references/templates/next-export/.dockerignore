@@ -1,0 +1,13 @@
+.git
+.github
+.next
+.next-*
+.vitest
+node_modules
+coverage
+playwright-report
+test-results
+.env*.local
+Dockerfile
+.dockerignore
+out

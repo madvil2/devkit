@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "start": "node scripts/serve-export.mjs out {{port}}"
+  }
+}
