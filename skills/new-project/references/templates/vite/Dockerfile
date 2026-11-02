@@ -1,7 +1,8 @@
 FROM node:{{nodeMajor}}-alpine AS build
 WORKDIR /app
-RUN corepack enable
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml* .npmrc* ./
+COPY package.json ./
+RUN npm install -g "pnpm@$(node -p "require('./package.json').packageManager.replace(/^pnpm@/, '').split('+')[0]")"
+COPY pnpm-lock.yaml pnpm-workspace.yaml* .npmrc* ./
 RUN pnpm install --frozen-lockfile
 COPY . .
 ARG VITE_API_MODE=http

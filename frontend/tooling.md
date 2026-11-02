@@ -2,7 +2,8 @@
 
 Applies to: all
 
-- **TOOL-1** pnpm via `packageManager`/corepack. Node LTS in `.nvmrc` + `engines`.
+- **TOOL-1** pnpm pinned in `packageManager`. Node LTS major in `.nvmrc` + `engines`.
+  - Corepack is not relied on: Node 25 and later do not ship it. CI installs pnpm with `pnpm/action-setup` (version from `packageManager`); Docker build stages run `npm install -g pnpm@<version>` with the version read from `packageManager` (DEP-1, DEP-2); locally a globally installed pnpm switches to the pinned version itself.
   - pnpm 12 fails installs on unapproved dependency build scripts (`ERR_PNPM_IGNORED_BUILDS`, exit 1).
   - Approvals live in `pnpm-workspace.yaml` under `allowBuilds: { <pkg>: true }`, written by `pnpm approve <pkg>`; each approval is reviewed. Never `pnpm approve --all`.
   - The pnpm 10 `ignoredBuiltDependencies` key that `create-next-app` writes is removed (stack.md W-10).

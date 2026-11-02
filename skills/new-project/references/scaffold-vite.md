@@ -41,7 +41,7 @@ pnpm pkg set packageManager=pnpm@<pnpm version> engines.node=">=<nodeMajor>"
 pnpm --version
 ```
 
-`pnpm` 10 switches to the pinned version itself (verified: local 10.33.1 ran 12.11.2). Read the major that actually runs from `pnpm --version` inside `<path>`.
+`pnpm` 10 switches to the pinned version itself (verified: local 10.33.1 ran 12.11.2). Read the major that actually runs from `pnpm --version` inside `<path>`. Corepack is not used: Node 25+ does not ship it (TOOL-1); the Dockerfile installs the `packageManager` version with npm (DEP-2).
 
 Runtime:
 

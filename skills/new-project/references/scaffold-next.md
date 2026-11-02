@@ -36,7 +36,8 @@ Overlays `templates/common` then `templates/next`. `{{siteUrl}}` comes from `ans
 
 - fills placeholders in every `package.fragment.json` and deep-merges them into `package.json` (`scripts.dev`/`start` on the port, `typecheck` = `next typegen && tsc --noEmit`, `check` building into `.next-build`), dropping the CLI `format` script (use `lint:fix`);
 - adds `.next*/types/**/*.ts`, `.next*/dev/types/**/*.ts` and the explicit `.next-build`/`.next-e2e` type paths to `tsconfig.json` `include`, so builds with `NEXT_DIST_DIR` do not rewrite `tsconfig.json`;
-- writes `.env.example`, `.env.development` and `.env.production` from `templates/next`.
+- writes `.env.example`, `.env.development` and `.env.production` from `templates/next`;
+- fills `{{nodeMajor}}` in `Dockerfile` and `.nvmrc` (`answers.versions.nodeMajor` is required, as for Vite; DEP-1).
 
 Then format once: `pnpm exec biome check --write` (after §5, when Biome is installed).
 

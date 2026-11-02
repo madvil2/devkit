@@ -10,7 +10,7 @@ Version source unless noted: `npm view <pkg> version time dist-tags`, https://ww
 
 | Area | Package | Line | Verified | Source | Notes |
 |---|---|---|---|---|---|
-| Runtime | Node LTS | 24 (`.nvmrc`) | 2026-10-11 | https://nodejs.org/dist/index.json; `depcruise --info` | dependency-cruiser needs ^22, ^24 or >=26; Vitest 5 needs >=22.12 |
+| Runtime | Node LTS | 24 (`.nvmrc`) | 2026-11-02 | https://nodejs.org/dist/index.json; `depcruise --info`; https://raw.githubusercontent.com/nodejs/Release/main/schedule.json; https://nodejs.org/docs/latest-v24.x/api/corepack.html; experiment: `docker run node:{24,26,lts}-alpine` | dependency-cruiser needs ^22, ^24 or >=26; Vitest 5 needs >=22.12; 24 is Maintenance LTS (since 2026-10-20), 26 Active LTS since 2026-10-28; Node 25+ ships no corepack, and `node:lts-alpine` is 26 since 2026-10-28, so Dockerfiles use `node:{{nodeMajor}}-alpine` and install pnpm with npm (TOOL-1, DEP-1, DEP-2) |
 | Runtime | pnpm | 12.11.2 | 2026-10-11 | npm | Unapproved build scripts fail installs (TOOL-1) |
 | Language | typescript | ~6.0 (6.0.3) | 2026-10-11 | npm; experiment | 7.0.2 is latest but blocks dependency-cruiser (watch item W-1) |
 | Core | react, react-dom | 19.3.0 | 2026-10-11 | npm | |

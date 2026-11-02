@@ -30,7 +30,7 @@ Node LTS:
 curl -s https://nodejs.org/dist/index.json | node -e 'const r=JSON.parse(require("fs").readFileSync(0,"utf8")).filter(x=>x.lts);console.log(r[0].version,r[0].lts)'
 ```
 
-Local toolchain: `node --version`, `pnpm --version`, `corepack --version`.
+Local toolchain: `node --version`, `pnpm --version` (no corepack: Node 25+ does not ship it, TOOL-1).
 
 ## 2. Breaking changes since `Verified`
 

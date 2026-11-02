@@ -4,6 +4,18 @@ Applies to: all
 
 Append-only, newest first. Each entry: date and trigger, packages old → new, findings with sources, a decision per finding. Ledger: [stack.md](stack.md).
 
+## 2026-11-02 — Docker images without corepack; Sec-Fetch-Site in the CSRF check
+
+Trigger: explicit request, port from an upstream review. Experiments: `docker run` and stage builds on `node:24-alpine`, `node:26-alpine` and `node:lts-alpine`. Packages: none.
+
+| Finding | Source | Decision |
+|---|---|---|
+| Corepack is not distributed from Node 25; `node:26-alpine` and `node:lts-alpine` (26.13.0) have none | https://nodejs.org/docs/latest-v24.x/api/corepack.html; experiment | TOOL-1 no longer relies on corepack |
+| The Next Dockerfile used the floating `node:lts-alpine` with `corepack enable` and fails since 2026-10-28; the Vite one fails once `nodeMajor` is 25 or later | experiment | DEP-1, DEP-2: `node:{{nodeMajor}}-alpine`, `npm install -g pnpm@<packageManager version>`; built on 24 and 26 |
+| The image does not verify pnpm against a `+sha512` hash in `packageManager` | inference | Accepted, known limit |
+| `isSameOriginRequest` accepted a matching `Origin` even when `Sec-Fetch-Site` said `same-site` or `cross-site` (for example an `http:` page on the same host) | https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Sec-Fetch-Site | AUTH-3 rewritten; `same-origin.ts` rejects any sent value other than `same-origin`; truth-table test added |
+| `__Host-` cookie prefix (upstream AUTH-1) | upstream review | Deferred: needs a `Secure` gate on the `SITE_URL` scheme and a WebKit check over plain-HTTP dev |
+
 ## 2026-10-12 — check-rules on Biome GritQL plugins; typography per locale
 
 Trigger: explicit request. Experiments: `@biomejs/biome@2.5.15` scratch fixtures (one failing and one passing sample per check); rendered tma and landing-product templates. Packages: `oxc-parser` 0.153.0 → removed.
