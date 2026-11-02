@@ -46,9 +46,9 @@ Loops (findings always go back to the same implementer via SendMessage, unless i
 
 Parallel agents:
 - Give each parallel agent its own scratch subfolder (`<scratchpad>/<agent-task>/`); no two agents write the same scratch files.
-- Split parallel implementers by explicit file or folder ownership; only one of them commits at a time.
+- Split parallel implementers by explicit file or folder ownership; only one of them commits at a time. The main session forwards the interfaces each one reports as changed to the siblings still running.
 - Tell each parallel implementer in its prompt that it works in parallel in a shared worktree, so the squash and test limits in its agent file apply.
-- In a shared worktree, start checkers only after every parallel implementer has returned and committed.
+- In a shared worktree, start checkers only after every parallel implementer has returned and committed; the main session gives the checker the base commit, and it checks their combined diff, never one implementer's diff alone.
 - Parallel implementers in one worktree each run only the tests for their own files; after integration the main session has an opus-checker run the full suite once.
 
 Waiting (every session and agent; each turn re-reads the whole context, so idle turns cost as much as working ones):
