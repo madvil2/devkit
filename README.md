@@ -36,7 +36,7 @@ Flags:
 - `--dry-run` prints what would happen, prefixed `would`, and writes nothing.
 - `--replace` moves anything in the way into a backup and links the devkit file in its place. Without it, such files are reported as conflicts and left alone.
 - `--optional` also installs the optional plugins.
-- `--bypass-permissions` also sets `permissions.defaultMode` to `bypassPermissions` and turns off the two permission-mode prompts.
+- `--bypass-permissions` also turns off the two permission-mode prompts and sets `permissions.defaultMode` to `bypassPermissions`, but only when no mode is set: your values win, so an existing `permissions.defaultMode` is kept.
 
 The installer always sets up `~/.claude` and warns when `CLAUDE_CONFIG_DIR` points elsewhere. The `DEVKIT_CLAUDE` environment variable points it at another `claude` binary (the default is `claude` on `PATH`); its tests use this for a fake CLI, and `node --test scripts/test/install.test.mjs` runs them.
 
@@ -45,7 +45,7 @@ What it does:
 1. **Links.** Every `agents/*.md`, `scripts/bounded.mjs`, `scripts/statusline.sh`, `hooks/biome-push-check.sh` and every skill folder in `skills/` is symlinked to the same path under `~/.claude`, so skills load under their bare names (`tdd`, not `devkit:tdd`). A folder under `~/.claude` that is itself a symlink to the matching clone folder counts as in place. One that is a symlink outside `~/.claude` (for example `~/.claude/skills` pointing to `~/.agents/skills`) is a conflict even with `--replace`: replace it with a real directory first. Nothing is ever written inside the clone.
 2. **CLAUDE.md.** Adds `@<clone>/global/CLAUDE.md` to `~/.claude/CLAUDE.md`, creating the file if needed and keeping everything already there. A line importing another `global/CLAUDE.md` is a conflict.
 3. **Settings.** Merges `install/settings.json` into `~/.claude/settings.json`: attribution off, model, status line, the Biome hook and a few UI preferences. Your values win: a key you already set is kept and listed as `kept`, only missing keys are added, arrays get the missing items, and a hook whose command is already there is not added twice. An invalid `settings.json` is left untouched and the run fails.
-4. **Plugins.** Adds the marketplaces the plugins need and installs the plugins that are not installed yet, from any marketplace. It never uninstalls anything. Without the `claude` CLI it prints the commands to run yourself.
+4. **Plugins.** Adds the marketplaces the plugins need and installs, at user scope, the plugins not yet installed at user scope from any marketplace. A plugin installed but disabled gets a `claude plugin enable` hint instead of a reinstall. It never uninstalls anything. Without the `claude` CLI it prints the commands to run yourself.
 
 Anything the installer replaces or rewrites (a conflicting file, `CLAUDE.md`, `settings.json`) is copied first to `~/.claude/devkit-backups/<timestamp>/`. Exit codes: 0 when everything is in place (kept settings and a missing `claude` CLI do not count), 1 when a conflict is left or a step failed, 2 for an unknown flag.
 
@@ -79,7 +79,7 @@ Devkit's own marketplace lists only its vendored plugins (below): run `claude pl
 
 ### Moving from the skills CLI
 
-If you installed skills with the skills CLI, run `node scripts/install.mjs --dry-run` first. Expect conflicts for skills linked into `~/.agents/skills` and for a copied `~/.claude/hooks/biome-push-check.sh`; rerun with `--replace` to swap them for devkit links (the originals go to the backup folder). If `~/.claude/skills` itself is a symlink to `~/.agents/skills`, remove just that symlink (`rm ~/.claude/skills`, no trailing slash) and rerun. Leave `~/.agents` alone: other agents read it. After any later skills CLI run that targets claude-code, run `node scripts/install.mjs --replace` again.
+If you installed skills with the skills CLI, run `node scripts/install.mjs --dry-run` first. Expect conflicts for skills linked into `~/.agents/skills` and for a copied `~/.claude/hooks/biome-push-check.sh`; rerun with `--replace` to swap them for devkit links (the originals go to the backup folder). If `~/.claude/skills` itself is a symlink to `~/.agents/skills`, remove just that symlink (`rm ~/.claude/skills`, no trailing slash) and rerun. Then link back each skill you still want that devkit does not ship, for example `ln -s ~/.agents/skills/<name> ~/.claude/skills/<name>`. Leave `~/.agents` alone: other agents read it. After any later skills CLI run that targets claude-code, run `node scripts/install.mjs --replace` again.
 
 ### Optional, by hand
 

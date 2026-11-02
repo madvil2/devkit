@@ -123,9 +123,9 @@ const IMPORT = `@${REPO}/global/CLAUDE.md`;
 const ALL_INSTALLED = {
   FAKE_MARKETPLACES: JSON.stringify([{ name: 'claude-plugins-official', source: 'github', repo: 'anthropics/claude-plugins-official' }]),
   FAKE_PLUGINS: JSON.stringify([
-    { id: 'github@claude-plugins-official', enabled: true },
-    { id: 'linear@claude-plugins-official', enabled: true },
-    { id: 'playwright@claude-plugins-official', enabled: true },
+    { id: 'github@claude-plugins-official', scope: 'user', enabled: true },
+    { id: 'linear@claude-plugins-official', scope: 'user', enabled: true },
+    { id: 'playwright@claude-plugins-official', scope: 'user', enabled: true },
   ]),
 };
 const copyRepo = (dir) => {
@@ -153,9 +153,9 @@ test('a fresh install links everything, writes the template settings and install
   assert.equal(settings.permissions, undefined);
   assert.deepEqual(changes(calls), [
     'plugin marketplace add anthropics/claude-plugins-official',
-    'plugin install github@claude-plugins-official',
-    'plugin install linear@claude-plugins-official',
-    'plugin install playwright@claude-plugins-official',
+    'plugin install github@claude-plugins-official --scope user',
+    'plugin install linear@claude-plugins-official --scope user',
+    'plugin install playwright@claude-plugins-official --scope user',
   ]);
 }));
 
@@ -244,7 +244,7 @@ test('conflicting files are reported, and replaced into a backup only with --rep
   assert.equal(readlinkSync(tdd), path.join('..', '..', 'elsewhere'));
   assert.match(first.output, /conflict ~\/\.claude\/agents\/fable\.md \(real file\)/);
   assert.match(first.output, /conflict ~\/\.claude\/skills\/tdd \(points to ~\/elsewhere\)/);
-  assert.match(first.output, /--replace/);
+  assert.match(first.output, /^rerun with --replace/m);
 
   const second = box.run(['--replace'], ALL_INSTALLED);
   assert.equal(second.code, 0, second.output);
@@ -291,10 +291,10 @@ test('--bypass-permissions adds the three permission keys', sandbox((box) => {
 test('a plugin installed from another marketplace counts as installed', sandbox((box) => {
   const { code, output, calls } = box.run([], {
     FAKE_MARKETPLACES: JSON.stringify([{ name: 'claude-plugins-official' }, { name: 'anthropic-plugin-directory' }]),
-    FAKE_PLUGINS: JSON.stringify([{ id: 'github@anthropic-plugin-directory', enabled: true }]),
+    FAKE_PLUGINS: JSON.stringify([{ id: 'github@anthropic-plugin-directory', scope: 'user', enabled: true }]),
   });
   assert.equal(code, 0, output);
-  assert.deepEqual(changes(calls), ['plugin install linear@claude-plugins-official', 'plugin install playwright@claude-plugins-official']);
+  assert.deepEqual(changes(calls), ['plugin install linear@claude-plugins-official --scope user', 'plugin install playwright@claude-plugins-official --scope user']);
 }));
 
 test('--optional adds the optional marketplaces and plugins', sandbox((box) => {
@@ -302,9 +302,9 @@ test('--optional adds the optional marketplaces and plugins', sandbox((box) => {
   assert.equal(code, 0, output);
   assert.deepEqual(changes(calls), [
     'plugin marketplace add Millon15/cc-millz',
-    'plugin install peer-chat@cc-millz',
+    'plugin install peer-chat@cc-millz --scope user',
     'plugin marketplace add madvil2/autopilot-jobsearch',
-    'plugin install autopilot-jobsearch@autopilot-jobsearch',
+    'plugin install autopilot-jobsearch@autopilot-jobsearch --scope user',
   ]);
 }));
 
@@ -357,6 +357,8 @@ test('a ~/.claude folder linked outside ~/.claude is a conflict and is never wri
     const { code, output } = box.run(args, ALL_INSTALLED);
     assert.equal(code, 1, output);
     assert.match(output, /conflict ~\/\.claude\/skills\/tdd \(~\/\.claude\/skills is a symlink to ~\/\.agents\/skills; replace it with a real directory first\)/);
+    assert.doesNotMatch(output, /rerun with --replace/);
+    assert.match(output, /^--replace does not fix a symlinked or dangling ~\/\.claude folder; replace or remove it first$/m);
   }
   assert.deepEqual(snapshot(shared), before);
 }));
@@ -366,4 +368,75 @@ test('CLAUDE_CONFIG_DIR set elsewhere gets a warning', sandbox((box) => {
   assert.equal(code, 0, output);
   assert.match(output, /CLAUDE_CONFIG_DIR is set to ~\/other/);
   assert.ok(existsSync(path.join(box.claude, 'settings.json')));
+}));
+
+for (const form of ['~', '$HOME', '${HOME}']) {
+  test(`an existing Biome hook written with ${form} is not added again`, sandbox((box) => {
+    mkdirSync(box.claude);
+    const command = `bash ${form}/.claude/hooks/biome-push-check.sh`;
+    writeFileSync(
+      path.join(box.claude, 'settings.json'),
+      JSON.stringify({ hooks: { PreToolUse: [{ matcher: 'Bash', hooks: [{ type: 'command', command }] }] } }),
+    );
+    const { code, output } = box.run([], ALL_INSTALLED);
+    assert.equal(code, 0, output);
+    const handlers = readJson(path.join(box.claude, 'settings.json')).hooks.PreToolUse.flatMap((group) => group.hooks);
+    assert.deepEqual(handlers.map((handler) => handler.command), [command]);
+  }));
+}
+
+test('a dangling settings.json symlink is left alone and the run fails', sandbox((box) => {
+  mkdirSync(box.claude);
+  const file = path.join(box.claude, 'settings.json');
+  symlinkSync(path.join(box.home, 'missing.json'), file);
+  const { code, output } = box.run([], ALL_INSTALLED);
+  assert.equal(code, 1, output);
+  assert.match(output, /~\/\.claude\/settings\.json is a dangling symlink/);
+  assert.equal(readlinkSync(file), path.join(box.home, 'missing.json'));
+  assert.equal(existsSync(path.join(box.home, 'missing.json')), false);
+}));
+
+test('a plugin disabled at user scope gets an enable hint instead of a reinstall', sandbox((box) => {
+  const { code, output, calls } = box.run([], {
+    FAKE_MARKETPLACES: ALL_INSTALLED.FAKE_MARKETPLACES,
+    FAKE_PLUGINS: JSON.stringify([
+      { id: 'github@anthropic-plugin-directory', scope: 'user', enabled: false },
+      { id: 'linear@claude-plugins-official', scope: 'user', enabled: true },
+      { id: 'playwright@claude-plugins-official', scope: 'user', enabled: true },
+    ]),
+  });
+  assert.equal(code, 0, output);
+  assert.deepEqual(changes(calls), []);
+  assert.match(output, /github@anthropic-plugin-directory is installed but disabled; run: claude plugin enable github@anthropic-plugin-directory --scope user/);
+}));
+
+test('a plugin installed only at project or local scope is installed at user scope', sandbox((box) => {
+  const { code, output, calls } = box.run([], {
+    FAKE_MARKETPLACES: ALL_INSTALLED.FAKE_MARKETPLACES,
+    FAKE_PLUGINS: JSON.stringify([
+      { id: 'github@claude-plugins-official', scope: 'project', enabled: true },
+      { id: 'linear@claude-plugins-official', scope: 'local', enabled: true },
+      { id: 'playwright@claude-plugins-official', scope: 'user', enabled: true },
+    ]),
+  });
+  assert.equal(code, 0, output);
+  assert.deepEqual(changes(calls), [
+    'plugin install github@claude-plugins-official --scope user',
+    'plugin install linear@claude-plugins-official --scope user',
+  ]);
+}));
+
+test('a dangling ~/.claude folder symlink is a conflict, in a dry run and a real run', sandbox((box) => {
+  mkdirSync(box.claude);
+  const skills = path.join(box.claude, 'skills');
+  symlinkSync(path.join(box.home, 'gone'), skills);
+  for (const args of [['--dry-run'], [], ['--replace']]) {
+    const { code, output } = box.run(args, ALL_INSTALLED);
+    assert.equal(code, 1, output);
+    assert.match(output, /conflict ~\/\.claude\/skills\/tdd \(~\/\.claude\/skills is a dangling symlink; remove it first\)/);
+    assert.doesNotMatch(output, /would link ~\/\.claude\/skills|ENOENT|    at /);
+    assert.doesNotMatch(output, /rerun with --replace/);
+  }
+  assert.equal(readlinkSync(skills), path.join(box.home, 'gone'));
+  assert.equal(existsSync(path.join(box.home, 'gone')), false);
 }));

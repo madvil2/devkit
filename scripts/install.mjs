@@ -62,7 +62,7 @@ const short = (path) => {
   return path;
 };
 
-const counts = { linked: 0, ok: 0, replaced: 0, conflicts: 0, added: 0, kept: 0, installed: 0, errors: 0 };
+const counts = { linked: 0, ok: 0, replaced: 0, conflicts: 0, blocked: 0, added: 0, kept: 0, installed: 0, errors: 0 };
 const say = (line) => console.log(line);
 const error = (line) => {
   counts.errors += 1;
@@ -121,6 +121,14 @@ const resolveDir = (dir) => {
   }
   return join(realpathSync(current), ...rest);
 };
+const danglingAncestor = (dir) => {
+  const parts = dir.slice(CLAUDE.length + 1).split('/');
+  for (let i = 0; i <= parts.length; i += 1) {
+    const candidate = join(CLAUDE, ...parts.slice(0, i));
+    if (lstat(candidate)?.isSymbolicLink() && !existsSync(candidate)) return candidate;
+  }
+  return undefined;
+};
 const symlinkedAncestor = (dir) => {
   const parts = dir.slice(CLAUDE.length + 1).split('/');
   for (let i = 1; i <= parts.length; i += 1) {
@@ -139,11 +147,19 @@ const link = (rel) => {
     say(`ok ${short(target)}`);
     return;
   }
+  const dangling = danglingAncestor(dirname(target));
+  if (dangling) {
+    counts.conflicts += 1;
+    counts.blocked += 1;
+    say(`conflict ${short(target)} (${short(dangling)} is a dangling symlink; remove it first)`);
+    return;
+  }
   const dir = resolveDir(dirname(target));
   if (inside(dir, ROOT)) return error(`${short(target)} resolves inside the devkit clone; left it alone`);
   if (!inside(dir, resolveDir(CLAUDE))) {
     const ancestor = symlinkedAncestor(dirname(target));
     counts.conflicts += 1;
+    counts.blocked += 1;
     say(`conflict ${short(target)} (${short(ancestor)} is a symlink to ${short(resolveDir(ancestor))}; replace it with a real directory first)`);
     return;
   }
@@ -250,7 +266,12 @@ const substitute = (value, dir) => {
 const leftover = (value) =>
   typeof value === 'string' ? value.includes('{{') : Array.isArray(value) || isPlain(value) ? Object.values(value).some(leftover) : false;
 
-const normalize = (command) => String(command ?? '').replace(/["']/g, '').replace(/\s+/g, ' ').trim();
+const normalize = (command) =>
+  String(command ?? '')
+    .replace(/["']/g, '')
+    .replace(/(^|\s)(~|\$HOME|\$\{HOME\})(?=\/|\s|$)/g, (_, before) => `${before}${HOME}`)
+    .replace(/\s+/g, ' ')
+    .trim();
 
 const mergeHooks = (target, template, record) => {
   if (!Object.hasOwn(target, 'hooks')) target.hooks = {};
@@ -301,6 +322,7 @@ const settings = () => {
 
   const file = join(CLAUDE, 'settings.json');
   const existed = existsSync(file);
+  if (!existed && lstat(file)) return error(`${short(file)} is a dangling symlink; left it untouched`);
   let original = {};
   if (existed) {
     try {
@@ -359,14 +381,14 @@ const plugins = () => {
   let installed;
   try {
     markets = new Set(list('marketplace', 'list').map((entry) => entry.name));
-    installed = list('list').map((entry) => entry.id);
+    installed = list('list');
   } catch (err) {
     return error(err.message);
   }
-  if (installed.includes('devkit@devkit')) {
+  if (installed.some((entry) => entry.id === 'devkit@devkit')) {
     console.warn('warning: devkit@devkit is installed and loads the same skills again as devkit:*; run: claude plugin uninstall devkit@devkit');
   }
-  const names = new Set(installed.map(nameOf));
+  const atUser = installed.filter((entry) => entry.scope === 'user');
   const run = (rest) => {
     say(`${DRY ? 'would run' : 'running'}: claude plugin ${rest.join(' ')}`);
     if (DRY) return true;
@@ -378,8 +400,14 @@ const plugins = () => {
     return true;
   };
   for (const id of wanted) {
-    if (names.has(nameOf(id))) {
-      say(`ok plugin ${id}`);
+    const present = atUser.filter((entry) => nameOf(entry.id) === nameOf(id));
+    const enabled = present.find((entry) => entry.enabled !== false);
+    if (enabled) {
+      say(`ok plugin ${enabled.id}`);
+      continue;
+    }
+    if (present.length) {
+      console.warn(`warning: ${present[0].id} is installed but disabled; run: claude plugin enable ${present[0].id} --scope user`);
       continue;
     }
     const market = marketOf(id);
@@ -387,7 +415,7 @@ const plugins = () => {
       if (!run(['marketplace', 'add', config.marketplaces[market]])) continue;
       markets.add(market);
     }
-    if (run(['install', id]) && !DRY) counts.installed += 1;
+    if (run(['install', id, '--scope', 'user']) && !DRY) counts.installed += 1;
   }
 };
 
@@ -404,7 +432,8 @@ say('');
 say(`${DRY ? 'dry run, nothing written. ' : ''}links: ${counts.linked} linked, ${counts.ok} ok, ${counts.replaced} replaced, ${counts.conflicts} conflicts`);
 say(`settings: ${counts.added} added, ${counts.kept} kept`);
 say(`plugins: ${counts.installed} installed`);
-if (counts.conflicts) say('rerun with --replace; originals go to ~/.claude/devkit-backups/<timestamp>');
+if (counts.conflicts > counts.blocked) say('rerun with --replace; originals go to ~/.claude/devkit-backups/<timestamp>');
+if (counts.blocked) say('--replace does not fix a symlinked or dangling ~/.claude folder; replace or remove it first');
 if (backupDir) say(`backups: ${short(backupDir)}`);
 say('next: restart Claude Code; set GITHUB_PERSONAL_ACCESS_TOKEN for the github plugin; authorize linear via /mcp; see README for the optional iTerm and agterm status hooks');
 process.exit(counts.conflicts || counts.errors ? 1 : 0);
