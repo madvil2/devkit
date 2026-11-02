@@ -4,13 +4,6 @@
   "owner": { "name": "Kostiantyn Kaimov", "url": "https://github.com/madvil2" },
   "plugins": [
     {
-      "name": "devkit",
-      "source": ".",
-      "description": "Agents, flow rules, a frontend rulebook and a new-project scaffolding skill.",
-      "category": "development",
-      "tags": ["agents", "workflow", "frontend", "rulebook"]
-    },
-    {
       "name": "security-audit",
       "source": "./plugins/security-audit",
       "description": "Pre-adoption security audit of a repository, package, MCP server or script: nine adaptive phases, a terminal verdict and a full report with file:line evidence. Vendored unchanged from Millon15/cc-millz.",
