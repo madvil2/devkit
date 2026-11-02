@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import {
   chmodSync,
+  cpSync,
   existsSync,
   lstatSync,
   mkdirSync,
@@ -48,11 +49,12 @@ const sandbox = (fn) => () => {
     dir,
     home,
     claude: path.join(home, '.claude'),
-    run(args = [], env = {}) {
+    run(args = [], env = {}, install = INSTALL) {
       writeFileSync(log, '');
-      const childEnv = { ...process.env, HOME: home, DEVKIT_CLAUDE: fake, FAKE_LOG: log, ...env };
-      delete childEnv.CLAUDE_CONFIG_DIR;
-      const result = spawnSync(NODE, [INSTALL, ...args], { env: childEnv, encoding: 'utf8', timeout: 60000 });
+      const base = { ...process.env };
+      delete base.CLAUDE_CONFIG_DIR;
+      const childEnv = { ...base, HOME: home, DEVKIT_CLAUDE: fake, FAKE_LOG: log, ...env };
+      const result = spawnSync(NODE, [install, ...args], { env: childEnv, encoding: 'utf8', timeout: 60000 });
       const output = result.stdout + result.stderr;
       const calls = readFileSync(log, 'utf8')
         .split('\n')
@@ -125,6 +127,13 @@ const ALL_INSTALLED = {
     { id: 'linear@claude-plugins-official', enabled: true },
     { id: 'playwright@claude-plugins-official', enabled: true },
   ]),
+};
+const copyRepo = (dir) => {
+  const copy = path.join(dir, 'clone');
+  for (const part of ['agents', 'global', 'hooks', 'install', 'scripts', 'skills']) {
+    cpSync(path.join(REPO, part), path.join(copy, part), { recursive: true });
+  }
+  return realpathSync(copy);
 };
 const changes = (calls) => calls.filter((call) => call.startsWith('plugin marketplace add') || call.startsWith('plugin install'));
 
@@ -227,12 +236,12 @@ test('conflicting files are reported, and replaced into a backup only with --rep
   mkdirSync(path.dirname(tdd), { recursive: true });
   mkdirSync(elsewhere);
   writeFileSync(fable, 'mine');
-  symlinkSync(elsewhere, tdd);
+  symlinkSync(path.join('..', '..', 'elsewhere'), tdd);
 
   const first = box.run([], ALL_INSTALLED);
   assert.equal(first.code, 1, first.output);
   assert.equal(readFileSync(fable, 'utf8'), 'mine');
-  assert.equal(readlinkSync(tdd), elsewhere);
+  assert.equal(readlinkSync(tdd), path.join('..', '..', 'elsewhere'));
   assert.match(first.output, /conflict ~\/\.claude\/agents\/fable\.md \(real file\)/);
   assert.match(first.output, /conflict ~\/\.claude\/skills\/tdd \(points to ~\/elsewhere\)/);
   assert.match(first.output, /--replace/);
@@ -243,7 +252,7 @@ test('conflicting files are reported, and replaced into a backup only with --rep
   assert.equal(readlinkSync(tdd), path.join(REPO, 'skills', 'tdd'));
   const [saved] = backups(box.claude);
   assert.equal(readFileSync(path.join(saved, 'agents', 'fable.md'), 'utf8'), 'mine');
-  assert.equal(readlinkSync(path.join(saved, 'skills', 'tdd')), elsewhere);
+  assert.equal(realpathSync(path.join(saved, 'skills', 'tdd')), realpathSync(elsewhere));
 }));
 
 test('an existing CLAUDE.md keeps its content and gets the import once', sandbox((box) => {
@@ -304,4 +313,57 @@ test('without the claude CLI the plugin commands are printed instead', sandbox((
   assert.equal(code, 0, output);
   assert.match(output, /claude plugin marketplace add anthropics\/claude-plugins-official/);
   assert.match(output, /claude plugin install github@claude-plugins-official/);
+}));
+
+test('a ~/.claude folder linked to the clone folder of the same name counts as in place', sandbox((box) => {
+  const clone = copyRepo(box.dir);
+  const install = path.join(clone, 'scripts', 'install.mjs');
+  mkdirSync(box.claude);
+  symlinkSync(path.join(clone, 'skills'), path.join(box.claude, 'skills'));
+  const before = snapshot(clone);
+  for (const args of [[], ['--replace']]) {
+    const { code, output } = box.run(args, ALL_INSTALLED, install);
+    assert.equal(code, 0, output);
+    assert.match(output, /ok ~\/\.claude\/skills\/tdd$/m);
+    assert.doesNotMatch(output, /^(conflict|replaced|error)/m);
+  }
+  assert.deepEqual(snapshot(clone), before);
+  assert.deepEqual(backups(box.claude), []);
+}));
+
+test('nothing is ever written inside the clone', sandbox((box) => {
+  const clone = copyRepo(box.dir);
+  const install = path.join(clone, 'scripts', 'install.mjs');
+  mkdirSync(box.claude);
+  symlinkSync(path.join(clone, 'skills'), path.join(box.claude, 'agents'));
+  symlinkSync(path.join(clone, 'agents'), path.join(box.claude, 'skills'));
+  const before = snapshot(clone);
+  for (const args of [[], ['--replace']]) {
+    const { code, output } = box.run(args, ALL_INSTALLED, install);
+    assert.equal(code, 1, output);
+    assert.match(output, /~\/\.claude\/agents\/fable\.md resolves inside the devkit clone/);
+  }
+  assert.deepEqual(snapshot(clone), before);
+}));
+
+test('a ~/.claude folder linked outside ~/.claude is a conflict and is never written', sandbox((box) => {
+  const shared = path.join(box.home, '.agents', 'skills');
+  mkdirSync(path.join(shared, 'tdd'), { recursive: true });
+  writeFileSync(path.join(shared, 'tdd', 'SKILL.md'), 'other');
+  mkdirSync(box.claude);
+  symlinkSync(shared, path.join(box.claude, 'skills'));
+  const before = snapshot(shared);
+  for (const args of [[], ['--replace']]) {
+    const { code, output } = box.run(args, ALL_INSTALLED);
+    assert.equal(code, 1, output);
+    assert.match(output, /conflict ~\/\.claude\/skills\/tdd \(~\/\.claude\/skills is a symlink to ~\/\.agents\/skills; replace it with a real directory first\)/);
+  }
+  assert.deepEqual(snapshot(shared), before);
+}));
+
+test('CLAUDE_CONFIG_DIR set elsewhere gets a warning', sandbox((box) => {
+  const { code, output } = box.run([], { ...ALL_INSTALLED, CLAUDE_CONFIG_DIR: path.join(box.home, 'other') });
+  assert.equal(code, 0, output);
+  assert.match(output, /CLAUDE_CONFIG_DIR is set to ~\/other/);
+  assert.ok(existsSync(path.join(box.claude, 'settings.json')));
 }));

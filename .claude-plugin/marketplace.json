@@ -1,6 +1,6 @@
 {
   "name": "devkit",
-  "description": "Devkit: agents, flow rules, a frontend rulebook and a new-project skill for Claude Code.",
+  "description": "Three third-party Claude Code plugins vendored and audited by devkit: security-audit, toolsmith and codex-delegation from Millon15/cc-millz.",
   "owner": { "name": "Kostiantyn Kaimov", "url": "https://github.com/madvil2" },
   "plugins": [
     {

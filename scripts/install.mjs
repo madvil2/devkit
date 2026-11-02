@@ -1,10 +1,4 @@
 #!/usr/bin/env node
-// Sets up Claude Code from this clone: links agents, scripts, the Biome hook and skills into
-// ~/.claude, imports global/CLAUDE.md, merges install/settings.json into ~/.claude/settings.json
-// (your values win) and installs the plugins in install/plugins.json.
-// Usage: node scripts/install.mjs [--dry-run] [--replace] [--optional] [--bypass-permissions]
-// DEVKIT_CLAUDE overrides the claude binary used for plugin commands (default: claude).
-
 import { spawnSync } from 'node:child_process';
 import {
   chmodSync,
@@ -19,10 +13,11 @@ import {
   renameSync,
   statSync,
   symlinkSync,
+  unlinkSync,
   writeFileSync,
 } from 'node:fs';
 import { homedir } from 'node:os';
-import { dirname, join, resolve } from 'node:path';
+import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const USAGE = 'usage: node scripts/install.mjs [--dry-run] [--replace] [--optional] [--bypass-permissions]';
@@ -52,6 +47,7 @@ const ROOT = realpathSync(join(dirname(fileURLToPath(import.meta.url)), '..'));
 const HOME = homedir();
 const CLAUDE = join(HOME, '.claude');
 const BIN = process.env.DEVKIT_CLAUDE || 'claude';
+const CONFIG_DIR = process.env.CLAUDE_CONFIG_DIR;
 
 const homes = [HOME];
 try {
@@ -115,10 +111,42 @@ const linkTargets = () => {
   return [...agents, 'scripts/bounded.mjs', 'scripts/statusline.sh', 'hooks/biome-push-check.sh', ...skills];
 };
 
+const inside = (path, dir) => path === dir || path.startsWith(`${dir}/`);
+const resolveDir = (dir) => {
+  const rest = [];
+  let current = dir;
+  while (!existsSync(current)) {
+    rest.unshift(basename(current));
+    current = dirname(current);
+  }
+  return join(realpathSync(current), ...rest);
+};
+const symlinkedAncestor = (dir) => {
+  const parts = dir.slice(CLAUDE.length + 1).split('/');
+  for (let i = 1; i <= parts.length; i += 1) {
+    const candidate = join(CLAUDE, ...parts.slice(0, i));
+    if (lstat(candidate)?.isSymbolicLink()) return candidate;
+  }
+  return dir;
+};
+
 const link = (rel) => {
   const source = join(ROOT, rel);
   const target = join(CLAUDE, rel);
   const stat = lstat(target);
+  if (stat && real(target) !== undefined && real(target) === real(source)) {
+    counts.ok += 1;
+    say(`ok ${short(target)}`);
+    return;
+  }
+  const dir = resolveDir(dirname(target));
+  if (inside(dir, ROOT)) return error(`${short(target)} resolves inside the devkit clone; left it alone`);
+  if (!inside(dir, resolveDir(CLAUDE))) {
+    const ancestor = symlinkedAncestor(dirname(target));
+    counts.conflicts += 1;
+    say(`conflict ${short(target)} (${short(ancestor)} is a symlink to ${short(resolveDir(ancestor))}; replace it with a real directory first)`);
+    return;
+  }
   if (!stat) {
     if (!DRY) {
       mkdirSync(dirname(target), { recursive: true });
@@ -128,13 +156,9 @@ const link = (rel) => {
     say(`${DRY ? 'would link' : 'linked'} ${short(target)}`);
     return;
   }
-  if (stat.isSymbolicLink() && real(target) === real(source)) {
-    counts.ok += 1;
-    say(`ok ${short(target)}`);
-    return;
-  }
-  const what = stat.isSymbolicLink()
-    ? `points to ${short(resolve(dirname(target), readlinkSync(target)))}`
+  const pointsTo = stat.isSymbolicLink() ? resolve(dirname(target), readlinkSync(target)) : undefined;
+  const what = pointsTo
+    ? `points to ${short(pointsTo)}`
     : `real ${stat.isDirectory() ? 'directory' : 'file'}`;
   if (!REPLACE) {
     counts.conflicts += 1;
@@ -144,7 +168,10 @@ const link = (rel) => {
   if (!DRY) {
     const saved = join(backup(), rel);
     mkdirSync(dirname(saved), { recursive: true });
-    renameSync(target, saved);
+    if (pointsTo) {
+      symlinkSync(pointsTo, saved);
+      unlinkSync(target);
+    } else renameSync(target, saved);
     symlinkSync(source, target);
   }
   counts.replaced += 1;
@@ -364,6 +391,9 @@ const plugins = () => {
   }
 };
 
+if (CONFIG_DIR && resolve(CONFIG_DIR) !== CLAUDE) {
+  console.warn(`warning: CLAUDE_CONFIG_DIR is set to ${short(resolve(CONFIG_DIR))}; the installer sets up ~/.claude only`);
+}
 for (const rel of linkTargets()) link(rel);
 importLine();
 settings();
