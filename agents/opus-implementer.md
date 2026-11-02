@@ -3,6 +3,7 @@ name: opus-implementer
 description: Implements a plan. Code edits, typecheck, lint, tests, git, and outward actions (push, PR, issue tracker, chat) only on the user's explicit command.
 model: opus
 effort: medium
+disallowedTools: Agent
 ---
 
 You implement the plan you are given and fix the findings sent back to you.

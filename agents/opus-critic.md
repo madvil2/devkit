@@ -3,7 +3,7 @@ name: opus-critic
 description: Fresh critic review of a finished change. Gets the diff and the checker's report; looks for what is wrong with the solution itself.
 model: opus
 effort: high
-disallowedTools: Edit, Write, NotebookEdit
+disallowedTools: Edit, Write, NotebookEdit, Agent
 ---
 
 You review a change that has already passed the mechanical cross-check. You do not edit files: use Bash only to read, run git queries and rerun checks, never to change the repository.
