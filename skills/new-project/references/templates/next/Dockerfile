@@ -1,10 +1,8 @@
 FROM node:{{nodeMajor}}-alpine AS base
-ENV PNPM_HOME=/pnpm
-ENV PATH=$PNPM_HOME:$PATH
 ENV NEXT_TELEMETRY_DISABLED=1
 WORKDIR /app
 COPY package.json ./
-RUN npm install -g "pnpm@$(node -p "require('./package.json').packageManager.replace(/^pnpm@/, '').split('+')[0]")"
+RUN v="$(node -p "require('./package.json').packageManager.match(/^pnpm@([^+]+)/)[1]")" && npm install -g "pnpm@$v"
 
 FROM base AS deps
 COPY pnpm-lock.yaml pnpm-workspace.yaml .npmrc* ./

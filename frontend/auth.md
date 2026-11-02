@@ -17,7 +17,7 @@ Changes to this file need a Fable critic review.
   - a request with neither signal is rejected.
   - Cross-site POST callbacks (payment return, OAuth `form_post`) arrive with `Sec-Fetch-Site: cross-site` by design, so they live in their own route handlers outside the BFF prefix and verify their own signature or `state`.
   - `SameSite` stays as defense in depth; a CSRF token is added on top when the backend requires one.
-  - Why: current browsers send `Sec-Fetch-Site` (Baseline since March 2023, Safari 16.4), and page scripts cannot forge it, so it is checked first; `same-origin` also requires the same scheme and port, which a host-only Origin match does not; the Origin check stays for clients that omit the header.
+  - Why: current browsers send `Sec-Fetch-Site` (Baseline since March 2023, Safari 16.4), and page scripts cannot forge it, so it is checked first; `same-origin` also requires the same scheme, which the Origin-vs-`Host` match does not compare; the Origin check stays for clients that omit the header.
 - **AUTH-4** (vite) Backend-set httpOnly session cookie (`credentials: 'include'`) preferred. Otherwise the access token stays in memory and refresh goes through an httpOnly cookie endpoint. Never web storage.
 - **AUTH-5** (tma) Raw `initData` goes to the backend for validation. Never authorize on `initDataUnsafe`. The session lives in memory.
 - **AUTH-6** Logout clears the query cache, stores and cookies.

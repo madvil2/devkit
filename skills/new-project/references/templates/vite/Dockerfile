@@ -1,7 +1,7 @@
 FROM node:{{nodeMajor}}-alpine AS build
 WORKDIR /app
 COPY package.json ./
-RUN npm install -g "pnpm@$(node -p "require('./package.json').packageManager.replace(/^pnpm@/, '').split('+')[0]")"
+RUN v="$(node -p "require('./package.json').packageManager.match(/^pnpm@([^+]+)/)[1]")" && npm install -g "pnpm@$v"
 COPY pnpm-lock.yaml pnpm-workspace.yaml* .npmrc* ./
 RUN pnpm install --frozen-lockfile
 COPY . .

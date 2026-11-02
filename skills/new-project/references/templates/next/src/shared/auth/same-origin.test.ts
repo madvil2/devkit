@@ -21,6 +21,10 @@ describe('isSameOriginRequest', () => {
   it.each([
     ['same-site with a matching Origin', { host, 'sec-fetch-site': 'same-site', origin }],
     ['cross-site with a matching Origin', { host, 'sec-fetch-site': 'cross-site', origin }],
+    [
+      'same-origin with a foreign Origin',
+      { host, 'sec-fetch-site': 'same-origin', origin: 'https://evil.example' },
+    ],
     ['none with a matching Origin', { host, 'sec-fetch-site': 'none', origin }],
     ['no Sec-Fetch-Site with a foreign Origin', { host, origin: 'https://evil.example' }],
     ['an Origin of null', { host, origin: 'null' }],

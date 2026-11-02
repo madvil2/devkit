@@ -14,6 +14,8 @@ Trigger: explicit request, port from an upstream review. Experiments: `docker ru
 | The Next Dockerfile used the floating `node:lts-alpine` with `corepack enable` and fails since 2026-10-28; the Vite one fails once `nodeMajor` is 25 or later | experiment | DEP-1, DEP-2: `node:{{nodeMajor}}-alpine`, `npm install -g pnpm@<packageManager version>`; built on 24 and 26 |
 | The image does not verify pnpm against a `+sha512` hash in `packageManager` | inference | Accepted, known limit |
 | `isSameOriginRequest` accepted a matching `Origin` even when `Sec-Fetch-Site` said `same-site` or `cross-site` (for example an `http:` page on the same host) | https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Sec-Fetch-Site | AUTH-3 rewritten; `same-origin.ts` rejects any sent value other than `same-origin`; truth-table test added |
+| AUTH-3 claimed that `same-origin` adds a port check over the Origin match, but `new URL(origin).host` already carries a non-default port; only the scheme is not compared | review; `same-origin.ts` | AUTH-3 Why reworded; the test adds `same-origin` with a foreign Origin |
+| A missing or non-pnpm `packageManager` made the Docker pnpm step install the latest pnpm | review; experiment | DEP-1, DEP-2 templates: the version lookup throws and fails the build; the unused `PNPM_HOME` lines removed from the Next Dockerfile |
 | `__Host-` cookie prefix (upstream AUTH-1) | upstream review | Deferred: needs a `Secure` gate on the `SITE_URL` scheme and a WebKit check over plain-HTTP dev |
 
 ## 2026-10-12 — check-rules on Biome GritQL plugins; typography per locale
