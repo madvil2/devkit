@@ -1,0 +1,9 @@
+{
+  "marketplaces": {
+    "claude-plugins-official": "anthropics/claude-plugins-official",
+    "cc-millz": "Millon15/cc-millz",
+    "autopilot-jobsearch": "madvil2/autopilot-jobsearch"
+  },
+  "plugins": ["github@claude-plugins-official", "linear@claude-plugins-official", "playwright@claude-plugins-official"],
+  "optional": ["peer-chat@cc-millz", "autopilot-jobsearch@autopilot-jobsearch"]
+}
