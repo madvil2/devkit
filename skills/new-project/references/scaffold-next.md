@@ -6,7 +6,7 @@ Run by opus-implementer in step 5. `<skill>`, `<path>`, `<answers>` as in `scaff
 
 Same as `scaffold-vite.md` §1.
 
-## 2. Official CLI (verified 2026-10-11, stack.md W-15)
+## 2. Official CLI (verified 2026-11-02, stack.md W-15)
 
 ```sh
 cd <parent of path>
@@ -16,12 +16,18 @@ git -C <path> init -b main
 
 `--no-react-compiler` is deliberate: the compiler is wired by the template (`reactCompiler: true` in `next.config.ts`, CMP-8) after the TypeScript pin.
 
+The CLI always writes `cacheComponents: true, partialPrefetching: true` and has no flag to turn them off. A static-export project (`output: 'export'`, marketing only, NXT-7) removes both: `cacheComponents: true` fails `next build` with `Invariant: PPR cannot be enabled in export mode`, and `partialPrefetching` requires `cacheComponents` (verified 16.4.4, stack.md W-15). After the render in §4, an export project edits `next.config.ts`:
+
+- `output: 'export'` replaces `output: 'standalone'`;
+- no `cacheComponents` and no `partialPrefetching` key;
+- `headers` is removed (it is not applied under export); the same security, CSP and cache headers go into the static host's config (web server or CDN) and are checked by the smoke test against the deployed site (AUTH-8, NXT-6).
+
 ## 3. Normalise the CLI output (NXT-13)
 
 - TypeScript: `pnpm add -D typescript@~6.0` (the CLI pins `^5`; stack.md W-1).
 - Biome: `pnpm add -D @biomejs/biome@<stack.md version>` (the CLI pins an older one); the rendered `biome.json` replaces the CLI one.
 - `@types/node`: `pnpm add -D @types/node@<Node LTS major>` (the CLI pins `^20`).
-- `next.config.ts`: the CLI writes `cacheComponents: true, partialPrefetching: true`. The template's `next.config.ts` replaces it; decide `cacheComponents` per project against NXT-6 (static by default) and record the decision in the ADR (stack.md W-15).
+- `next.config.ts`: the CLI writes `cacheComponents: true, partialPrefetching: true`. The template's `next.config.ts` replaces it; decide `cacheComponents` per project against NXT-6 (static by default) and record the decision in the ADR (stack.md W-15). An export project keeps both off (§2).
 - `AGENTS.md`: the CLI writes its own; it is replaced by the rendered rulebook (`agents-md-outline.md`).
 - `pnpm-workspace.yaml`: remove the pnpm 10 `ignoredBuiltDependencies` key; approvals per `scaffold-vite.md` §4 (`sharp`, `unrs-resolver` are expected).
 - Demo files (`src/app/page.tsx`, `page.module.css`, `globals.css`, `public/*.svg`) are removed by the renderer.
@@ -45,10 +51,13 @@ Then format once: `pnpm exec biome check --write` (after §5, when Biome is inst
 
 ```sh
 cd <path>
-pnpm pkg set packageManager=pnpm@<pnpm version> engines.node=">=<nodeMajor>"
+pnpm pkg set packageManager=pnpm@<stack.md pnpm version> engines.node=">=<nodeMajor>"
+pnpm --version
 pnpm add @tanstack/react-query zustand zod @base-ui/react lucide-react server-only
 pnpm add -D babel-plugin-react-compiler dependency-cruiser postcss postcss-custom-media @csstools/postcss-global-data vitest @testing-library/react happy-dom @playwright/test @axe-core/playwright
 ```
+
+`<stack.md pnpm version>` is the full 12.x version from the stack.md pnpm row (for example `12.16.1`), never the output of a local `pnpm --version`: the CLI sets `packageManager` to the local pnpm, which may be 10.x. A local pnpm 10 then switches to the pinned 12.x itself (`scaffold-vite.md` §4); `pnpm --version` inside `<path>` must print 12.x before `pnpm add`.
 
 landing + product adds `react-hook-form @hookform/resolvers`.
 

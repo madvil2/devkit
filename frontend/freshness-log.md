@@ -4,6 +4,24 @@ Applies to: all
 
 Append-only, newest first. Each entry: date and trigger, packages old → new, findings with sources, a decision per finding. Ledger: [stack.md](stack.md).
 
+## 2026-11-02 — freshness run for a static-export marketing project (stones)
+
+Trigger: `new-project` freshness step, Next marketing type with `output: 'export'`; the user chose (a) for all four contradictions. Experiments: create-next-app 16.4.4 export build; dependency-cruiser 18.7.1 `--info` with TS 7; `rules-selftest` with `@biomejs/biome@2.6.4`. Local toolchain: node v24.14.1, pnpm 10.33.0.
+
+Packages: pnpm 12.11.2 → 12.16.1; react, react-dom 19.3.0 → 19.3.1; next, create-next-app 16.4.0 → 16.4.4; postcss 8.5.29 → 8.5.32; @tanstack/react-query 5.104.1 → 5.105.2; zustand 5.0.15 → 5.0.16; zod 4.6.5 → 4.6.7; lucide-react 1.55.0 → 1.66.0; @biomejs/biome 2.5.15 → 2.6.4; dependency-cruiser 18.5.0 → 18.7.1; vitest 5.0.3 → 5.0.5; @playwright/test 1.64.0 → 1.64.1; @axe-core/playwright 4.13.0 → 4.14.0. Re-verified unchanged: typescript ~6.0 (6.0.3), postcss-custom-media 12.0.3, @csstools/postcss-global-data 4.0.0, @base-ui/react 1.9.0, @testing-library/react 16.3.3. Not adopted: happy-dom 20.14.6 → 21.0.4 (major; row left at its old `Verified` date).
+
+| Finding | Source | Decision |
+|---|---|---|
+| With `output: 'export'`, `cacheComponents: true` fails `next build` (`Invariant: PPR cannot be enabled in export mode`), and `partialPrefetching` without `cacheComponents` fails too; with both removed the export builds | experiment; next 16.4.4 `dist/export/index.js:660`; https://nextjs.org/docs/app/guides/static-exports | W-15, NXT-6: a static-export project removes both; `scaffold-next.md` §2 edits `next.config.ts` for export projects; W-15 open unknown settled for export only |
+| project-types.md allowed `output: 'export'` for marketing while NXT-7 required `standalone`; `headers()` (AUTH-8 security headers and CSP, NXT-6 cache headers) is not applied under export | https://nextjs.org/docs/app/guides/static-exports#unsupported-features; https://nextjs.org/docs/messages/export-no-custom-routes; experiment | NXT-7 allows `export` for a marketing site with no server features; AUTH-8 and NXT-6 move the headers to the static host's config (web server or CDN), checked by the smoke test on the deployed site; project-types.md row cites them |
+| Biome 2.6 matches plugin-level `includes` globs relative to the config directory | Biome CHANGELOG 2.6.2 (#12264); https://github.com/biomejs/biome/pull/12264 | W-19 reworded; plugins stay on `overrides[].plugins` (tooling.md unchanged); `rules-selftest` 180 samples, 0 failures; `biome migrate`: no migration needed |
+| Next 16.4.0 is affected by GHSA-673q-mjm6-r5xr (RCE in `use cache`), GHSA-2464-fhr4-w9xw (RCE in Image Optimization with SVG) and GHSA-p3m5-59mp-jv5r (Server Actions DoS), fixed in 16.4.1 | https://github.com/vercel/next.js/releases/tag/v16.4.1 | Next row 16.4.4, never below 16.4.1 |
+| create-next-app sets `packageManager` to the local pnpm (10.33.0 here), and the scaffold's `pnpm pkg set packageManager=pnpm@<pnpm version>` did not say which version | experiment | `scaffold-next.md` §5 sets the 12.x version from the stack.md pnpm row and checks `pnpm --version` in the project |
+| dependency-cruiser 18.7.1 still declares `typescript >=2.0.0 <7.0.0` | `depcruise --info`; npm | W-1 unchanged: stay on `~6.0` |
+| pnpm 12.12–12.16.1 keep `allowBuilds`; create-next-app 16.4.4 still writes `ignoredBuiltDependencies` | https://github.com/pnpm/pnpm/releases/tag/v12.12.0; https://github.com/pnpm/pnpm/releases/tag/v12.15.0; experiment | W-10 unchanged; whether pnpm 12 honors the old key stays open |
+| happy-dom 21 turns off CSS file and iframe loading by default; `disableCSSFileLoading` deprecated | https://github.com/capricorn86/happy-dom/releases/tag/v21.0.0 | Inferred no rule impact (TST-2 imports CSS Modules through Vitest; the template sets only `environment: 'happy-dom'`); the major bump is left for a separate decision |
+| Inferred unchanged, not re-run: W-4, W-6, W-7, W-8, W-9 (Next and PostCSS moved by patch only) | npm | `Verified` dates kept |
+
 ## 2026-11-02 — Docker images without corepack; Sec-Fetch-Site in the CSRF check
 
 Trigger: explicit request, port from an upstream review. Experiments: `docker run` and stage builds on `node:24-alpine`, `node:26-alpine` and `node:lts-alpine`. Packages: none.

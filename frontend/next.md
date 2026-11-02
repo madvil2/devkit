@@ -12,8 +12,8 @@ Applies to: next
   - no client JS in static sections;
   - motion libraries lazy;
   - mobile budget: LCP < 2.5 s, CLS < 0.1, INP < 200 ms (manual Lighthouse at DoD for marketing).
-- **NXT-6** Static by default. Dynamic only where cookies are read. The root layout never reads cookies (it would make every page dynamic). Explicit `revalidate`. Cache headers in `next.config.ts`. Whether `cacheComponents` stays on is recorded in the project ADR (stack.md W-15).
-- **NXT-7** `output: 'standalone'`; `distDir: process.env.NEXT_DIST_DIR || '.next'`. Agents build with `NEXT_DIST_DIR=.next-build` so they never clobber a running dev server.
+- **NXT-6** Static by default. Dynamic only where cookies are read. The root layout never reads cookies (it would make every page dynamic). Explicit `revalidate`. Cache headers in `next.config.ts`, or, under `output: 'export'`, in the static host's config (web server or CDN), checked by the smoke test against the deployed site. Whether `cacheComponents` stays on is recorded in the project ADR (stack.md W-15); with `output: 'export'` it is off, and `partialPrefetching` is removed with it.
+- **NXT-7** `output: 'standalone'`, or `output: 'export'` for a marketing site with no server features (project-types.md); `distDir: process.env.NEXT_DIST_DIR || '.next'`. Agents build with `NEXT_DIST_DIR=.next-build` so they never clobber a running dev server.
 - **NXT-8** `error.tsx`, `not-found.tsx` and `loading.tsx` per route group, with i18n messages.
 - **NXT-9** Decorative effects live in `shared/effects` or `sections/`, never in `shared/ui`.
 - **NXT-10** CSS and theme in the App Router:

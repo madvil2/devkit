@@ -19,5 +19,5 @@
   "addons": [],
   "port": 3990,
   "rulebookRevision": "2026-11-02",
-  "versions": { "biome": "2.5.15", "nodeMajor": "24", "pnpm": "12.11.2", "typescript": "~6.0" }
+  "versions": { "biome": "2.6.4", "nodeMajor": "24", "pnpm": "12.16.1", "typescript": "~6.0" }
 }

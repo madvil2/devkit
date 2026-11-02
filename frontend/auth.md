@@ -25,5 +25,6 @@ Changes to this file need a Fable critic review.
 - **AUTH-8** (next) Security headers in `next.config.ts` `headers()`:
   - `Content-Security-Policy` with `default-src 'self'`, `object-src 'none'`, `base-uri 'self'`, `form-action 'self'`, `frame-ancestors` (`'none'`, or the Telegram web hosts for TMA embeds);
   - `script-src`: static pages need inline scripts for Next's flight data and the pre-paint theme script, so a hash list alone does not cover them; use `'self' 'unsafe-inline'` on static routes, or a per-request nonce set in `src/proxy.ts`, which makes those routes dynamic. Decide per project in the ADR (stack.md open unknowns);
-  - `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `Strict-Transport-Security` in production.
+  - `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `Strict-Transport-Security` in production;
+  - with `output: 'export'` (NXT-7), `headers()` is not applied and there is no `src/proxy.ts` for a nonce: the same headers, CSP with `'self' 'unsafe-inline'` included, are set in the static host's config (web server or CDN) and checked by the smoke test against the deployed site.
 - **AUTH-9** (vite) Static hosts set the same headers in the server config (`nginx.conf`); the pre-paint script in `index.html` is allowed by its `sha256` hash.
