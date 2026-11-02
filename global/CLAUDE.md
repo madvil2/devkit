@@ -11,7 +11,7 @@ Roles are predefined agents in `~/.claude/agents/`: `opus-context`, `opus-planne
 Subagents may launch subagents (Claude Code allows three layers below the main session by default), within these limits:
 - opus-planner and fable launch only opus-context, for read-only lookups (in parallel when independent), and list in their report what they asked and what came back. A subagent that needs any other agent, fable included, returns the request to the main session.
 - opus-context, opus-implementer, opus-checker and opus-critic launch nothing: their frontmatter removes `Agent`. A subagent's frontmatter cannot limit which types it launches, so the planner and fable keep the tool and follow the rule above.
-- Questions for the user and outward actions still go through the main session (subagents have no AskUserQuestion), and the parallel-agent rules apply to nested agents too.
+- Questions for the user and outward actions still go through the main session (subagents have no AskUserQuestion).
 
 A plan from opus-planner or fable opens with `Assumptions:`, `Questions for the user:` and `Simpler alternative:`. These questions are for the user, not lookups: when the questions or the alternative are not `none`, the main session puts them to the user, with the assumptions, before launching an implementer, sends answers that change the plan to the same planner via SendMessage for a revised plan, and passes the answers to the implementer with the plan. When both are `none`, it goes straight on. A revised plan goes through this step again, without re-asking questions the user already answered; this holds for a revision made for a `Decision needed:` too.
 
