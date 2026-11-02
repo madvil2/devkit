@@ -7,13 +7,13 @@ Applies to: next
 - **NXT-3** A `JsonLd` component with `<`-escaped serialization. Organization, WebSite, BreadcrumbList, FAQPage, Product/SoftwareApplication.
 - **NXT-4** `app/robots.ts` and `app/sitemap.ts` come from the routes registry × locales. Private routes are `noindex` and excluded. OG image 1200×630.
 - **NXT-5** Performance:
-  - `next/image` with `sizes`;
+  - `next/image` with `sizes`; under `output: 'export'` `images.unoptimized: true` (the optimizer is a server feature), so images are pre-sized assets in `public/` with `width`/`height` set;
   - LCP image preloaded;
   - no client JS in static sections;
   - motion libraries lazy;
   - mobile budget: LCP < 2.5 s, CLS < 0.1, INP < 200 ms (manual Lighthouse at DoD for marketing).
-- **NXT-6** Static by default. Dynamic only where cookies are read. The root layout never reads cookies (it would make every page dynamic). Explicit `revalidate`. Cache headers in `next.config.ts`, or, under `output: 'export'`, in the static host's config (web server or CDN), checked by the smoke test against the deployed site. Whether `cacheComponents` stays on is recorded in the project ADR (stack.md W-15); with `output: 'export'` it is off, and `partialPrefetching` is removed with it.
-- **NXT-7** `output: 'standalone'`, or `output: 'export'` for a marketing site with no server features (project-types.md); `distDir: process.env.NEXT_DIST_DIR || '.next'`. Agents build with `NEXT_DIST_DIR=.next-build` so they never clobber a running dev server.
+- **NXT-6** Static by default. Dynamic only where cookies are read. The root layout never reads cookies (it would make every page dynamic). Explicit `revalidate`. Cache headers in `next.config.ts`, or, under `output: 'export'`, in the static host's config (web server or CDN), checked by TST-7 against the served site. Whether `cacheComponents` stays on is recorded in the project ADR (stack.md W-15); with `output: 'export'` it is off, and `partialPrefetching` is removed with it.
+- **NXT-7** `output: 'standalone'`, or `output: 'export'` for a marketing site with no server features (project-types.md); `distDir: process.env.NEXT_DIST_DIR || '.next'`. Agents build with `NEXT_DIST_DIR=.next-build` so they never clobber a running dev server. Under `output: 'export'` `distDir` names the export directory and Next's build files go to `.next`, which keeps `.next/dev` (the dev server's folder) across builds; `pnpm start` serves the export directory with `scripts/serve-export.mjs` (`next start` refuses export).
 - **NXT-8** `error.tsx`, `not-found.tsx` and `loading.tsx` per route group, with i18n messages.
 - **NXT-9** Decorative effects live in `shared/effects` or `sections/`, never in `shared/ui`.
 - **NXT-10** CSS and theme in the App Router:
@@ -30,7 +30,7 @@ Applies to: next
 - **NXT-12** PostCSS: Next uses the shared `postcss.config.mjs` (TOOL-7). A custom config completely disables Next's default autoprefixer and preset-env features; nothing is added back by default. Add `autoprefixer` only per STY-11. With Turbopack the root config wins.
 - **NXT-13** `create-next-app` output is a base, not a standard: its pinned TypeScript, Biome and `@types/node` lines are replaced with the stack.md lines, and its `AGENTS.md` is replaced by the rendered rulebook.
 - **NXT-14** Next 16 specifics (stack.md W-2, W-3, W-5):
-  - route guards live in `src/proxy.ts` (the `middleware` file name is deprecated; proxy runs on the Node runtime only);
+  - route guards live in `src/proxy.ts` (the `middleware` file name is deprecated; proxy runs on the Node runtime only); not under `output: 'export'`, whose template has no proxy and no private routes;
   - `next lint` does not exist; Biome is the linter (TOOL-3);
   - Turbopack is the default for `dev` and `build`; no custom `webpack` config (it fails the Turbopack build); `--webpack` only as a recorded fallback.
 
@@ -45,3 +45,5 @@ src/app/
   api/health/route.ts
 src/proxy.ts
 ```
+
+Under `output: 'export'` (NXT-7) the tree has no `api/`, no `src/proxy.ts` and no `src/instrumentation.ts`; `nginx.conf` and `scripts/serve-export.mjs` serve the export (DEP-1, TST-3).

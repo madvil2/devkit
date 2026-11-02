@@ -10,7 +10,7 @@ Styling is CSS Modules + tiered tokens in every row.
 
 | Type | Stack | Structure | Rendering | Auth | Default deploy |
 |---|---|---|---|---|---|
-| Marketing / SEO landing | Next (App Router) | C | SSG; `output: 'export'` if no server features (NXT-7; no `cacheComponents`, NXT-6) | none | dokku Docker, or static if export (headers in the host config, AUTH-8, NXT-6) |
+| Marketing / SEO landing | Next (App Router) | C | SSG; `output: 'export'` if no server features (NXT-7; no `cacheComponents`, NXT-6) | none | dokku Docker (nginx image under export, DEP-1), or a static host (headers in the host config, AUTH-8, NXT-6; checked by TST-7) |
 | Landing + product (postcraft-like) | Next | B (+ `widgets/landing-*`) | RSC marketing + client islands | AUTH-1 BFF | dokku Docker standalone |
 | Admin / back-office | Vite + React + TanStack Router/Query/Table | A | CSR | AUTH-4 | static nginx behind auth |
 | Client SPA, no public SEO | Vite | A | CSR | AUTH-4 | static |

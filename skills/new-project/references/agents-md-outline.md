@@ -5,7 +5,7 @@ The project's `AGENTS.md` is a self-contained render of the devkit frontend rule
 ## Render rules
 
 - Copy rule text verbatim with its ID (`**CMP-3** …`). Keep enforcement tags (`[rules: …]`, `[arch: …]`, `[ts]`, `[ci]`, `[e2e]`).
-- Scope filter: include a rule when its scope tag matches the project. Scopes: `all` always; `vite` for admin/spa/tma; `next` for marketing and landing + product; `tma`; `money` when the project handles money; `auth` rules per the chosen pattern (AUTH-1..3, AUTH-8 for next with BFF; AUTH-4, AUTH-9 for vite; AUTH-5 for tma; AUTH-6, AUTH-7 always); `marketing`; `pwa`; `i18n-remote` when copy is edited remotely; `multi-tenant` (TOK-7) when white-label.
+- Scope filter: include a rule when its scope tag matches the project. Scopes: `all` always; `vite` for admin/spa/tma; `next` for marketing and landing + product; `tma`; `money` when the project handles money; `auth` rules per the chosen pattern (AUTH-1..3 for next with BFF; AUTH-8 for next; AUTH-4, AUTH-9 for vite; AUTH-5 for tma; AUTH-6, AUTH-7 always); `marketing`; `pwa`; `i18n-remote` when copy is edited remotely; `multi-tenant` (TOK-7) when white-label.
 - Inside an included rule, drop sub-bullets whose suffix tag is out of scope (for example the `(next)` line of CMP-8 in a Vite project).
 - Substitute project paths and names (`<name>`, port, locales, layer list of the variant). Drop references to `stack.md` and other rulebook files; inline the fact instead (for example "TypeScript stays on 6.x: dependency-cruiser does not support 7").
 - No Cyrillic outside the TXT-4 data examples. No AI attribution.
@@ -32,12 +32,12 @@ The project's `AGENTS.md` is a self-contained render of the devkit frontend rule
 | 14 | Money (only with money) | `money.md` | MNY-1 … MNY-4 |
 | 15 | Framework: Vite SPA or Next | `vite-spa.md` or `next.md` | SPA-1 … SPA-6 or NXT-1 … NXT-14 |
 | 16 | Telegram Mini App (only tma) | `tma.md` | TMA-1 … TMA-8 |
-| 17 | Testing | `testing.md` | TST-1 … TST-6 |
+| 17 | Testing | `testing.md` | TST-1 … TST-7 |
 | 18 | Tooling: TypeScript, Biome, PostCSS, dependency-cruiser, check-rules catalogue | `tooling.md` | TOOL-1 … TOOL-8 |
 | 19 | CI and deploy | `ci-deploy.md` | CI-1, CI-2, DEP-1 … DEP-3 (DEP-1 next, DEP-2 vite) |
 | 20 | Workflow: no comments, docs, commits, local files | `workflow.md` | WF-1 … WF-6 |
 
-Rule IDs added after rev. 1 that must appear when in scope: TOOL-8, STY-11, NXT-13, NXT-14, TST-6, SPA-6, AUTH-9, MNY-4, TXT-4.
+Rule IDs added after rev. 1 that must appear when in scope: TOOL-8, STY-11, NXT-13, NXT-14, TST-6, TST-7, SPA-6, AUTH-9, MNY-4, TXT-4.
 
 ## Check-rules and dependency-cruiser tables
 

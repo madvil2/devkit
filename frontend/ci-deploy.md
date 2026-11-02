@@ -16,6 +16,7 @@ Applies to: all
   - non-root user;
   - telemetry off;
   - public env as `ARG` with no secret defaults;
-  - `/api/health`.
+  - `/api/health`;
+  - under `output: 'export'` (NXT-7): the same build stage, then `nginx:alpine` serving the export directory with `nginx.conf` (`try_files $uri $uri.html $uri/index.html`, `404.html`, AUTH-8 headers, NXT-6 cache headers: `/_next/static/` immutable, HTML `no-cache`) and `/healthz`, as DEP-2.
 - **DEP-2** (vite) Build stage on `node:<nodeMajor>-alpine` (pnpm per TOOL-1), then `nginx:alpine` with SPA fallback, SPA-4 caching and AUTH-9 headers.
 - **DEP-3** `dependabot.yml`: weekly, grouped minor/patch. Major bumps of rows with a watch item in stack.md go through a freshness run first.
