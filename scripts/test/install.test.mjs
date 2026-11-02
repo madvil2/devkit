@@ -440,3 +440,30 @@ test('a dangling ~/.claude folder symlink is a conflict, in a dry run and a real
   assert.equal(readlinkSync(skills), path.join(box.home, 'gone'));
   assert.equal(existsSync(path.join(box.home, 'gone')), false);
 }));
+
+test('a plugin synced from the account counts as present without a warning', sandbox((box) => {
+  const { code, output, calls } = box.run([], {
+    FAKE_MARKETPLACES: ALL_INSTALLED.FAKE_MARKETPLACES,
+    FAKE_PLUGINS: JSON.stringify([
+      { id: 'github@synced', scope: 'synced', enabled: false },
+      { id: 'linear@claude-plugins-official', scope: 'user', enabled: true },
+      { id: 'playwright@claude-plugins-official', scope: 'user', enabled: true },
+    ]),
+  });
+  assert.equal(code, 0, output);
+  assert.deepEqual(changes(calls), []);
+  assert.doesNotMatch(output, /disabled/);
+}));
+
+test('a dangling ~/.claude stops after the links step, in a dry run and a real run', sandbox((box) => {
+  symlinkSync(path.join(box.home, 'gone'), box.claude);
+  for (const args of [['--dry-run'], [], ['--replace']]) {
+    const { code, output, calls } = box.run(args, ALL_INSTALLED);
+    assert.equal(code, 1, output);
+    assert.match(output, /~\/\.claude is a dangling symlink; remove it first/);
+    assert.doesNotMatch(output, /CLAUDE\.md|settings\.json|ENOENT|    at /);
+    assert.deepEqual(calls, []);
+  }
+  assert.equal(readlinkSync(box.claude), path.join(box.home, 'gone'));
+  assert.equal(existsSync(path.join(box.home, 'gone')), false);
+}));

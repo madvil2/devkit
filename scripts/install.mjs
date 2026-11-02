@@ -388,7 +388,7 @@ const plugins = () => {
   if (installed.some((entry) => entry.id === 'devkit@devkit')) {
     console.warn('warning: devkit@devkit is installed and loads the same skills again as devkit:*; run: claude plugin uninstall devkit@devkit');
   }
-  const atUser = installed.filter((entry) => entry.scope === 'user');
+  const counted = installed.filter((entry) => entry.scope !== 'project' && entry.scope !== 'local');
   const run = (rest) => {
     say(`${DRY ? 'would run' : 'running'}: claude plugin ${rest.join(' ')}`);
     if (DRY) return true;
@@ -400,8 +400,8 @@ const plugins = () => {
     return true;
   };
   for (const id of wanted) {
-    const present = atUser.filter((entry) => nameOf(entry.id) === nameOf(id));
-    const enabled = present.find((entry) => entry.enabled !== false);
+    const present = counted.filter((entry) => nameOf(entry.id) === nameOf(id));
+    const enabled = present.find((entry) => entry.scope !== 'user' || entry.enabled !== false);
     if (enabled) {
       say(`ok plugin ${enabled.id}`);
       continue;
@@ -423,9 +423,12 @@ if (CONFIG_DIR && resolve(CONFIG_DIR) !== CLAUDE) {
   console.warn(`warning: CLAUDE_CONFIG_DIR is set to ${short(resolve(CONFIG_DIR))}; the installer sets up ~/.claude only`);
 }
 for (const rel of linkTargets()) link(rel);
-importLine();
-settings();
-plugins();
+if (lstat(CLAUDE)?.isSymbolicLink() && !existsSync(CLAUDE)) error(`${short(CLAUDE)} is a dangling symlink; remove it first`);
+else {
+  importLine();
+  settings();
+  plugins();
+}
 if (spawnSync('jq', ['--version']).error) console.warn('warning: jq is not on PATH; the status line and the Biome hook need it');
 
 say('');

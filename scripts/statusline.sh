@@ -4,8 +4,6 @@
 
 input=$(cat)
 
-# Read every field in one jq pass instead of one subshell per field. Fields are separated by
-# the unit separator, not a tab, so empty fields keep their place; numbers are rounded to integers.
 us=$(printf '\037')
 IFS="$us" read -r cwd model effort thinking ctx rl5 rl5_at rl7 rl7_at added removed <<EOF
 $(echo "$input" | jq -r 'def n: if type == "number" then (. + 0.5 | floor) else . end; [
