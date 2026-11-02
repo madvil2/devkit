@@ -30,10 +30,9 @@ const showVersion = (raw) => {
 const LAYOUTS = {
   skills: {
     target: 'skills',
-    sparse: (name) => `skills/*/${name}/`,
+    sparse: (name) => [`skills/*/${name}/`, `skills/${name}/`],
     locate: (upstream, name) =>
-      dirsIn(join(upstream, 'skills'))
-        .map((group) => `skills/${group}/${name}`)
+      [`skills/${name}`, ...dirsIn(join(upstream, 'skills')).map((group) => `skills/${group}/${name}`)]
         .filter((path) => existsSync(join(upstream, path, 'SKILL.md'))),
     inspect(upstream, name, path) {
       if (path.startsWith('skills/deprecated/')) console.warn(`${name}: deprecated upstream`)
@@ -96,7 +95,7 @@ try {
     const layout = LAYOUTS[source.layout]
     const upstream = join(tmp, String(index))
     git(tmp, 'clone', '--quiet', '--depth', '1', '--branch', source.ref, '--filter=blob:none', '--sparse', source.source, String(index))
-    git(upstream, 'sparse-checkout', 'set', '--no-cone', '/LICENSE', ...source.items.map(layout.sparse))
+    git(upstream, 'sparse-checkout', 'set', '--no-cone', '/LICENSE', ...source.items.flatMap(layout.sparse))
     const commit = git(upstream, 'rev-parse', 'HEAD')
     if (!existsSync(join(upstream, 'LICENSE'))) throw new Error(`${source.name}: no LICENSE at the upstream root`)
     const paths = {}
