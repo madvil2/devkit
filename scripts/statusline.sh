@@ -4,21 +4,23 @@
 
 input=$(cat)
 
-# Read every field in one jq pass, tab-separated, instead of one subshell per field.
-IFS='	' read -r cwd model effort thinking ctx rl5 rl5_at rl7 rl7_at added removed <<EOF
-$(echo "$input" | jq -r '[
+# Read every field in one jq pass instead of one subshell per field. Fields are separated by
+# the unit separator, not a tab, so empty fields keep their place; numbers are rounded to integers.
+us=$(printf '\037')
+IFS="$us" read -r cwd model effort thinking ctx rl5 rl5_at rl7 rl7_at added removed <<EOF
+$(echo "$input" | jq -r 'def n: if type == "number" then (. + 0.5 | floor) else . end; [
   (.workspace.current_dir // .cwd // ""),
   (.model.display_name // ""),
   (.effort.level // ""),
   (.thinking.enabled // false | tostring),
-  (.context_window.used_percentage // ""),
-  (.rate_limits.five_hour.used_percentage // ""),
-  (.rate_limits.five_hour.resets_at // ""),
-  (.rate_limits.seven_day.used_percentage // ""),
-  (.rate_limits.seven_day.resets_at // ""),
+  (.context_window.used_percentage // "" | n),
+  (.rate_limits.five_hour.used_percentage // "" | n),
+  (.rate_limits.five_hour.resets_at // "" | n),
+  (.rate_limits.seven_day.used_percentage // "" | n),
+  (.rate_limits.seven_day.resets_at // "" | n),
   (.cost.total_lines_added // 0),
   (.cost.total_lines_removed // 0)
-] | @tsv')
+] | map(tostring) | join("\u001f")')
 EOF
 
 dirname=$(basename "$cwd")
