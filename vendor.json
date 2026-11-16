@@ -4,7 +4,7 @@
       "name": "mattpocock-skills",
       "source": "https://github.com/mattpocock/skills.git",
       "ref": "main",
-      "commit": "4ae2317ddb22b046e26455e4f9c9b3aaaf62212d",
+      "commit": "5863806dd4e15c63174bee4e7515a4256792ecfa",
       "layout": "skills",
       "license": "skills/LICENSE-mattpocock-skills",
       "items": [
@@ -70,7 +70,7 @@
       "name": "cc-millz",
       "source": "https://github.com/Millon15/cc-millz.git",
       "ref": "master",
-      "commit": "17454c5067ef2efc7cc7c61ac4af6a94dd5c4024",
+      "commit": "39435fda97a6302fc49ef8137ce8cc46b5916a5b",
       "layout": "plugins",
       "license": "plugins/LICENSE-cc-millz",
       "items": [
@@ -79,16 +79,16 @@
         "toolsmith"
       ],
       "hashes": {
-        "codex-delegation": "2d09bf0bcd03582b37f4c258313e6d605e489c22",
+        "codex-delegation": "bddd32f8ec52aec84b700e75d45f36501f605794",
         "security-audit": "9fab841372786f1bc1ecae39933dba272693ff85",
-        "toolsmith": "bdf72b16eeb37eaf91ea8ad1b76426fbafaaa223"
+        "toolsmith": "d6e46847ab3961a7e90550a742ae434566971aa9"
       }
     },
     {
       "name": "make-interfaces-feel-better",
       "source": "https://github.com/jakubkrehel/make-interfaces-feel-better.git",
       "ref": "main",
-      "commit": "35545ea1512ad59fa463e6b1f95ca9c052981fe6",
+      "commit": "1a2aa9695487dc6d2a59af28e34db9b1490ab181",
       "layout": "skills",
       "license": "skills/LICENSE-make-interfaces-feel-better",
       "items": [
